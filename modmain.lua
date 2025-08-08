@@ -9,8 +9,15 @@ local init_postinit =
 {
 	"vs_player",
 	"vs_items",
+	"vs_widget",
 }
 
 for _, v in pairs(init_postinit) do
 	modimport("postinit/"..v)
 end
+
+-- Prefab for handling the slots and container.
+PrefabFiles =
+{
+	"vanity_slots",
+}

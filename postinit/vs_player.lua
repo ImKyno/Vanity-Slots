@@ -13,12 +13,11 @@ local function AddVanitySlots(inst)
 		end
 	end
 	
-	local function CheckVanitySlots(inst)
+	local function CheckVanitySlots(inst, owner)
 		local vanitycontainer = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		
 		if not vanitycontainer then
-			local newcontainer = _G.SpawnPrefab("vanity_slots")
-			inst.components.inventory:Equip(newcontainer)
+			inst.components.vanityslot:UpdateVanitySlotInventory()
 		end
 	end
 	
@@ -29,6 +28,7 @@ local function AddVanitySlots(inst)
 	end
 	
 	inst:AddComponent("vanityslot")
+	inst.components.vanityslot.bits = 3
 	
 	inst.CheckVanitySlots = CheckVanitySlots
 	inst:DoTaskInTime(0, CheckVanitySlots)

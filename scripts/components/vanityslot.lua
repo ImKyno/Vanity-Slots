@@ -1,7 +1,3 @@
-local function OnSpawn(inst)
-	inst.components.vanityslot:UpdateVanitySlotInventory()
-end
-
 local function OnRespawn(inst)
     inst.components.vanityslot:Reset()
 end
@@ -12,21 +8,22 @@ local VanitySlot = Class(function(self, inst)
 	inst:AddTag("vanityslotowner")
 
 	self.callbacks = {}
+	self.bits = 3
 	self.pause = nil
 	self.onreset = nil
 	
-	-- inst:ListenForEvent("ms_newplayercharacterspawned", OnSpawn)
 	inst:ListenForEvent("ms_respawnedfromghost", OnRespawn)
 end)
 
 function VanitySlot:OnRemoveFromEntity()
 	self.inst:RemoveTag("vanityslotowner")
 	
-	-- self.inst:RemoveEventCallback("ms_newplayercharacterspawned", OnSpawn)
 	self.inst:RemoveEventCallback("ms_respawnedfromghost", OnRespawn)
 end
 
 function VanitySlot:Reset()
+	self.bits = 3 
+	
 	if self.onreset ~= nil then
 		self.onreset(self.inst)
 	end
@@ -37,12 +34,14 @@ end
 function VanitySlot:OnSave()
 	return
 	{
-		-- Save something (?)
+		bits = self.bits,
 	}
 end
 
 function VanitySlot:OnLoad(data)
-	-- Load something (?)
+	if data.bits ~= nil then
+		self.bits = data.bits
+	end
 end
 
 function VanitySlot:LoadPostPass(newents, data)
@@ -50,7 +49,12 @@ function VanitySlot:LoadPostPass(newents, data)
 end
 
 function VanitySlot:UpdateVanitySlotInventory()
-	local vanityslots = "vanity_slots"
+	local vanityslots = nil
+	
+	if self.bits >= 3 then
+		vanityslots = "vanity_slots"
+	end
+	
 	local vanitycontainer = self.inst.components.inventory and self.inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 	
 	if vanityslots then

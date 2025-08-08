@@ -10,6 +10,15 @@ local assets =
 	Asset("ATLAS", "images/vanity_slots.xml"),
 }
 
+local function GetEquippedItem(inst, owner)
+	return (owner.components.vanityslot ~= nil and inst.components.container ~= nil) and
+	{
+		hand = inst.components.container.slots[1],
+		body = inst.components.container.slots[2],
+		head = inst.components.container.slots[3],
+	} or {}
+end
+
 local function OnEquip(inst, owner)
 	inst.components.container:Open(owner)
 end
