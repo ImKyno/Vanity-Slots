@@ -1,6 +1,21 @@
 -- Common Dependencies.
 local containers = require("containers")
-local params     = containers.params
+local params     = {}
+
+local containers_widgetsetup_base = containers.widgetsetup
+function containers.widgetsetup(container, prefab, data, ...)
+	local t = params[prefab or container.inst.prefab]
+	
+	if t ~= nil then
+		for k, v in pairs(t) do
+			container[k] = v
+		end
+
+		container:SetNumSlots(container.widget.slotpos ~= nil and #container.widget.slotpos or 0)
+	else
+		containers_widgetsetup_base(container, prefab, data, ...)
+	end
+end
 
 -- I don't think its possible to make a vanity slot that 
 -- Does not conflict with equippable and inventory components and other slot mods (?) 

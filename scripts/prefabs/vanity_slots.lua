@@ -58,7 +58,7 @@ local function fn()
 	inst:AddComponent("equippable")
 	inst.components.equippable.equipslot = EQUIPSLOTS.VANITY
 	inst.components.equippable:SetPreventUnequipping(true)
-	inst.components.equippable:SetOnEquip(OnEquip)
+	-- inst.components.equippable:SetOnEquip(OnEquip)
 	inst.components.equippable:SetOnUnequip(OnUnequip)
 
 	inst:AddComponent("container")

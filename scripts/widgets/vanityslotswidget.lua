@@ -2,40 +2,43 @@ require("util")
 
 local Widget      = require("widgets/widget")
 local Image       = require("widgets/image")
-local ImageButton = require("widgets/imagebutton")
 local Text        = require("widgets/text")
+local ImageButton = require("widgets/imagebutton")
+local TextButton  = require("widgets/textbutton")
 
-local function ToggleVanitySlots()
+local W_SCALE     = .2
+local W_ATLAS     = "images/crafting_menu_icons.xml"
+
+local function ToggleVanitySlots()	
 	local vanitycontainer = ThePlayer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 	
-	if vanitycontainer then
+	if vanitycontainer and not vanitycontainer.replica.container:IsOpenedBy(ThePlayer) then
 		vanitycontainer.replica.container:Open(ThePlayer)
 		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
-		print("VANITY SLOTS: Widget opened.")
+	else
+		vanitycontainer.replica.container:Close(ThePlayer)
+		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 	end
 end
 
 -- GOD I hate making widgets...
-local VanitySlotsWidget = Class(Widget, function(self)
-	Widget._ctor(self, "VanitySlots")
-	self:UpdateWhilePaused(false)
+local VanitySlots = Class(Widget, function(self)
+	Widget._ctor(self, "Vanity Slots")
+	
+	self.root = self:AddChild(Widget("root"))
 	
 	self.tasks = {}
-	self.vanitySlotsBtn = self:AddChild(ImageButton("images/crafting_menu_icons.xml", "warable.tex", nil, nil, nil, nil, {1,1}, {0,0}))
-	self.vanitySlotsBtn:SetScale(2, 2, 2)
+	self.vanitySlotsBtn = self.root:AddChild(ImageButton(W_ATLAS, "filter_warable.tex", nil, nil, nil, nil, {1,1}, {0,0}))
+	self.vanitySlotsBtn:SetPosition(0, 0, 0)
+	self.vanitySlotsBtn:SetScale(W_SCALE, W_SCALE, W_SCALE)
 	self.vanitySlotsBtn:SetOnClick(ToggleVanitySlots)
 	
-	local width, height = self.vanitySlotsBtn:GetSize()
-	self.size = 
-	{
-		width = width,
-		height = height,
-	}
-	
-	print("VANITY SLOTS: Widget created.")
+	self.VanitySlotsShown = false
+	self:RefreshTooltips()
+	self:ShowButton()
 	
 	-----------------------------------------------------------------------------------------------------------------
-	-- Shows x/y Position on the screen for lookup.
+	-- Shows x/y Position on the screen for easy lookup.
 	--[[
 	self.animationUp = self.root:AddChild(Text(NEWFONT_OUTLINE, 30, "Y: ", {unpack(UICOLOURS.RED)}))
 	self.animationUp:SetPosition(-520, -350)
@@ -55,12 +58,27 @@ local VanitySlotsWidget = Class(Widget, function(self)
 		self.animationRight:SetString("X: " .. pos.x)
 	end)
 	]]--
-	
-	self:RefreshTooltips()
 end)
 
-function VanitySlotsWidget:RefreshTooltips()
-    self.vanitySlotsBtn:SetTooltip("View Cosmetic Slots")
+function VanitySlots:RefreshTooltips()
+	if self.VanitySlotsShown then
+		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS.CLOSE)
+	else
+		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS.OPEN)
+	end
 end
 
-return VanitySlotsWidget
+function VanitySlots:Show()
+	self._base.Show(self)
+	self:RefreshTooltips()
+end
+
+function VanitySlots:ShowButton()
+    self.vanitySlotsBtn:Show()
+end
+
+function VanitySlots:HideButton()
+    self.vanitySlotsBtn:Hide()
+end
+
+return VanitySlots
