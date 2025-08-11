@@ -22,6 +22,13 @@ local function AddVanitySlots(inst)
 	end
 	
 	inst:AddTag("vanityslotowner")
+	
+	if _G.TheNet:GetIsClient() then
+		inst.IsIntegratedBackpackOpen = function(inst)
+			local backpack = inst.replica.inventory and inst.replica.inventory:GetOverflowContainer()
+			return _G.Profile:GetIntegratedBackpack() and backpack and backpack._isopen or false
+		end
+	end
 
 	if not _G.TheWorld.ismastersim then	
 		return inst

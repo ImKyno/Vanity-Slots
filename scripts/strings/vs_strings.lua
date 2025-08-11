@@ -1,14 +1,2 @@
-STRINGS =
-{
-	UI =
-	{
-		HUD =
-		{
-			VANITYSLOTS =
-			{
-				CLOSE = "Close",
-				OPEN = "View Cosmetic Slots",
-			},
-		},
-	},
-}
+STRINGS.UI.HUD.VANITYSLOTS_CLOSE = "Close"
+STRINGS.UI.HUD.VANITYSLOTS_OPEN = "View Cosmetic Slots"

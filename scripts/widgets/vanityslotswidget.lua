@@ -14,10 +14,16 @@ local function ToggleVanitySlots()
 	
 	if vanitycontainer and not vanitycontainer.replica.container:IsOpenedBy(ThePlayer) then
 		vanitycontainer.replica.container:Open(ThePlayer)
-		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
 	else
 		vanitycontainer.replica.container:Close(ThePlayer)
-		TheFrontEnd:GetSound():PlaySound("dontstarve/HUD/click_move")
+	end
+end
+
+local function CloseVanitySlots()
+	local vanitycontainer = ThePlayer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+	
+	if vanitycontainer then
+		vanitycontainer.replica.container:Close(ThePlayer)
 	end
 end
 
@@ -33,12 +39,15 @@ local VanitySlots = Class(Widget, function(self)
 	self.vanitySlotsBtn:SetScale(W_SCALE, W_SCALE, W_SCALE)
 	self.vanitySlotsBtn:SetOnClick(ToggleVanitySlots)
 	
+	-- TO DO: Create setting to let player decide if container starts open or closed.
+	self.inst:DoTaskInTime(0, CloseVanitySlots)
+	
 	self.VanitySlotsShown = false
 	self:RefreshTooltips()
 	self:ShowButton()
 	
 	-----------------------------------------------------------------------------------------------------------------
-	-- Shows x/y Position on the screen for easy lookup.
+	-- Shows x/y position on the screen for easy lookup.
 	--[[
 	self.animationUp = self.root:AddChild(Text(NEWFONT_OUTLINE, 30, "Y: ", {unpack(UICOLOURS.RED)}))
 	self.animationUp:SetPosition(-520, -350)
@@ -62,9 +71,9 @@ end)
 
 function VanitySlots:RefreshTooltips()
 	if self.VanitySlotsShown then
-		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS.CLOSE)
+		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_CLOSE)
 	else
-		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS.OPEN)
+		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_OPEN)
 	end
 end
 
