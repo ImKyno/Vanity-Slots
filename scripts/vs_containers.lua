@@ -21,11 +21,12 @@ end
 -- Does not conflict with equippable and inventory components and other slot mods (?) 
 -- So... we are making a container attached to the player instead 💀💀
 
--- TO DO: Make position compatible with mods that change the inventory size...
-
 -- UPDATE: Setting position for both widget and container is a pain in the ass
 -- I'll just hardcode the position below the player, this way I don't need to 
 -- lose my sanity while making it compatible with pesky mods that add 100 inv slots.
+
+-- TO DO: Make position compatible with mods that change the inventory size...
+-- TO DO: Prevent equipping heavy objects i.e statues, sunkenchest, etc.
 
 params.vanity_slots =
 {
@@ -65,7 +66,7 @@ function params.vanity_slots.itemtestfn(container, item, slot)
 	elseif slot == 3 then
 		return item:HasTag("vanity_head") or item:HasTag("hat") -- Why only hats have consistent tag?
 	elseif slot == nil then
-		return item:HasAnyTag("vanity_hand", "vanity_head", "hat", "vanity_body")
+		return item:HasAnyTag("vanity_hand", "vanity_body", "vanity_body", "hat")
 	end
 	
 	return false

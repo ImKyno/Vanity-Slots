@@ -16,7 +16,6 @@ for _, v in pairs(init_postinit) do
 	modimport("postinit/"..v)
 end
 
--- Prefab for handling the slots and container.
 PrefabFiles =
 {
 	"vanity_slots",

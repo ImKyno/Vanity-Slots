@@ -3,14 +3,22 @@ local _G           = GLOBAL
 local require      = _G.require
 local EQUIPSLOTS   = _G.EQUIPSLOTS
 
-AddPrefabPostInit("trunkvest_winter", function(inst)
-	inst:AddTag("vanity_body")
-end)
+require("vs_tuning")
 
-AddPrefabPostInit("minerhat", function(inst)
-	inst:AddTag("vanity_head")
-end)
+for slot, item in pairs(TUNING.VANITYSLOT_HAND) do
+	AddPrefabPostInit(item, function(inst)
+		inst:AddTag("vanity_hand")
+	end)
+end
 
-AddPrefabPostInit("cane", function(inst)
-	inst:AddTag("vanity_hand")
-end)
+for slot, item in pairs(TUNING.VANITYSLOT_BODY) do
+	AddPrefabPostInit(item, function(inst)
+		inst:AddTag("vanity_body")
+	end)
+end
+
+for slot, item in pairs(TUNING.VANITYSLOT_HEAD) do
+	AddPrefabPostInit(item, function(inst)
+		inst:AddTag("vanity_head")
+	end)
+end

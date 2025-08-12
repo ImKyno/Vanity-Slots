@@ -24,6 +24,7 @@ function c_vsvanitybody()
 		c_give("armorruins",       nil, true)
 		c_give("hawaiianshirt",    nil, true)
 		c_give("yellowamulet",     nil, true)
+		c_give("krampus_sack",     nil, true)
     end
 end
 
