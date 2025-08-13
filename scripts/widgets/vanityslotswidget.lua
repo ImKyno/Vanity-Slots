@@ -40,7 +40,9 @@ local VanitySlots = Class(Widget, function(self)
 	self.vanitySlotsBtn:SetOnClick(ToggleVanitySlots)
 	
 	-- TO DO: Create setting to let player decide if container starts open or closed.
-	self.inst:DoTaskInTime(0, CloseVanitySlots)
+	if not TUNING.VANITYSLOT_STARTOPEN then
+		self.inst:DoTaskInTime(0, CloseVanitySlots)
+	end
 	
 	self.VanitySlotsShown = false
 	self:RefreshTooltips()

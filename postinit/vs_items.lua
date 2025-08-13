@@ -5,20 +5,16 @@ local EQUIPSLOTS   = _G.EQUIPSLOTS
 
 require("vs_tuning")
 
-for slot, item in pairs(TUNING.VANITYSLOT_HAND) do
-	AddPrefabPostInit(item, function(inst)
+-- This can techincally make hidden items like Bishop shot, 
+-- Rook charge, Ewecus spit, etc. an equippable vanity item. Amazing.
+local function MakeVanityItem(inst)
+	if inst.eslot == EQUIPSLOTS.HAND then
 		inst:AddTag("vanity_hand")
-	end)
-end
-
-for slot, item in pairs(TUNING.VANITYSLOT_BODY) do
-	AddPrefabPostInit(item, function(inst)
+	elseif inst.eslot == EQUIPSLOTS.BODY then
 		inst:AddTag("vanity_body")
-	end)
+	elseif inst.eslot == EQUIPSLOTS.HEAD then
+		inst:AddTag("vanity_head")
+	end
 end
 
-for slot, item in pairs(TUNING.VANITYSLOT_HEAD) do
-	AddPrefabPostInit(item, function(inst)
-		inst:AddTag("vanity_head")
-	end)
-end
+AddPrefabPostInitAny(MakeVanityItem)

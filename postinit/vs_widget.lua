@@ -1,9 +1,9 @@
 -- Common Dependencies.
 local _G          = GLOBAL
 local require     = _G.require
-local TheSim      = _G.TheSim
 local VanitySlots = require("widgets/vanityslotswidget")
 
+-- Why there are so many copycats of EES?
 local ExtraEquipSlotMods =
 {
 	"1818688368",
@@ -22,6 +22,7 @@ local ExtraEquipSlotMods =
 	"375850593",
 }
 
+-- TO DO: Make widget position compatible with EES mods.
 AddClassPostConstruct("widgets/controls", function(self)
 	self.vanitySlotsBtn = self.bottom_root:AddChild(VanitySlots())
 	self.vanitySlotsBtn:SetPosition(530, 30)

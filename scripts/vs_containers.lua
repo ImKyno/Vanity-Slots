@@ -25,9 +25,8 @@ end
 -- I'll just hardcode the position below the player, this way I don't need to 
 -- lose my sanity while making it compatible with pesky mods that add 100 inv slots.
 
--- TO DO: Make position compatible with mods that change the inventory size...
+-- TO DO: Make position compatible with mods that change the inventory size... (?)
 -- TO DO: Prevent equipping heavy objects i.e statues, sunkenchest, etc.
-
 params.vanity_slots =
 {
 	widget =

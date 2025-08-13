@@ -63,7 +63,7 @@ function VanitySlot:UpdateVanitySlotInventory()
 			local newcontainer = SpawnPrefab(vanityslots)
 			self.inst.components.inventory:Equip(newcontainer)
 		elseif not vanitycontainer:HasTag(vanityslots) then 
-			-- Has vanity slots and container but wrong data. Give appropriate data and transfer items.
+			-- Has slots and container but wrong data. Give appropriate data and transfer items.
 			local containeritems = vanitycontainer.components.container:RemoveAllItems()
 			vanitycontainer.components.container:Close(self.inst)
 			vanitycontainer:Remove()

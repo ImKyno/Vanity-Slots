@@ -1,7 +1,7 @@
--- These tables should be only used for vanilla items, I'm not sure about mods.
--- But I guess you could go ahead and try insert yours.
 TUNING.VANITYSLOT_HAND =
 {
+	--[[
+	"blowdart_pipe",
 	"bullkelp_root",
 	"cane",
 	"chum",
@@ -9,18 +9,22 @@ TUNING.VANITYSLOT_HAND =
 	"lantern",
 	"spear",
 	"torch",
+	]]--
 }
 
 TUNING.VANITYSLOT_BODY =
 {
+	--[[
 	"amulet",
 	"armorruins",
 	"armorskeleton",
 	"backpack",
 	"hawaiianshirt",
 	"krampus_sack",
+	"sculpture_bishophead",
 	"trunkvest_winter",
 	"yellowamulet",
+	]]--
 }
 
 -- All hats have a consistent tag "hat" so they don't really need our custom tag.
@@ -29,3 +33,6 @@ TUNING.VANITYSLOT_HEAD =
 {
 	"walrushat",
 }
+
+-- Change to false if you want the container to start closed.
+TUNING.VANITYSLOT_STARTOPEN = true
