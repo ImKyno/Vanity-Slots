@@ -8,120 +8,99 @@ local assets =
 }
 
 -- TO DO: Fix some persisting effects i.e: alterguardianhat light, minerhat light, ruinshat forcefield, amulet health regen, etc.
--- TO DO: Fix items disappearing onload.
+-- TO DO: Fix items disappearing on load.
+-- TO DO: Fix items not unequipping. --- DONE.
+-- TO DO: Fix real items not re-equipping when vanity items are unequipped. -- DONE.
+-- TO DO: Fix vanity items not re-equipping when real items are unequipped/equipped.
 -- TO DO: Make way to equip backpacks.
--- TO DO: Make way to prevent equipped containers in vanity slot to hold items.
--- TO DO: Allow heavy objects i.e statues as vanity (?)
+-- TO DO: Make way to prevent equipped containers in vanity slot to hold items. --- DONE.
 -- TO DO: Items that produce light i.e: minerhat, lantern, etc. should always be off when held.
 -- TO DO: Some items don't have onequiptomodelfn, need to make one for them.
 
+local function OnEquipVanity(inst, data)
+	local slots = EQUIPSLOTS.HANDS or EQUIPSLOTS.BODY or EQUIPSLOTS.HEAD
+	
+	if data.eslot == slots and data.item ~= nil then
+		
+	end
+end
+
+local function OnUnequipVanity(inst, data)
+	local slots = EQUIPSLOTS.HANDS or EQUIPSLOTS.BODY or EQUIPSLOTS.HEAD
+	
+	if data.eslot == slots and data.item ~= nil then
+		
+	end
+end
+
 local function ShowEquippedItem(inst, data, owner)
 	local owner = inst.components.inventoryitem.owner or inst.components.inventoryitem:GetGrandOwner()
-	print("VANITY SLOTS [SHOW ITEM]: FOUND OWNER:", owner)
-
-	local hand = inst.components.container:GetItemInSlot(1)
-	local body = inst.components.container:GetItemInSlot(2)
-	local head = inst.components.container:GetItemInSlot(3)
+	local vanityitem = data.item
+	local vanityslot = data.slot
 	
-	if hand ~= nil and owner ~= nil then
-		print("VANITY SLOTS [SHOW ITEM]: EQUIPPED [HAND] ITEM:", hand, "OWNER:", owner)
-		if hand.components.equippable.onequiptomodelfn then
-			hand.components.equippable:Equip(owner)
-			hand.components.equippable.onequiptomodelfn(hand, owner)
+	if owner ~= nil then
+		if not owner:HasTag("equipmentmodel") then
+			owner:AddTag("equipmentmodel")
 		end
-		
-		-- Make them last forever for *aesthetics* A bit op? Yeah, but you're using a mod that gives you 3 extra slots anyway.
-		if hand.components.fueled ~= nil then
-			hand.components.fueled:StopConsuming()
-		end
-		
-		if hand.components.perishable ~= nil then
-			hand.components.perishable:StopPerishing()
-		end
-		
-		-- You wanted to carry two krampus sacks full of items? 💀💀
-		-- Nah buddy, you can't have containers with stuff inside. :steammocking:
-		if hand.components.container ~= nil then
-			hand.components.container:DropEverything()
-			hand.components.container:Close()
-		end
-
-		inst.vanity_hand_equipped = true
-	end
 	
-	if body ~= nil and owner ~= nil then
-		print("VANITY SLOTS [SHOW ITEM]: EQUIPPED [BODY] ITEM:", body, "OWNER:", owner)
-		owner:AddTag("equipmentmodel")
-		if body.components.equippable.onequiptomodelfn then
-			body.components.equippable:Equip(owner)
-			body.components.equippable.onequiptomodelfn(body, owner)
-		end
-		owner:RemoveTag("equipmentmodel")
-		
-		if body.components.fueled ~= nil then
-			body.components.fueled:StopConsuming()
-		end
-		
-		if body.components.perishable ~= nil then
-			body.components.perishable:StopPerishing()
-		end
-		
-		if body.components.container ~= nil then
-			body.components.container:DropEverything()
-			body.components.container:Close()
-		end
+		if vanityitem ~= nil then
+			vanityitem.components.equippable:Equip(owner)
+			if vanityitem.components.equippable.onequiptomodelfn ~= nil then
+				vanityitem.components.equippable.onequiptomodelfn(vanityitem, owner)
+			end
 
-		inst.vanity_body_equipped = true
-	end
-	
-	if head ~= nil and owner ~= nil then
-		print("VANITY SLOTS [SHOW ITEM]: EQUIPPED [HEAD] ITEM:", head, "OWNER:", owner)
-		owner:AddTag("equipmentmodel")
-		if head.components.equippable.onequiptomodelfn then
-			head.components.equippable:Equip(owner)
-			head.components.equippable.onequiptomodelfn(head, owner)
-		end
-		owner:RemoveTag("equipmentmodel")
+			if vanityitem.components.fueled ~= nil then
+				vanityitem.components.fueled:StopConsuming()
+			end
 		
-		if head.components.fueled ~= nil then
-			head.components.fueled:StopConsuming()
-		end
-		
-		if head.components.perishable ~= nil then
-			head.components.perishable:StopPerishing()
-		end
-		
-		if head.components.container ~= nil then
-			head.components.container:DropEverything()
-			head.components.container:Close()
-		end
+			if vanityitem.components.perishable ~= nil then
+				vanityitem.components.perishable:StopPerishing()
+			end
 
-		inst.vanity_head_equipped = true
+			if vanityitem.components.container ~= nil then
+				vanityitem.components.container._restrictedtag = vanityitem.components.container.restrictedtag
+				vanityitem.components.container.restrictedtag = "steammocking"
+				
+				vanityitem.components.container:DropEverything()
+				vanityitem.components.container:Close()
+			end
+
+			owner:RemoveTag("equipmentmodel")
+		end
 	end
 end
 
 local function HideEquippedItem(inst, data, owner)
 	local owner = inst.components.inventoryitem.owner or inst.components.inventoryitem:GetGrandOwner()
-	print("VANITY SLOTS [HIDE ITEM]: FOUND OWNER:", owner)
-
-	local hand = inst.components.container.slots[1]
-	local body = inst.components.container.slots[2]
-	local head = inst.components.container.slots[3]
+	local vanityitem = data.prev_item
+	local vanityslot = data.slot
 	
-	if data.eslot ~= EQUIPSLOTS.VANITY and hand == nil then
-		print("VANITY SLOTS [HIDE ITEM]: UNEQUIPPED [HAND] ITEM:", hand, "OWNER:", owner)
-        return
-    end
+	local realhand = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+	local realbody = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+	local realhead = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
 	
-	if data.eslot ~= EQUIPSLOTS.VANITY and body == nil then
-		print("VANITY SLOTS [HIDE ITEM]: UNEQUIPPED [BODY] ITEM:", body, "OWNER:", owner)
-        return
-    end
+	if owner ~= nil then
+		if owner:HasTag("equipmentmodel") then
+			owner:RemoveTag("equipmentmodel")
+		end
 
-	if data.eslot ~= EQUIPSLOTS.VANITY and head == nil then
-		print("VANITY SLOTS [HIDE ITEM]: UNEQUIPPED [HEAD] ITEM:", head, "OWNER:", owner)
-        return
-    end
+		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+			vanityitem.components.equippable:Unequip(owner)
+
+			if realhand ~= nil then
+				realhand.components.equippable:Unequip(owner)
+				realhand.components.equippable:Equip(owner)
+			end
+
+			if vanityitem.components.container ~= nil then
+				if vanityitem.components.container.restrictedtag == "steammocking" then
+					vanityitem.components.container.restrictedtag = nil
+				else
+					vanityitem.components.container.restrictedtag = vanityitem.components.container._restrictedtag
+				end
+			end
+		end
+	end
 end
 
 local function OnEquip(inst, owner)
@@ -133,26 +112,6 @@ local function OnUnequip(inst, owner)
 	
 	inst:RemoveEventCallback("itemget", inst.ShowEquippedItem, owner)
 	inst:RemoveEventCallback("itemlose", inst.HideEquippedItem, owner)
-end
-
-local function OnSave(inst, data, owner)
-	data.vanity_hand_equipped = inst.vanity_hand_equipped
-	data.vanity_body_equipped = inst.vanity_body_equipped
-	data.vanity_head_equipped = inst.vanity_head_equipped
-end
-
-local function OnLoad(inst, data, owner)
-	if data and data.vanity_hand_equipped then
-		
-	end
-	
-	if data and data.vanity_body_equipped then
-	
-	end
-	
-	if data and data.vanity_head_equipped then
-	
-	end
 end
 
 local function fn()
