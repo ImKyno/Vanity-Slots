@@ -12,6 +12,7 @@ local assets =
 -- TO DO: Fix items not unequipping. --- DONE.
 -- TO DO: Fix real items not re-equipping when vanity items are unequipped. -- DONE.
 -- TO DO: Fix vanity items not re-equipping when real items are unequipped/equipped. --- DONE.
+-- TO DO: Fix rift items making character symbols vanish.
 -- TO DO: Make way to equip backpacks.
 -- TO DO: Make way to prevent equipped containers in vanity slot to hold items. --- DONE.
 -- TO DO: Items that produce light i.e: minerhat, lantern, etc. should always be off when held.
@@ -32,6 +33,8 @@ local function ShowEquippedItem(inst, data, owner)
 	local vanityslot = data.slot
 	
 	if owner ~= nil then
+		owner.AnimState:Hide("LANTERN_OVERLAY") -- Special case for lantern.
+	
 		if vanityitem ~= nil then
 			vanityitem.components.equippable:Equip(owner)
 			

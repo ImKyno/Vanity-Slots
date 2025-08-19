@@ -5,22 +5,24 @@ local ACTIONS    = _G.ACTIONS
 local STRINGS    = _G.STRINGS
 local EQUIPSLOTS = _G.EQUIPSLOTS
 
-local EQUIPSLOTS_TO_SLOT_INDEX_MAP =
+local EQUIPSLOTS_VANITYSLOTS_INDEX =
 {
     [EQUIPSLOTS.HANDS] = 1,
     [EQUIPSLOTS.BODY]  = 2,
     [EQUIPSLOTS.HEAD]  = 3,
 }
 
+local INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX = table.invert(EQUIPSLOTS_VANITYSLOTS_INDEX)
+
 -- Action for equipping items that can't go in inventory as vanity. i.e Backpacks.
 AddAction("EQUIPVANITY", STRINGS.ACTIONS.EQUIPVANITY, function(act)
 	local owner = act.doer or nil
 	local vanityitem = act.target or nil
-	local vanityslots = owner.components.inventory:GetItemInSlot(EQUIPSLOTS_TO_SLOT_INDEX_MAP[vanityitem.components.equippable.equipslot]) or nil
+	local vanityslot = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 	
 	if owner ~= nil then
-		if vanityitem ~= nil then
-			vanityitem.components.equippable:Equip(vanityslots)
+		if vanityslot ~= nil then
+			owner.components.inventory:Equip(vanityitem)
 			return true
 		end
 	end

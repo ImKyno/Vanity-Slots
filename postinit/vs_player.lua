@@ -44,6 +44,10 @@ local function AddVanitySlots(inst)
 			if vanityitem1.components.equippable.onequiptomodelfn ~= nil then
 				vanityitem1.components.equippable.onequiptomodelfn(vanityitem1, inst)
 			end
+			
+			if data.item ~= nil and data.item.components.equippable ~= nil then
+				inst.AnimState:Hide("LANTERN_OVERLAY") -- Special case for lantern.
+			end
 		end
 		
 		if vanityitem2 ~= nil and vanityitem2.components.equippable ~= nil then

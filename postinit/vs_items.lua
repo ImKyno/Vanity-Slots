@@ -32,6 +32,11 @@ end
 AddPrefabPostInitAny(MakeVanityItem)
 
 -- Below is numerous required postinits for some specific items that couldn't be done automatically.
+local VANITY_COMMON_ITEMS =
+{
+
+}
+
 local function OnEquipToModelCommon(inst, owner)
 	
 end

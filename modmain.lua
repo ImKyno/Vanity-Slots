@@ -7,8 +7,8 @@ require("vs_main")
 
 local init_main =
 {
-	-- "vs_actions",
-	-- "vs_stategraphs",
+	"vs_actions",
+	"vs_stategraphs",
 	"vs_widget",
 }
 
