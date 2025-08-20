@@ -14,8 +14,8 @@ local init_main =
 
 local init_postinit =
 {
-	"vs_player",
 	"vs_items",
+	"vs_player",
 }
 
 for _, v in pairs(init_main) do

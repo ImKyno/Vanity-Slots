@@ -7,16 +7,20 @@ local assets =
 	Asset("ANIM", "anim/ui_chest_3x1.zip"),
 }
 
--- TO DO: Fix some persisting effects i.e: alterguardianhat light, minerhat light, ruinshat forcefield, amulet health regen, etc.
 -- TO DO: Fix items disappearing on load. --- DONE.
 -- TO DO: Fix items not unequipping. --- DONE.
 -- TO DO: Fix real items not re-equipping when vanity items are unequipped. -- DONE.
 -- TO DO: Fix vanity items not re-equipping when real items are unequipped/equipped. --- DONE.
--- TO DO: Fix rift items making character symbols vanish.
--- TO DO: Make way to equip backpacks.
 -- TO DO: Make way to prevent equipped containers in vanity slot to hold items. --- DONE.
--- TO DO: Items that produce light i.e: minerhat, lantern, etc. should always be off when held.
--- TO DO: Some items don't have onequiptomodelfn, need to make one for them.
+-- TO DO: Items that produce light i.e: minerhat, lantern, etc. should always be off when held. --- DONE.
+-- TO DO: Some items don't have onequiptomodelfn, need to make one for them. --- DONE.
+
+-- TO DO: Fix rift items making character symbols vanish.
+-- TO DO: Fix vanityslots widget tooltip when opened.
+-- TO DO: Fix cant move item from containers when vanity is equipped.
+-- TO DO: Fix equip/use actions when vanity are equipped.
+-- TO DO: Make way to equip backpacks.
+-- TO DO: Swap equipped item with vanity item.
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX =
 {
@@ -38,8 +42,25 @@ local function ShowEquippedItem(inst, data, owner)
 		if vanityitem ~= nil then
 			vanityitem.components.equippable:Equip(owner)
 			
+			--[[
 			if vanityitem.components.equippable.onequiptomodelfn ~= nil then
 				vanityitem.components.equippable.onequiptomodelfn(vanityitem, owner)
+			end
+			]]--
+			
+			vanityitem:AddTag("vanity_cannotuse")
+			vanityitem:AddTag("vanity_equipped")
+			
+			local realslot = INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslot]
+			local realitem = owner.components.inventory:GetEquippedItem(realslot)
+            
+			if realitem and realitem.prefab == vanityitem.prefab then 
+				print("VANITY SLOTS: VANITY AND EQUIPPED ITEM ARE THE SAME.")
+				print("VANITY SLOTS: YOU SHOULDN'T BE DOING THAT.")
+			else
+				if vanityitem.components.equippable.onequiptomodelfn ~= nil then
+					vanityitem.components.equippable.onequiptomodelfn(vanityitem, owner)
+				end
 			end
 
 			if vanityitem.components.fueled ~= nil then
@@ -54,7 +75,7 @@ local function ShowEquippedItem(inst, data, owner)
 				vanityitem.components.container._restrictedtag = vanityitem.components.container.restrictedtag
 				vanityitem.components.container.restrictedtag = "steammocking"
 				
-				vanityitem.components.container:DropEverything()
+				vanityitem.components.container:DropEverything(owner:GetPosition())
 				vanityitem.components.container:Close()
 			end
 		end
@@ -73,6 +94,9 @@ local function HideEquippedItem(inst, data, owner)
 		if vanityslot ~= nil then
 			if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 				vanityitem.components.equippable:Unequip(owner)
+				
+				vanityitem:RemoveTag("vanity_cannotuse")
+				vanityitem:RemoveTag("vanity_equipped")
 
 				if vanityitem.components.container ~= nil then
 					if vanityitem.components.container.restrictedtag == "steammocking" then

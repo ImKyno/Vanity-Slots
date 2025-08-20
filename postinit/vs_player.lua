@@ -63,6 +63,51 @@ local function AddVanitySlots(inst)
 			vanityitem3.components.equippable:Unequip(inst)
 			vanityitem3.components.equippable:Equip(inst)
 			
+			--[[
+			if vanityitem3.components.equippable.onequiptomodelfn ~= nil then
+				vanityitem3.components.equippable.onequiptomodelfn(vanityitem3, inst)
+			end
+			]]--
+			
+			if data.item and data.item.prefab == vanityitem3.prefab then 
+				print("VANITY SLOTS: EQUIPPED AND VANITY ITEM ARE THE SAME.")
+				print("VANITY SLOTS: YOU SHOULDN'T BE DOING THAT.")
+			else
+				if vanityitem3.components.equippable.onequiptomodelfn ~= nil then
+					vanityitem3.components.equippable.onequiptomodelfn(vanityitem3, inst)
+				end
+			end
+		end
+	end
+	
+	local function SwapToRealItem(inst, data)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityitem1 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+		local vanityitem2 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(2) or nil
+		local vanityitem3 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(3) or nil
+
+		if vanityitem1 ~= nil and vanityitem1.components.equippable ~= nil then
+			vanityitem1.components.equippable:Unequip(inst)
+			vanityitem1.components.equippable:Equip(inst)
+			
+			if vanityitem1.components.equippable.onequiptomodelfn ~= nil then
+				vanityitem1.components.equippable.onequiptomodelfn(vanityitem1, inst)
+			end
+		end
+		
+		if vanityitem2 ~= nil and vanityitem2.components.equippable ~= nil then
+			vanityitem2.components.equippable:Unequip(inst)
+			vanityitem2.components.equippable:Equip(inst)
+			
+			if vanityitem2.components.equippable.onequiptomodelfn ~= nil then
+				vanityitem2.components.equippable.onequiptomodelfn(vanityitem2, inst)
+			end
+		end
+		
+		if vanityitem3 ~= nil and vanityitem3.components.equippable ~= nil then
+			vanityitem3.components.equippable:Unequip(inst)
+			vanityitem3.components.equippable:Equip(inst)
+			
 			if vanityitem3.components.equippable.onequiptomodelfn ~= nil then
 				vanityitem3.components.equippable.onequiptomodelfn(vanityitem3, inst)
 			end
@@ -85,7 +130,7 @@ local function AddVanitySlots(inst)
 	inst:ListenForEvent("death", RemoveVanitySlots)
 	
 	inst:ListenForEvent("equip", SwapToVanityItem)
-	inst:ListenForEvent("unequip", SwapToVanityItem)
+	inst:ListenForEvent("unequip", SwapToRealItem)
 end
 
 AddPlayerPostInit(AddVanitySlots)

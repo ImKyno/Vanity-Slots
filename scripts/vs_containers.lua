@@ -58,16 +58,16 @@ params.vanity_slots =
 }
 
 function params.vanity_slots.itemtestfn(container, item, slot)
-	local isheavy = item:HasTag("heavy")
+	local isforbid = item:HasTag("vanity_item_forbid") or item:HasTag("heavy")
 
 	if slot == 1 then
-		return item:HasTag("vanity_hand") and not isheavy
+		return item:HasTag("vanity_hand") and not isforbid
 	elseif slot == 2 then
-		return item:HasTag("vanity_body") and not isheavy
+		return item:HasTag("vanity_body") and not isforbid
 	elseif slot == 3 then
-		return item:HasTag("vanity_head") or item:HasTag("hat") and not isheavy -- Why only hats have consistent tag?
+		return item:HasTag("vanity_head") and not isforbid
 	elseif slot == nil then
-		return item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head", "hat") and not isheavy
+		return item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head") and not isforbid
 	end
 	
 	return false
