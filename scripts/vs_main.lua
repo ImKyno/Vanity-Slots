@@ -7,7 +7,7 @@ require("strings/vs_strings")
 
 -- Global function for applying common effects to vanity items.
 global("ApplyVanityEffects")
-ApplyVanityEffects = function(vanityitem)
+ApplyVanityEffects = function(vanityitem, owner)
 	if vanityitem == nil then
 		return print("VANITY SLOTS: COULDN'T APPLY VANITY EFFECTS")
 	end
@@ -56,7 +56,7 @@ end
 
 -- Global function for removing common effects from vanity items.
 global("RemoveVanityEffects")
-RemoveVanityEffects = function(vanityitem)
+RemoveVanityEffects = function(vanityitem, owner)
 	if vanityitem == nil then
 		return print("VANITY SLOTS: COULDN'T REMOVE VANITY EFFECTS")
 	end

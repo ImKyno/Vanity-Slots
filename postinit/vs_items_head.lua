@@ -40,8 +40,6 @@ local function CommonPostInit(inst)
 				inst.components.perishable:StopPerishing()
 			end
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -64,8 +62,6 @@ local function CommonPostInit(inst)
 				inst.components.perishable:StartPerishing()
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -124,8 +120,6 @@ local function MushroomHatPostInit(inst)
 			
 			owner:RemoveTag("spoiler")
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -151,8 +145,6 @@ local function MushroomHatPostInit(inst)
 				owner:AddTag("spoiler")
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -173,8 +165,6 @@ local function RuinsHatPostInit(inst)
         end
 		
 		inst.ondetach()
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -183,8 +173,6 @@ local function RuinsHatPostInit(inst)
 				inst.onattach()
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -213,8 +201,6 @@ local function FeatherHatPostInit(inst)
 				end
 			end
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -244,8 +230,6 @@ local function FeatherHatPostInit(inst)
 				end
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -265,8 +249,6 @@ local function BeefaloHatPostInit(inst)
 			
 			owner:RemoveTag("beefalo")
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -285,18 +267,66 @@ local function BeefaloHatPostInit(inst)
 				owner:AddTag("beefalo")
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
 AddPrefabPostInit("beefalohat", BeefaloHatPostInit)
 
------------------------------------------------------------------------------------------------
+local function MinerHatPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		local skin_build = inst:GetSkinBuild()
+		local owner = inst.components.inventoryitem ~= nil 
+        and inst.components.inventoryitem:GetGrandOwner() or nil
+		
+		if owner ~= nil then
+			if inst.components.fueled ~= nil then
+				inst.components.fueled:StopConsuming()
+				
+				if inst.components.fueled.accepting ~= nil then
+					inst.components.fueled.__accepting = inst.components.fueled.accepting
+					inst.components.fueled.accepting = false
+				end
+			end
+			
+			if inst._light ~= nil then
+				if inst._light:IsValid() then
+					inst._light:Remove()
+				end
+				
+				inst._light = nil
+			end
+			
+			if skin_build ~= nil then
+				owner:PushEvent("equipskinneditem", inst:GetSkinName())
+				owner.AnimState:OverrideItemSkinSymbol("swap_hat", skin_build, "swap_hat_off", inst.GUID, "hat_miner")
+			else
+				owner.AnimState:OverrideSymbol("swap_hat", "hat_miner", "swap_hat_off")
+			end
+			
+			owner.AnimState:Show("HAT")
+			owner.AnimState:Show("HAIR_HAT")
+			owner.AnimState:Hide("HAIR_NOHAT")
+			owner.AnimState:Hide("HAIR")
 
--- MINERHAT
+			owner.AnimState:Hide("HEAD")
+			owner.AnimState:Show("HEAD_HAT")
+			owner.AnimState:Show("HEAD_HAT_NOHELM")
+			owner.AnimState:Hide("HEAD_HAT_HELM")
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.accepting ~= nil then
+					inst.components.fueled.accepting = inst.components.fueled.__accepting
+				end
+			end
+		end
+	end
+end
 
------------------------------------------------------------------------------------------------
+AddPrefabPostInit("minerhat", MinerHatPostInit)
 
 local function HiveHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
@@ -307,11 +337,7 @@ local function HiveHatPostInit(inst)
 					owner.components.sanity.neg_aura_absorb = 0
 				end
 			end
-			
-			owner:AddTag("hive_sanity_aura")
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -326,8 +352,6 @@ local function HiveHatPostInit(inst)
 				end
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -341,8 +365,6 @@ local function SkeletonHatPostInit(inst)
 				owner:RemoveTag("shadowdominance")
 			end
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -354,8 +376,6 @@ local function SkeletonHatPostInit(inst)
 				end
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -370,8 +390,6 @@ local function AntlionHatPostInit(inst)
 			
 			inst:RemoveTag("turfhat")
 		end
-		
-		inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -384,16 +402,57 @@ local function AntlionHatPostInit(inst)
 			
 			inst:AddTag("turfhat")
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
 AddPrefabPostInit("antlionhat", AntlionHatPostInit)
 
 local function PollyRogersHatPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.components.fueled ~= nil then
+				inst.components.fueled:StopConsuming()
+				
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.__no_sewing = inst.components.fueled.no_sewing
+					inst.components.fueled.no_sewing = true
+				end
+			end
+			
+			if inst.pollytask then
+				inst.pollytask:Cancel()
+				inst.pollytask = nil
+			end
+
+			if inst.polly then
+				inst.polly.flyaway = true
+				inst.polly:PushEvent("flyaway")
+			end
+		end
+	end
 	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
+				
+				if inst.components.equippable:IsEquipped() then
+					inst.components.fueled:StartConsuming()
+				end
+			end
+			
+			if inst.components.equippable:IsEquipped() then
+				if inst.components.spawner ~= nil and not inst.polly and not inst.components.spawner:IsSpawnPending() then
+					inst.components.spawner:ReleaseChild()
+				end
+			end
+		end
+	end
 end
+
+AddPrefabPostInit("polly_rogershat", PollyRogersHatPostInit)
 
 local function MonkeySmallHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
@@ -409,8 +468,6 @@ local function MonkeySmallHatPostInit(inst)
 			
 			owner:RemoveTag("master_crewman")
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -429,8 +486,6 @@ local function MonkeySmallHatPostInit(inst)
 				owner:AddTag("master_crewman")
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -450,8 +505,6 @@ local function MonkeyMediumHatPostInit(inst)
 			
 			owner:RemoveTag("boat_health_buffer")
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -470,8 +523,6 @@ local function MonkeyMediumHatPostInit(inst)
 				owner:AddTag("boat_health_buffer")
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -492,8 +543,6 @@ local function MonocleHatPostInit(inst)
 			owner:RemoveCameraExtraDistance(inst)
 			owner:RemoveTag("scrapmonolevision")
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -513,8 +562,6 @@ local function MonocleHatPostInit(inst)
 				owner:AddTag("scrapmonolevision")
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
@@ -535,8 +582,6 @@ local function BatNoseHatPostInit(inst)
 				owner.components.foodmemory:RememberFood("hungerregenbuff")
 			end
 		end
-		
-		-- inst:AddTag("vanity_equipped")
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
@@ -555,9 +600,57 @@ local function BatNoseHatPostInit(inst)
 				end
 			end
 		end
-		
-		-- inst:RemoveTag("vanity_equipped")
 	end
 end
 
 AddPrefabPostInit("batnosehat", BatNoseHatPostInit)
+
+local function DreadstoneHatPostInit(inst)
+	inst.dreadstone_doregen = function(inst, owner)
+		if owner.components.sanity ~= nil and owner.components.sanity:IsInsanityMode() then
+			local setbonus = inst.components.setbonus ~= nil and inst.components.setbonus:IsEnabled(EQUIPMENTSETNAMES.DREADSTONE)
+			and TUNING.ARMOR_DREADSTONE_REGEN_SETBONUS or 1
+			
+			local rate = 1 / _G.Lerp(1 / TUNING.ARMOR_DREADSTONE_REGEN_MAXRATE, 1 / TUNING.ARMOR_DREADSTONE_REGEN_MINRATE, owner.components.sanity:GetPercent())
+			inst.components.armor:Repair(inst.components.armor.maxcondition * rate * setbonus)
+		end
+		
+		if not inst.components.armor:IsDamaged() then
+			inst.regentask:Cancel()
+			inst.regentask = nil
+		end
+	end
+	
+	inst.dreadstone_startregen = function(inst, owner)
+		if inst.regentask == nil then
+			inst.regentask = inst:DoPeriodicTask(TUNING.ARMOR_DREADSTONE_REGEN_PERIOD, inst.dreadstone_doregen, nil, owner)
+		end
+	end
+	
+	inst.dreadstone_stopregen = function(inst)
+		if inst.regentask ~= nil then
+			inst.regentask:Cancel()
+			inst.regentask = nil
+		end
+	end
+	
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			inst.dreadstone_stopregen(inst)
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if owner.components.sanity ~= nil then
+				if inst.components.equippable:IsEquipped() and inst.components.armor:IsDamaged() then
+					inst.dreadstone_startregen(inst, owner)
+				else
+					inst.dreadstone_stopregen(inst)
+				end
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("dreadstonehat", DreadstoneHatPostInit)

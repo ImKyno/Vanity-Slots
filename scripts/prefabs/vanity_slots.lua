@@ -44,7 +44,7 @@ local function ShowEquippedItem(inst, data, owner)
 					vanityitem.onequipvanity(vanityitem, inst)
 				end
 			else
-				ApplyVanityEffects(vanityitem)
+				ApplyVanityEffects(vanityitem, owner)
 			end
 		end
 	end
@@ -63,7 +63,7 @@ local function HideEquippedItem(inst, data, owner)
 			if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 				vanityitem.components.equippable:Unequip(owner)
 				
-				RemoveVanityEffects(vanityitem)
+				RemoveVanityEffects(vanityitem, owner)
 				
 				-- Show any real item if its equipped.
 				if realitem ~= nil and realitem.components.equippable ~= nil then

@@ -51,7 +51,7 @@ local function AddVanitySlots(inst)
 				end
 			end
 			
-			_G.ApplyVanityEffects(vanityitem)
+			_G.ApplyVanityEffects(vanityitem, inst)
 		end
 	end
 	
