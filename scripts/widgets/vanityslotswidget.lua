@@ -9,24 +9,6 @@ local TextButton  = require("widgets/textbutton")
 local W_SCALE     = .2
 local W_ATLAS     = "images/crafting_menu_icons.xml"
 
-local function ToggleVanitySlots()	
-	local vanitycontainer = ThePlayer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-	
-	if vanitycontainer and not vanitycontainer.replica.container:IsOpenedBy(ThePlayer) then
-		vanitycontainer.replica.container:Open(ThePlayer)
-	else
-		vanitycontainer.replica.container:Close(ThePlayer)
-	end
-end
-
-local function CloseVanitySlots()
-	local vanitycontainer = ThePlayer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-	
-	if vanitycontainer then
-		vanitycontainer.replica.container:Close(ThePlayer)
-	end
-end
-
 -- GOD I hate making widgets...
 local VanitySlots = Class(Widget, function(self)
 	Widget._ctor(self, "Vanity Slots")
@@ -37,16 +19,38 @@ local VanitySlots = Class(Widget, function(self)
 	self.vanitySlotsBtn = self.root:AddChild(ImageButton(W_ATLAS, "filter_warable.tex", nil, nil, nil, nil, {1,1}, {0,0}))
 	self.vanitySlotsBtn:SetPosition(0, 0, 0)
 	self.vanitySlotsBtn:SetScale(W_SCALE, W_SCALE, W_SCALE)
-	self.vanitySlotsBtn:SetOnClick(ToggleVanitySlots)
+	
+	-- self.vanitySlotsBtn:SetOnClick(ToggleVanitySlots)
+	self.vanitySlotsBtn:SetOnClick(function() 
+		local vanitycontainer = ThePlayer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+	
+		if vanitycontainer and not vanitycontainer.replica.container:IsOpenedBy(ThePlayer) then
+			vanitycontainer.replica.container:Open(ThePlayer)
+			self.VanitySlotsShown = true
+			self:RefreshTooltips()
+		else
+			vanitycontainer.replica.container:Close(ThePlayer)
+			self.VanitySlotsShown = false
+			self:RefreshTooltips()
+		end
+	end)
 	
 	-- TO DO: Create setting to let player decide if container starts open or closed.
-	if not TUNING.VANITYSLOT_STARTOPEN then
-		self.inst:DoTaskInTime(0, CloseVanitySlots)
+	if not TUNING.VANITYSLOTS_STARTOPEN then
+		self.inst:DoTaskInTime(0, function()
+			local vanitycontainer = ThePlayer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+	
+			if vanitycontainer then
+				vanitycontainer.replica.container:Close(ThePlayer)				
+				self.VanitySlotsShown = false
+				self:RefreshTooltips()
+			end
+		end)
 	end
 	
 	self.VanitySlotsShown = false
 	self:RefreshTooltips()
-	self:ShowButton()
+	-- self:ShowButton()
 	
 	-----------------------------------------------------------------------------------------------------------------
 	-- Shows x/y position on the screen for easy lookup.
@@ -86,10 +90,12 @@ end
 
 function VanitySlots:ShowButton()
     self.vanitySlotsBtn:Show()
+	self:RefreshTooltips()
 end
 
 function VanitySlots:HideButton()
     self.vanitySlotsBtn:Hide()
+	self:RefreshTooltips()
 end
 
 return VanitySlots

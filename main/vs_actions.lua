@@ -20,10 +20,16 @@ AddAction("EQUIPVANITY", STRINGS.ACTIONS.EQUIPVANITY, function(act)
 	local owner = act.doer
 	local vanityitem = act.target
 	local vanityslot = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-	
-	if owner ~= nil then
-		if vanityslot and vanityitem then
-			vanityslot.components.container:GiveItem(vanityitem, vanityslot, vanityitem:GetPosition())
+	local equipslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslot.components.equippable.equipslot]
+
+	if owner ~= nil and vanityitem ~= nil then
+		if vanityitem.onequipvanity ~= nil then
+			vanityitem.onequipvanity(vanityitem, owner)
+		end
+		
+		if vanityslot ~= nil then
+			-- vanityitem.components.inventoryitem.cangoincontainer = true
+			vanityslot.components.container:GiveItem(vanityitem, equipslot, vanityitem:GetPosition())
 			return true
 		end
 	end
@@ -41,21 +47,79 @@ AddComponentAction("SCENE", "inventoryitem", function(inst, doer, actions, right
 	end
 end)
 
--- Hack to prevent players from using tophat container when equipped as vanity.
+-- Hack to prevent players from doing actions when item is equipped as vanity.
 local COMPONENT_ACTIONS = UpvalueHacker.GetUpvalue(_G.EntityScript.CollectActions, "COMPONENT_ACTIONS")
 local INVENTORY = COMPONENT_ACTIONS.INVENTORY
+local USEITEM = COMPONENT_ACTIONS.USEITEM
 
 local _INVENTORY_magiciantool = INVENTORY.magiciantool
-function INVENTORY.magiciantool(inst, doer, actions, right)
-	if doer:HasTag("magician") and not inst:HasTag("vanity_cannotuse") then
-		if not doer.components.playercontroller.isclientcontrollerattached and
-		(right or doer.components.playercontroller:IsControlPressed(CONTROL_FORCE_INSPECT)) then
-			table.insert(actions, ACTIONS.USEMAGICTOOL)
-		else
-			local equippable = inst.replica.equippable		
-			if equippable ~= nil and equippable:IsEquipped() and not inst:HasTag("vanity_cannotuse") then
-				table.insert(actions, ACTIONS.USEMAGICTOOL)
-			end
-		end
+function INVENTORY.magiciantool(inst, ...)
+	if inst:HasTag("vanity_equipped") then 
+		return
+	else 
+		return _INVENTORY_magiciantool(inst, ...) 
+	end
+end
+
+local _INVENTORY_equippable = INVENTORY.equippable
+function INVENTORY.equippable(inst, ...)
+	if inst:HasTag("vanity_equipped") then
+		return
+	else
+		return _INVENTORY_equippable(inst, ...)
+	end
+end
+
+local _USEITEM_ghostlyelixir = USEITEM.ghostlyelixir
+function USEITEM.ghostlyelixir(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_ghostlyelixir(inst, doer, target, ...)
+	end
+end
+
+local _USEITEM_repairer = USEITEM.repairer
+function USEITEM.repairer(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_repairer(inst, doer, target, ...)
+	end
+end
+
+local _USEITEM_sewing = USEITEM.sewing
+function USEITEM.sewing(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_sewing(inst, doer, target, ...)
+	end
+end
+
+local _USEITEM_edible = USEITEM.edible
+function USEITEM.edible(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_edible(inst, doer, target, ...)
+	end
+end
+
+local _INVENTORY_container = INVENTORY.container
+function INVENTORY.container(inst, ...)
+	if inst:HasTag("vanity_equipped") then
+		return
+	else
+		return _INVENTORY_container(inst, ...)
+	end
+end
+
+local _USEITEM_inventoryitem = USEITEM.inventoryitem
+function USEITEM.inventoryitem(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_inventoryitem(inst, doer, target, ...)
 	end
 end

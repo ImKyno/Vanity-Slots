@@ -10,124 +10,79 @@ local EQUIPSLOTS_VANITYSLOTS_INDEX =
     [EQUIPSLOTS.HEAD]  = 3,
 }
 
+local INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX = table.invert(EQUIPSLOTS_VANITYSLOTS_INDEX)
+
 local function AddVanitySlots(inst)
 	local function RemoveVanitySlots(inst)
-		local vanitycontainer = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		
-		if vanitycontainer then
-			vanitycontainer.components.container:DropEverything()
-			vanitycontainer:Remove()
+		if vanityslots then
+			vanityslots.components.container:DropEverything()
+			vanityslots:Remove()
 		end
 	end
 	
 	local function CheckVanitySlots(inst, owner)
-		local vanitycontainer = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		
-		if not vanitycontainer then
-			inst.components.vanityslot:UpdateVanitySlotInventory()
+		if not vanityslots then
+			inst.components.vanityslots:UpdateVanitySlotsInventory()
 		end
 	end
 	
 	local function SwapToVanityItem(inst, data)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-		-- local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
-		-- print("VANITY SLOTS: EQUIPSLOTS INDEX:", _G.dumptable(EQUIPSLOTS_VANITYSLOTS_INDEX))
-		-- print("VANITY SLOTS:", data.eslot, EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot], vanityitem)
-		local vanityitem1 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
-		local vanityitem2 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(2) or nil
-		local vanityitem3 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(3) or nil
-
-		if vanityitem1 ~= nil and vanityitem1.components.equippable ~= nil then
-			vanityitem1.components.equippable:Unequip(inst)
-			vanityitem1.components.equippable:Equip(inst)
-			
-			if vanityitem1.components.equippable.onequiptomodelfn ~= nil then
-				vanityitem1.components.equippable.onequiptomodelfn(vanityitem1, inst)
-			end
-			
-			if data.item ~= nil and data.item.components.equippable ~= nil then
-				inst.AnimState:Hide("LANTERN_OVERLAY") -- Special case for lantern.
-			end
-		end
+		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
+		local realitem = data.item
 		
-		if vanityitem2 ~= nil and vanityitem2.components.equippable ~= nil then
-			vanityitem2.components.equippable:Unequip(inst)
-			vanityitem2.components.equippable:Equip(inst)
+		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+			vanityitem.components.equippable:Unequip(inst)
+			vanityitem.components.equippable:Equip(inst)
 			
-			if vanityitem2.components.equippable.onequiptomodelfn ~= nil then
-				vanityitem2.components.equippable.onequiptomodelfn(vanityitem2, inst)
-			end
-		end
-		
-		if vanityitem3 ~= nil and vanityitem3.components.equippable ~= nil then
-			vanityitem3.components.equippable:Unequip(inst)
-			vanityitem3.components.equippable:Equip(inst)
-			
-			--[[
-			if vanityitem3.components.equippable.onequiptomodelfn ~= nil then
-				vanityitem3.components.equippable.onequiptomodelfn(vanityitem3, inst)
-			end
-			]]--
-			
-			if data.item and data.item.prefab == vanityitem3.prefab then 
-				print("VANITY SLOTS: EQUIPPED AND VANITY ITEM ARE THE SAME.")
+			if realitem and realitem.prefab == vanityitem.prefab then 
+				print("VANITY SLOTS: EQUIPPED/VANITY ITEM ARE THE SAME.")
 				print("VANITY SLOTS: YOU SHOULDN'T BE DOING THAT.")
+				if vanityitem.onequipvanity ~= nil then
+					vanityitem.onequipvanity(vanityitem, vanityslots)
+				end
 			else
-				if vanityitem3.components.equippable.onequiptomodelfn ~= nil then
-					vanityitem3.components.equippable.onequiptomodelfn(vanityitem3, inst)
+				if vanityitem.onequipvanity ~= nil then
+					vanityitem.onequipvanity(vanityitem, inst)
 				end
 			end
+			
+			_G.ApplyVanityEffects(vanityitem)
 		end
 	end
 	
 	local function SwapToRealItem(inst, data)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-		local vanityitem1 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
-		local vanityitem2 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(2) or nil
-		local vanityitem3 = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(3) or nil
+		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
 
-		if vanityitem1 ~= nil and vanityitem1.components.equippable ~= nil then
-			vanityitem1.components.equippable:Unequip(inst)
-			vanityitem1.components.equippable:Equip(inst)
+		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then	
+			vanityitem.components.equippable:Unequip(inst)
+			vanityitem.components.equippable:Equip(inst)
 			
-			if vanityitem1.components.equippable.onequiptomodelfn ~= nil then
-				vanityitem1.components.equippable.onequiptomodelfn(vanityitem1, inst)
-			end
-		end
-		
-		if vanityitem2 ~= nil and vanityitem2.components.equippable ~= nil then
-			vanityitem2.components.equippable:Unequip(inst)
-			vanityitem2.components.equippable:Equip(inst)
-			
-			if vanityitem2.components.equippable.onequiptomodelfn ~= nil then
-				vanityitem2.components.equippable.onequiptomodelfn(vanityitem2, inst)
-			end
-		end
-		
-		if vanityitem3 ~= nil and vanityitem3.components.equippable ~= nil then
-			vanityitem3.components.equippable:Unequip(inst)
-			vanityitem3.components.equippable:Equip(inst)
-			
-			if vanityitem3.components.equippable.onequiptomodelfn ~= nil then
-				vanityitem3.components.equippable.onequiptomodelfn(vanityitem3, inst)
+			if vanityitem.onequipvanity ~= nil then
+				vanityitem.onequipvanity(vanityitem, inst)
 			end
 		end
 	end
 
-	inst:AddTag("vanityslotowner")
+	inst:AddTag("vanityslotsowner")
 
 	if not _G.TheWorld.ismastersim then	
 		return inst
 	end
 	
-	inst:AddComponent("vanityslot")
-	inst.components.vanityslot.bits = 3
-	
-	inst.CheckVanitySlots = CheckVanitySlots
-	inst:DoTaskInTime(0, CheckVanitySlots)
+	inst:AddComponent("vanityslots")
+	inst.components.vanityslots.bits = 3
 	
 	inst.RemoveVanitySlots = RemoveVanitySlots
 	inst:ListenForEvent("death", RemoveVanitySlots)
+	
+	inst.CheckVanitySlots = CheckVanitySlots
+	inst:DoTaskInTime(0, CheckVanitySlots)
 	
 	inst:ListenForEvent("equip", SwapToVanityItem)
 	inst:ListenForEvent("unequip", SwapToRealItem)

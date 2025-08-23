@@ -17,7 +17,7 @@ function containers.widgetsetup(container, prefab, data, ...)
 	end
 end
 
--- I don't think its possible to make a vanity slot that 
+-- I don't think its possible to make a equip slot that 
 -- Does not conflict with equippable and inventory components and other slot mods (?) 
 -- So... we are making a container attached to the player instead 💀💀
 
@@ -26,7 +26,6 @@ end
 -- lose my sanity while making it compatible with pesky mods that add 100 inv slots.
 
 -- TO DO: Make position compatible with mods that change the inventory size... (?)
--- TO DO: Prevent equipping heavy objects i.e statues, sunkenchest, etc.
 params.vanity_slots =
 {
 	widget =
@@ -72,6 +71,8 @@ function params.vanity_slots.itemtestfn(container, item, slot)
 	
 	return false
 end
+
+params.vanity_slots.priorityfn = params.vanity_slots.itemtestfn
 
 -- References:
 -- pos = Vector3(310, -29, 0), -- hand_inv 

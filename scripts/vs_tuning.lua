@@ -1,10 +1,81 @@
 -- Change to false if you want the container to start closed.
-TUNING.VANITYSLOT_STARTOPEN = true
+TUNING.VANITYSLOTS_STARTOPEN = true
 
-TUNING.VANITY_COMMON_ITEMS =
+TUNING.VANITY_COMMON_HEAD_ITEMS =
 {
-	"featherhat",
-	"minerhat",
+	"head_test",
+	--[[
+	"balloonhat",
+	"beehat",
+	"bushhat",
+	"catcoonhat",
+	"cookiecutterhat",
+	"deserthat",
+	"dragonbodyhat",
+	"dragonheadhat",
+	"dragontailhat",
+	"dreadstonehat",
+	"earmuffshat",
+	"eyebrellahat",
+	"eyemaskhat",
+	"flowerhat",
+	"footballhat",
+	"ghostflowerhat",
+	"goggleshat",
+	"icehat",
+	"kelphat",
+	"mask_blacksmithhat",
+	"mask_dollbrokenhat",
+	"mask_dollhat",
+	"mask_dollrepairedhat",
+	"mask_foolhat",
+	"mask_halfwithat",
+	"mask_kinghat",
+	"mask_mirrorhat",
+	"mask_queenhat",
+	"mask_sagehat",
+	"mask_toadyhat",
+	"mask_treehat",
+	"mermhat",
+	"molehat",
+	"moonstorm_goggleshat",
+	"nightcaphat",
+	"nutrientsgoggleshat",
+	"plantregistryhat",
+	"rabbithat",
+	"rainhat",
+	"roseglasses",
+	"scraphat",
+	"slurtlehat",
+	"spiderhat",
+	"strawhat",
+	"tophat",
+	"walrushat",
+	"walterhat",
+	"watermelonhat",
+	"wathgrithr_improvedhat",
+	"wathgrithrhat",
+	"winterhat",
+	"woodcarvedhat",
+	]]--
+}
+
+TUNING.VANITY_MUSHROOM_HEAD_ITEMS =
+{
+	"red_mushroomhat",
+	"green_mushroomhat",
+	"blue_mushroomhat",
+	"moon_mushroomhat",
+}
+
+TUNING.VANITY_COMMON_BODY_ITEMS =
+{
+	"body_test",
+}
+
+TUNING.VANITY_COMMON_HANDS_ITEMS =
+{
+	"hands_test",
 }
 
 -- Items that can't go in containers.

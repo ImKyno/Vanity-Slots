@@ -3,7 +3,10 @@ version                     = "1.0-A"
 
 description                 = 
 [[
-󰀄 Adds Head and Clothing cosmetic slots to express your fashion desires without the need to give up on your equipment!
+󰀞 Adds Cosmetic Slots for Hands, Body and Head to express your fashion desires without the need to give up on your actual equipment!
+
+󰀖 Ever wanted to use that item skin but wouldn't simple because the item isn't that great? Fear not! Now you can use any equippable item
+without worrying about to have it really equipped. Travel the Constant in a sizzling style!
 
 󰀌 Mod Version: 1.0-A
 󰀧 Update: Mod Launch
@@ -11,12 +14,13 @@ description                 =
 
 author                      = "Kyno"
 api_version                 = 10
+priority                    = -1 -- Above 0 = Override other mods. | Below 0 = Overriden by other mods.
 
 dst_compatible              = true
 all_clients_require_mod     = true
 client_only_mod             = false
 
-server_filter_tags          = {"Cosmetic Slots", "Vanity Slots", "Entertainment", "Kyno"}
+server_filter_tags          = {"Cosmetic Slots", "Vanity Slots", "CMS", "Entertainment", "Kyno"}
 
-icon                        = "ModiconTCS.tex"
-icon_atlas                  = "ModiconTCS.xml"
+icon                        = "ModiconCMS.tex"
+icon_atlas                  = "ModiconCMS.xml"

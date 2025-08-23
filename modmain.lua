@@ -15,6 +15,7 @@ local init_main =
 local init_postinit =
 {
 	"vs_items",
+	"vs_items_head",
 	"vs_player",
 }
 

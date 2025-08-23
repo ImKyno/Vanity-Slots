@@ -1,11 +1,11 @@
 local function OnRespawn(inst)
-    inst.components.vanityslot:Reset()
+    inst.components.vanityslots:Reset()
 end
 
-local VanitySlot = Class(function(self, inst)
+local VanitySlots = Class(function(self, inst)
 	self.inst = inst
 
-	inst:AddTag("vanityslotowner")
+	inst:AddTag("vanityslotsowner")
 
 	self.callbacks = {}
 	self.bits = 3
@@ -15,40 +15,40 @@ local VanitySlot = Class(function(self, inst)
 	inst:ListenForEvent("ms_respawnedfromghost", OnRespawn)
 end)
 
-function VanitySlot:OnRemoveFromEntity()
-	self.inst:RemoveTag("vanityslotowner")
+function VanitySlots:OnRemoveFromEntity()
+	self.inst:RemoveTag("vanityslotsowner")
 	
 	self.inst:RemoveEventCallback("ms_respawnedfromghost", OnRespawn)
 end
 
-function VanitySlot:Reset()
-	self.bits = 3 
+function VanitySlots:Reset()
+	self.bits = 3
 	
 	if self.onreset ~= nil then
 		self.onreset(self.inst)
 	end
 	
-	self:UpdateVanitySlotInventory()
+	self:UpdateVanitySlotsInventory()
 end
 
-function VanitySlot:OnSave()
+function VanitySlots:OnSave()
 	return
 	{
 		bits = self.bits,
 	}
 end
 
-function VanitySlot:OnLoad(data)
+function VanitySlots:OnLoad(data)
 	if data.bits ~= nil then
 		self.bits = data.bits
 	end
 end
 
-function VanitySlot:LoadPostPass(newents, data)
-	self:UpdateVanitySlotInventory()
+function VanitySlots:LoadPostPass(newents, data)
+	self:UpdateVanitySlotsInventory()
 end
 
-function VanitySlot:UpdateVanitySlotInventory()
+function VanitySlots:UpdateVanitySlotsInventory()
 	local vanityslots = nil
 	
 	if self.bits >= 3 then
@@ -57,6 +57,19 @@ function VanitySlot:UpdateVanitySlotInventory()
 	
 	local vanitycontainer = self.inst.components.inventory and self.inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 	
+	if vanityslots then
+		if not vanitycontainer then
+			local newcontainer = SpawnPrefab(vanityslots)
+			self.inst.components.inventory:Equip(newcontainer)
+		else
+			if vanitycontainer then
+				vanitycontainer.components.container:DropEverything()
+				vanitycontainer:Remove()
+			end
+		end
+	end
+	
+	--[[
 	if vanityslots then
 		if not vanitycontainer then
 			-- Has slots but no container. Give one container.
@@ -82,6 +95,7 @@ function VanitySlot:UpdateVanitySlotInventory()
 			vanitycontainer:Remove()
 		end
 	end
+	]]--
 end
 
-return VanitySlot
+return VanitySlots
