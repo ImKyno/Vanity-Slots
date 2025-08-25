@@ -70,6 +70,24 @@ function INVENTORY.equippable(inst, ...)
 	end
 end
 
+local _INVENTORY_container = INVENTORY.container
+function INVENTORY.container(inst, ...)
+	if inst:HasTag("vanity_equipped") then
+		return
+	else
+		return _INVENTORY_container(inst, ...)
+	end
+end
+
+local _INVENTORY_useableitem = INVENTORY.useableitem
+function INVENTORY.useableitem(inst, ...)
+	if inst:HasTag("vanity_equipped") then
+		return 
+	else
+		return _INVENTORY_useableitem(inst, ...)
+	end
+end
+
 local _USEITEM_ghostlyelixir = USEITEM.ghostlyelixir
 function USEITEM.ghostlyelixir(inst, doer, target, ...)
 	if target:HasTag("vanity_equipped") then
@@ -103,15 +121,6 @@ function USEITEM.edible(inst, doer, target, ...)
 		return
 	else
 		return _USEITEM_edible(inst, doer, target, ...)
-	end
-end
-
-local _INVENTORY_container = INVENTORY.container
-function INVENTORY.container(inst, ...)
-	if inst:HasTag("vanity_equipped") then
-		return
-	else
-		return _INVENTORY_container(inst, ...)
 	end
 end
 

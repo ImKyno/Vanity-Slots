@@ -46,6 +46,11 @@ local function ShowEquippedItem(inst, data, owner)
 			else
 				ApplyVanityEffects(vanityitem, owner)
 			end
+			
+			if realitem ~= nil and realitem.fx ~= nil then
+				realitem.fx:Remove()
+				realitem.fx = nil
+			end
 		end
 	end
 end
@@ -92,7 +97,6 @@ local function InitVanitySlots(inst, owner)
 	if inst.components.container ~= nil then
 		for slot, item in pairs(inst.components.container.slots) do
 			ShowEquippedItem(inst, {item = item, slot = slot}, owner)
-			print(ShowEquippedItem)
 		end
 	end
 end
@@ -141,7 +145,7 @@ local function fn()
 	inst:ListenForEvent("itemget", ShowEquippedItem)
 	inst:ListenForEvent("itemlose", HideEquippedItem)
 	
-	-- Need this because stupid OnLoad won't run equip event.
+	-- Need this because stupid OnLoad won't call equip event.
 	inst:DoTaskInTime(0, InitVanitySlots)
 
     return inst

@@ -5,7 +5,7 @@ require("vs_tuning")
 require("vs_upvaluehacker")
 require("strings/vs_strings")
 
--- Global function for applying common effects to vanity items.
+-- Function for applying common effects to vanity items.
 global("ApplyVanityEffects")
 ApplyVanityEffects = function(vanityitem, owner)
 	if vanityitem == nil then
@@ -54,7 +54,7 @@ ApplyVanityEffects = function(vanityitem, owner)
 	end
 end
 
--- Global function for removing common effects from vanity items.
+-- Function for removing common effects from vanity items.
 global("RemoveVanityEffects")
 RemoveVanityEffects = function(vanityitem, owner)
 	if vanityitem == nil then

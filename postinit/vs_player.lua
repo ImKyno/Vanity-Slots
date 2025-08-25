@@ -51,6 +51,12 @@ local function AddVanitySlots(inst)
 				end
 			end
 			
+			-- "Hide" animated items for client, fx still exists in the server.
+			if realitem ~= nil and realitem.fx ~= nil then
+				realitem.fx:Remove()
+				realitem.fx = nil
+			end
+			
 			_G.ApplyVanityEffects(vanityitem, inst)
 		end
 	end
