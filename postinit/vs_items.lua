@@ -29,8 +29,6 @@ end
 
 AddPrefabPostInitAny(MakeVanityItem)
 
--- Below is numerous required postinits for some specific items that couldn't be done automatically.
-
 -- Items that can't go in containers.
 local function RestrictedItemsPostInit(inst)
 	inst:AddTag("vanity_item_restricted")

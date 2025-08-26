@@ -24,7 +24,7 @@ TUNING.VANITY_MUSHROOM_HEAD_ITEMS =
 	"moon_mushroomhat",
 }
 
-TUNING.VANITY_USEABLE_HEAD_ITEMS =
+TUNING.VANITY_USEABLEITEM_HEAD_ITEMS =
 {
 	"bushhat",
 	"plantregistryhat",
@@ -53,4 +53,5 @@ TUNING.VANITY_FORBID_ITEMS =
 	"mermarmorhat",
 	"mermarmorupgradedhat",
 	"rooknose",
+	-- And all other statues, oversized crops, etc.
 }

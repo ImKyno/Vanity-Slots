@@ -5,6 +5,28 @@ require("vs_tuning")
 require("vs_upvaluehacker")
 require("strings/vs_strings")
 
+-- Function to fix issues when vanity item is equipped when hiding.
+global("ReEquipVanityItemHead")
+ReEquipVanityItemHead = function(vanityitem, owner)
+	if vanityitem == nil then
+		return
+	end
+
+	local realitem = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
+	local skin_build = realitem:GetSkinBuild()
+		
+	if realitem ~= nil then
+		local prefab = string.gsub(realitem.prefab, "hat", "")
+
+		if skin_build ~= nil then
+			owner:PushEvent("equipskinneditem", realitem:GetSkinName())
+			owner.AnimState:OverrideItemSkinSymbol("swap_hat", skin_build, "swap_hat", realitem.GUID, "hat_"..prefab)
+		else
+			owner.AnimState:OverrideSymbol("swap_hat", "hat_"..prefab, "swap_hat")
+		end
+	end
+end
+
 -- Function for applying common effects to vanity items.
 global("ApplyVanityEffects")
 ApplyVanityEffects = function(vanityitem, owner)
@@ -34,13 +56,25 @@ ApplyVanityEffects = function(vanityitem, owner)
 			if vanityitem.components.fueled.no_sewing ~= nil then
 				vanityitem.components.fueled.__no_sewing = vanityitem.components.fueled.no_sewing
 				vanityitem.components.fueled.no_sewing = true
-				end
 			end
+		end
 			
 		if vanityitem.components.perishable ~= nil then
 			vanityitem.components.perishable:StopPerishing()
 		end
 	end
+
+	-- Case where vanity item is equipped when hiding.
+	local statename = owner.sg.currentstate.name
+	if statename == "hide" then
+		ReEquipVanityItemHead(vanityitem, owner)
+	end
+
+	--[[
+	elseif statename ~= "shell_idle" or statename ~= "shell_hit" then
+		ReEquipVanityItemBody(vanityitem, owner)
+	end
+	]]--
 			
 	-- You wanted to carry two krampus sacks full of items? 💀💀
 	-- Nah bro, you can't have containers with stuff inside. :steammocking:

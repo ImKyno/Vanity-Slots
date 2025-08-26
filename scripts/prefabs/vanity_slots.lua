@@ -10,7 +10,6 @@ local assets =
 -- TO DO: Fix rift items making character symbols vanish.
 -- TO DO: Fix vanityslots widget tooltip when opened.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
--- TO DO: Fix equip/use actions when vanity are equipped.
 -- TO DO: Fix items that can't go in container not swapping with equipped vanity.
 -- TO DO: Fix widget from appearing when dead.
 -- TO DO: Make way to equip backpacks.

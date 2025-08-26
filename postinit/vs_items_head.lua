@@ -6,11 +6,10 @@ local EQUIPSLOTS   = _G.EQUIPSLOTS
 require("vs_tuning")
 
 -- TO DO: Fix these items:
--- bushhat (player invisible if use when equipped as real item)
+-- bushhat (player invisible when equipping vanity animated hat)
 
--- rabbithat (dont hide when vanity equipped)
 -- alterguardianhat (gives light when vanity)
--- wagpunkhat (dont hide when vanity equipped, crashes)
+-- wagpunkhat (fx does not update when vanity is equipped)
 -- voidclothhat (dont hide when vanity equipped)
 -- lunarplanthat (dont hide when vanity equipped)
 
@@ -655,49 +654,89 @@ end
 
 AddPrefabPostInit("dreadstonehat", DreadstoneHatPostInit)
 
-local function BushHatPostInit(inst)
-	inst.stopusingbush = function(inst, data)
-		local hat = inst.components.inventory ~= nil and inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
-		
-		if hat ~= nil and hat.components.useableitem ~= nil and data.statename ~= "hide" then
-			hat.components.useableitem:StopUsingItem()
-		end
-	end
-	
+local function UseableItemHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
-			inst:RemoveEventCallback("newstate", inst.stopusingbush, owner)
+			inst:RemoveAllEventCallbacks()
+		end
+	end
+end
+
+for k, item in pairs(TUNING.VANITY_USEABLEITEM_HEAD_ITEMS) do
+	AddPrefabPostInit(item, UseableItemHatPostInit)
+end
+
+local function WagpunkHatPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			inst:RemoveAllEventCallbacks()
+			
+			if inst._wearer ~= nil then
+				inst._wearer:set(nil)
+			end
+			
+			if owner ~= nil and owner.components.combat ~= nil then
+				owner.components.combat.externaldamagemultipliers:RemoveModifier(inst)
+			end
 		end
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
-			if inst.components.equippable:IsEquipped() then
-				inst:ListenForEvent("newstate", inst.stopusingbush, owner)
+			local armor = inst.components.armor
+			if armor ~= nil then
+				armor.__condition = armor.condition
 			end
+			
+			-- WARBIS has too many things to take care of. Fuck it. 
+			-- Spawn a new one with the previous condition when it was equipped.
+			local new_wagpunkhat = _G.SpawnPrefab("wagpunkhat")
+			if new_wagpunkhat ~= nil then
+				new_wagpunkhat.components.armor:SetCondition(armor.__condition)
+				if owner.components.inventory ~= nil then
+					owner.components.inventory:GiveItem(new_wagpunkhat, nil, owner:GetPosition())
+				else
+					owner.components.inventory:DropItem(new_wagpunkhat)
+				end
+			end
+			
+			inst:Remove()
 		end
-	end
-	
-	local _OnUse
-	local function OnUse(inst)
-		local owner = inst.components.inventoryitem ~= nil 
-        and inst.components.inventoryitem:GetGrandOwner() or nil
-		
-		if owner ~= nil then
-			owner.sg:GoToState("hide")
-		end
-		
-		return _OnUse(inst)
-	end
-	
-	if not _G.TheWorld.ismastersim then
-		return inst
-	end
-	
-	if inst.components.useableitem ~= nil then
-		_OnUse = inst.components.useableitem.onusefn
-		inst.components.useableitem.onusefn = OnUse
 	end
 end
 
---AddPrefabPostInit("bushhat", BushHatPostInit)
+AddPrefabPostInit("wagpunkhat", WagpunkHatPostInit)
+
+local function RabbitHatPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.components.perishable ~= nil then
+				inst.components.perishable:StopPerishing()
+			end
+	
+			owner:RemoveTag("rabbitdisguise")
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.perishable ~= nil then
+				inst.components.perishable:StartPerishing()
+			end
+			
+			if inst.components.equippable:IsEquipped() then
+				owner:AddTag("rabbitdisguise")
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("rabbithat", RabbitHatPostInit)
+
+local function AlterGuardianHatPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			
+		end
+	end
+end
