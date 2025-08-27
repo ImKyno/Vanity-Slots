@@ -99,7 +99,7 @@ local function MushroomHatPostInit(inst)
 	end
 
 	inst.onequipvanity = function(inst, owner, from_ground)
-		if owner ~= nil then			
+		if owner ~= nil then
 			if inst.components.perishable ~= nil then
 				inst.components.perishable:StopPerishing()
 			end
@@ -123,6 +123,7 @@ local function MushroomHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.perishable ~= nil then
 				inst.components.perishable:StartPerishing()
 			end
@@ -142,6 +143,10 @@ local function MushroomHatPostInit(inst)
 				end
 				
 				owner:AddTag("spoiler")
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
 			end
 		end
 	end
@@ -168,8 +173,13 @@ local function RuinsHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.equippable:IsEquipped() then
 				inst.onattach()
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
 			end
 		end
 	end
@@ -204,6 +214,7 @@ local function FeatherHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			local attractor = owner.components.birdattractor
 			local birdspawner = _G.TheWorld.components.birdspawner
 			
@@ -228,6 +239,16 @@ local function FeatherHatPostInit(inst)
 					end
 				end
 			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
+			end
 		end
 	end
 end
@@ -237,6 +258,7 @@ AddPrefabPostInit("featherhat", FeatherHatPostInit)
 local function BeefaloHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
+			--[[
 			if inst.components.fueled ~= nil then
 				inst.components.fueled:StopConsuming()
 				
@@ -247,11 +269,16 @@ local function BeefaloHatPostInit(inst)
 			end
 			
 			owner:RemoveTag("beefalo")
+			]]--
+			if inst.components.equippable.onequiptomodelfn ~= nil then
+				inst.components.equippable.onequiptomodelfn(inst, owner)
+			end
 		end
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.fueled ~= nil then
 				if inst.components.fueled.no_sewing ~= nil then
 					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
@@ -264,6 +291,16 @@ local function BeefaloHatPostInit(inst)
 		
 			if inst.components.equippable:IsEquipped() then
 				owner:AddTag("beefalo")
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
 			end
 		end
 	end
@@ -340,7 +377,8 @@ local function HiveHatPostInit(inst)
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
-		if owner ~= nil then			
+		if owner ~= nil then
+			--[[
 			if owner.components.sanity ~= nil then
 				if owner.components.sanity.neg_aura_absorb ~= nil then
 					owner.components.sanity.neg_aura_absorb = 0
@@ -349,6 +387,10 @@ local function HiveHatPostInit(inst)
 				if inst.components.equippable:IsEquipped() then
 					owner.components.sanity.neg_aura_absorb = TUNING.ARMOR_HIVEHAT_SANITY_ABSORPTION
 				end
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
 			end
 		end
 	end
@@ -368,11 +410,16 @@ local function SkeletonHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.equippable:IsEquipped() then
 				if owner.components.sanity ~= nil then
 					owner.components.sanity:SetInducedInsanity(inst, true)
 					owner:AddTag("shadowdominance")
 				end
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
 			end
 		end
 	end
@@ -392,7 +439,8 @@ local function AntlionHatPostInit(inst)
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
-		if owner ~= nil then	
+		if owner ~= nil then
+			--[[
 			if inst.components.equippable:IsEquipped() then
 				if inst.components.autoterraformer ~= nil then
 					inst.components.autoterraformer:StartTerraforming()
@@ -400,6 +448,10 @@ local function AntlionHatPostInit(inst)
 			end
 			
 			inst:AddTag("turfhat")
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
 		end
 	end
 end
@@ -418,12 +470,12 @@ local function PollyRogersHatPostInit(inst)
 				end
 			end
 			
-			if inst.pollytask then
+			if inst.pollytask ~= nil then
 				inst.pollytask:Cancel()
 				inst.pollytask = nil
 			end
 
-			if inst.polly then
+			if inst.polly ~= nil then
 				inst.polly.flyaway = true
 				inst.polly:PushEvent("flyaway")
 			end
@@ -432,6 +484,7 @@ local function PollyRogersHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.fueled ~= nil then
 				if inst.components.fueled.no_sewing ~= nil then
 					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
@@ -445,6 +498,16 @@ local function PollyRogersHatPostInit(inst)
 			if inst.components.equippable:IsEquipped() then
 				if inst.components.spawner ~= nil and not inst.polly and not inst.components.spawner:IsSpawnPending() then
 					inst.components.spawner:ReleaseChild()
+				end
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
 				end
 			end
 		end
@@ -471,6 +534,7 @@ local function MonkeySmallHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.fueled ~= nil then
 				if inst.components.fueled.no_sewing ~= nil then
 					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
@@ -484,6 +548,16 @@ local function MonkeySmallHatPostInit(inst)
 			if inst.components.equippable:IsEquipped() then
 				owner:AddTag("master_crewman")
 			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
+			end
 		end
 	end
 end
@@ -493,6 +567,7 @@ AddPrefabPostInit("monkey_smallhat", MonkeySmallHatPostInit)
 local function MonkeyMediumHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
+			--[[
 			if inst.components.fueled ~= nil then
 				inst.components.fueled:StopConsuming()
 				
@@ -503,11 +578,16 @@ local function MonkeyMediumHatPostInit(inst)
 			end
 			
 			owner:RemoveTag("boat_health_buffer")
+			]]--
+			if inst.components.equippable.onequiptomodelfn ~= nil then
+				inst.components.equippable.onequiptomodelfn(inst, owner)
+			end
 		end
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.fueled ~= nil then
 				if inst.components.fueled.no_sewing ~= nil then
 					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
@@ -520,6 +600,16 @@ local function MonkeyMediumHatPostInit(inst)
 			
 			if inst.components.equippable:IsEquipped() then
 				owner:AddTag("boat_health_buffer")
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
 			end
 		end
 	end
@@ -546,6 +636,7 @@ local function MonocleHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.fueled ~= nil then
 				if inst.components.fueled.no_sewing ~= nil then
 					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
@@ -560,6 +651,16 @@ local function MonocleHatPostInit(inst)
 				owner:AddCameraExtraDistance(inst, TUNING.SCRAP_MONOCLE_EXTRA_VIEW_DIST)
 				owner:AddTag("scrapmonolevision")
 			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
+			end
 		end
 	end
 end
@@ -569,6 +670,7 @@ AddPrefabPostInit("scrap_monoclehat", MonocleHatPostInit)
 local function BatNoseHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
+			--[[
 			if inst.components.perishable ~= nil then
 				inst.components.perishable:StopPerishing()
 			end
@@ -580,11 +682,16 @@ local function BatNoseHatPostInit(inst)
 			if owner.components.foodmemory ~= nil then
 				owner.components.foodmemory:RememberFood("hungerregenbuff")
 			end
+			]]--
+			if inst.components.equippable.onequiptomodelfn ~= nil then
+				inst.components.equippable.onequiptomodelfn(inst, owner)
+			end
 		end
 	end
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.perishable ~= nil then
 				if inst.components.equippable:IsEquipped() then
 					inst.components.perishable:StartPerishing()
@@ -597,6 +704,10 @@ local function BatNoseHatPostInit(inst)
 						owner.components.foodmemory:RememberFood("hungerregenbuff")
 					end
 				end
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
 			end
 		end
 	end
@@ -641,12 +752,17 @@ local function DreadstoneHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if owner.components.sanity ~= nil then
 				if inst.components.equippable:IsEquipped() and inst.components.armor:IsDamaged() then
 					inst.dreadstone_startregen(inst, owner)
 				else
 					inst.dreadstone_stopregen(inst)
 				end
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
 			end
 		end
 	end
@@ -683,6 +799,7 @@ local function WagpunkHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			local armor = inst.components.armor
 			if armor ~= nil then
 				armor.__condition = armor.condition
@@ -701,6 +818,10 @@ local function WagpunkHatPostInit(inst)
 			end
 			
 			inst:Remove()
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
 		end
 	end
 end
@@ -720,12 +841,17 @@ local function RabbitHatPostInit(inst)
 	
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
+			--[[
 			if inst.components.perishable ~= nil then
 				inst.components.perishable:StartPerishing()
 			end
 			
 			if inst.components.equippable:IsEquipped() then
 				owner:AddTag("rabbitdisguise")
+			end
+			]]--
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
 			end
 		end
 	end
