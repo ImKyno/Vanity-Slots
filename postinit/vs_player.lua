@@ -35,6 +35,12 @@ local function AddVanitySlots(inst)
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
 		local realitem = data.item
 		
+		--[[
+		if realitem ~= nil and realitem:HasTag("lantern_overlay") then
+			inst.AnimState:Hide("LANTERN_OVERLAY")
+		end
+		]]--
+		
 		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 			vanityitem.components.equippable:Unequip(inst)
 			vanityitem.components.equippable:Equip(inst)
@@ -55,6 +61,10 @@ local function AddVanitySlots(inst)
 			if realitem ~= nil and realitem.fx ~= nil then
 				realitem.fx:Remove()
 				realitem.fx = nil
+			end
+			
+			if realitem ~= nil and realitem.components.container ~= nil then
+				realitem.components.container:Open(inst)
 			end
 			
 			_G.ApplyVanityEffects(vanityitem, inst)

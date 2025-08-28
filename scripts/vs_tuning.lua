@@ -24,13 +24,6 @@ TUNING.VANITY_MUSHROOM_HEAD_ITEMS =
 	"moon_mushroomhat",
 }
 
-TUNING.VANITY_USEABLEITEM_HEAD_ITEMS =
-{
-	"bushhat",
-	"plantregistryhat",
-	"nutrientsgoggleshat",
-}
-
 TUNING.VANITY_PILLOW_BODY_ITEMS =
 {
 	"bodypillow_beefalowool",
@@ -48,7 +41,6 @@ TUNING.VANITY_RESTRICTED_ITEMS =
 	"piggyback",
 	"propsign",
 	"seedpouch",
-	"slurper",
 	"spicepack",
 }
 
@@ -57,8 +49,10 @@ TUNING.VANITY_FORBID_ITEMS =
 {
 	"bishophead",
 	"knighthead",
-	"mermarmorhat",
+	"mermarmorhat", -- Merm hats are forbid because their animations don't work for players.
 	"mermarmorupgradedhat",
+	-- "merm_tool",
+	-- "merm_tool_upgraded",
 	"rooknose",
 	-- And all other statues, oversized crops, etc.
 }

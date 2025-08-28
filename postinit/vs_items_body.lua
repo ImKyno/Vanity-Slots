@@ -6,6 +6,26 @@ local UpvalueHacker = require("vs_upvaluehacker")
 
 require("vs_tuning")
 
+local function RestrictedItemsPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		inst:AddTag("vanity_equipped")
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+		
+		inst:RemoveTag("vanity_equipped")
+	end
+end
+
+for k, item in pairs(TUNING.VANITY_RESTRICTED_ITEMS) do
+	AddPrefabPostInit(item, RestrictedItemsPostInit)
+end
+
 local function BodyPillowPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then

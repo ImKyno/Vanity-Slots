@@ -35,6 +35,10 @@ local function ShowEquippedItem(inst, data, owner)
 			
 			local realslot = INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslot]
 			local realitem = owner.components.inventory:GetEquippedItem(realslot)
+			
+			if realitem and realitem.prefab == "lantern" then
+				owner.AnimState:Hide("LANTERN_OVERLAY")
+			end
             
 			if realitem and realitem.prefab == vanityitem.prefab then 
 				print("VANITY SLOTS: VANITY/EQUIPPED ITEM ARE THE SAME.")
@@ -49,6 +53,20 @@ local function ShowEquippedItem(inst, data, owner)
 			if realitem ~= nil and realitem.fx ~= nil then
 				realitem.fx:Remove()
 				realitem.fx = nil
+			end
+			
+			-- You wanted to carry two krampus sacks full of items? 💀💀
+			-- Nah bro, you can't have containers with stuff inside. :steammocking:
+			if vanityitem.components.container ~= nil then
+				vanityitem.components.container:DropEverything(owner:GetPosition())
+				vanityitem.components.container:Close(owner)
+			
+				vanityitem.components.container.__restrictedtag = vanityitem.components.container.restrictedtag
+				vanityitem.components.container.restrictedtag = "steammocking" -- https://tenor.com/view/steammocking-gif-24857170
+			end
+			
+			if realitem ~= nil and realitem.components.container ~= nil then
+				realitem.components.container:Open(owner)
 			end
 		end
 	end
@@ -67,11 +85,15 @@ local function HideEquippedItem(inst, data, owner)
 			if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 				vanityitem.components.equippable:Unequip(owner)
 				
+				if vanityitem.components.container ~= nil then
+					vanityitem.components.container.restrictedtag = vanityitem.components.container.__restrictedtag
+				end
+				
 				RemoveVanityEffects(vanityitem, owner)
 				
 				-- Show any real item if its equipped.
 				if realitem ~= nil and realitem.components.equippable ~= nil then
-					realitem.components.equippable:Unequip(owner)
+					-- realitem.components.equippable:Unequip(owner)
 					realitem.components.equippable:Equip(owner)
 				end
 			end

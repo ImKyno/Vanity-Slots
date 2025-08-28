@@ -22,16 +22,18 @@ AddAction("EQUIPVANITY", STRINGS.ACTIONS.EQUIPVANITY, function(act)
 	local vanityslot = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 	local equipslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslot.components.equippable.equipslot]
 
-	if owner ~= nil and vanityitem ~= nil then
+	if owner ~= nil and vanityslot ~= nil and vanityitem ~= nil then
+		vanityitem.components.inventoryitem.cangoincontainer = true
+		
+		vanityslot.components.container:GiveItem(vanityitem, equipslot, vanityitem:GetPosition())
+		
 		if vanityitem.onequipvanity ~= nil then
 			vanityitem.onequipvanity(vanityitem, owner)
 		end
 		
-		if vanityslot ~= nil then
-			-- vanityitem.components.inventoryitem.cangoincontainer = true
-			vanityslot.components.container:GiveItem(vanityitem, equipslot, vanityitem:GetPosition())
-			return true
-		end
+		vanityitem.components.inventoryitem.cangoincontainer = false
+		
+		return true
 	end
 end)
 
@@ -130,6 +132,15 @@ function USEITEM.edible(inst, doer, target, ...)
 		return
 	else
 		return _USEITEM_edible(inst, doer, target, ...)
+	end
+end
+
+local _USEITEM_fuel = USEITEM.fuel
+function USEITEM.fuel(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_fuel(inst, doer, target, ...)
 	end
 end
 

@@ -97,17 +97,17 @@ ApplyVanityEffects = function(vanityitem, owner)
 	if statename == "shell_idle" or statename == "shell_hit" then
 		ReEquipVanityItemBodyTall(vanityitem, owner)
 	end
-			
-	-- You wanted to carry two krampus sacks full of items? 💀💀
-	-- Nah bro, you can't have containers with stuff inside. :steammocking:
+	
+	--[[
 	local container = vanityitem.components.container
 	if container ~= nil then
 		container:DropEverything(owner:GetPosition())
-		container:Close(owner)
+		-- container:Close(owner)
 			
 		container.__restrictedtag = container.restrictedtag
-		container.restrictedtag = "steammocking" -- https://tenor.com/view/steammocking-gif-24857170
+		container.restrictedtag = "steammocking"
 	end
+	]]--
 end
 
 -- Function for removing common effects from vanity items.
@@ -147,8 +147,10 @@ RemoveVanityEffects = function(vanityitem, owner)
 		end
 	end
 
+	--[[
 	local container = vanityitem.components.container
 	if container ~= nil then
 		container.restrictedtag = container.__restrictedtag
 	end
+	]]--
 end

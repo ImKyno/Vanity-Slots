@@ -591,6 +591,33 @@ end
 
 AddPrefabPostInit("dreadstonehat", DreadstoneHatPostInit)
 
+local function BushHatPostInit(inst)
+	local _stopusingbush = UpvalueHacker.GetUpvalue(_G.Prefabs.bushhat.fn, "stopusingbush")
+	
+	local function stopusingbush(inst, data)
+		_stopusingbush(inst, data)
+	end
+	
+	UpvalueHacker.SetUpvalue(_G.Prefabs.bushhat.fn, stopusingbush, "stopusingbush")
+	_G.Prefabs.bushhat._stopusingbush = _stopusingbush
+	
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			inst:RemoveEventCallback("newstate", stopusingbush, owner)
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("bushhat", BushHatPostInit)
+
 local function PlantRegistryHatPostInit(inst)
 	local _stopusingplantregistry = UpvalueHacker.GetUpvalue(_G.Prefabs.plantregistryhat.fn, "stopusingplantregistry")
 
@@ -618,6 +645,32 @@ end
 
 AddPrefabPostInit("plantregistryhat", PlantRegistryHatPostInit)
 AddPrefabPostInit("nutrientsgoggleshat", PlantRegistryHatPostInit)
+
+local function SlurperPostInit(inst)
+	inst:AddTag("vanity_item_restricted")
+
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.task ~= nil then
+				inst.task:Cancel()
+			end
+
+			inst._light.Light:Enable(false)
+			
+			inst.ondetach(owner)
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("slurper", SlurperPostInit)
 
 local function WagpunkHatPostInit(inst)
 	-- local wagpunk_OnAttack = UpvalueHacker.GetUpvalue(_G.Prefabs.wagpunkhat.simple, "onequip", "wagpunk_OnAttack")
