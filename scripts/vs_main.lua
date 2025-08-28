@@ -16,13 +16,37 @@ ReEquipVanityItemHead = function(vanityitem, owner)
 	local skin_build = realitem:GetSkinBuild()
 		
 	if realitem ~= nil then
-		local prefab = string.gsub(realitem.prefab, "hat", "")
+		-- local prefab = string.gsub(realitem.prefab, "hat", "")
+		local prefab = realitem.symbolname or string.gsub(realitem.prefab, "hat", "")
 
 		if skin_build ~= nil then
 			owner:PushEvent("equipskinneditem", realitem:GetSkinName())
 			owner.AnimState:OverrideItemSkinSymbol("swap_hat", skin_build, "swap_hat", realitem.GUID, "hat_"..prefab)
 		else
 			owner.AnimState:OverrideSymbol("swap_hat", "hat_"..prefab, "swap_hat")
+		end
+	end
+end
+
+-- This is not for BODY, its for the back part used in Snurtle Shell and other items.
+global("ReEquipVanityItemBodyTall")
+ReEquipVanityItemBodyTall = function(vanityitem, owner)
+	if vanityitem == nil then
+		return
+	end
+
+	local realitem = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY)
+	local skin_build = realitem:GetSkinBuild()
+		
+	if realitem ~= nil then
+		-- local prefab = realitem.symbolname or realitem.prefab
+		local prefab = realitem.AnimState:GetBuild() or realitem.prefab
+
+		if skin_build ~= nil then
+			owner:PushEvent("equipskinneditem", realitem:GetSkinName())
+			owner.AnimState:OverrideItemSkinSymbol("swap_body_tall", skin_build, "swap_body_tall", realitem.GUID, prefab)
+		else
+			owner.AnimState:OverrideSymbol("swap_body_tall", prefab, "swap_body_tall")
 		end
 	end
 end
@@ -70,11 +94,9 @@ ApplyVanityEffects = function(vanityitem, owner)
 		ReEquipVanityItemHead(vanityitem, owner)
 	end
 
-	--[[
-	elseif statename ~= "shell_idle" or statename ~= "shell_hit" then
-		ReEquipVanityItemBody(vanityitem, owner)
+	if statename == "shell_idle" or statename == "shell_hit" then
+		ReEquipVanityItemBodyTall(vanityitem, owner)
 	end
-	]]--
 			
 	-- You wanted to carry two krampus sacks full of items? 💀💀
 	-- Nah bro, you can't have containers with stuff inside. :steammocking:

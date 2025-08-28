@@ -31,6 +31,13 @@ TUNING.VANITY_USEABLEITEM_HEAD_ITEMS =
 	"nutrientsgoggleshat",
 }
 
+TUNING.VANITY_PILLOW_BODY_ITEMS =
+{
+	"bodypillow_beefalowool",
+	"bodypillow_kelp",
+	"bodypillow_steelwool",
+}
+
 -- Items that can't go in containers.
 TUNING.VANITY_RESTRICTED_ITEMS =
 {

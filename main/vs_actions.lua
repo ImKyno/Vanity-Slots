@@ -106,6 +106,15 @@ function USEITEM.repairer(inst, doer, target, ...)
 	end
 end
 
+local _USEITEM_forgerepair = USEITEM.forgerepair
+function USEITEM.forgerepair(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_forgerepair(inst, doer, target, ...)
+	end
+end
+
 local _USEITEM_sewing = USEITEM.sewing
 function USEITEM.sewing(inst, doer, target, ...)
 	if target:HasTag("vanity_equipped") then
