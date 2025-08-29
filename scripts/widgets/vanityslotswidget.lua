@@ -9,13 +9,29 @@ local TextButton  = require("widgets/textbutton")
 local W_SCALE     = .2
 local W_ATLAS     = "images/crafting_menu_icons.xml"
 
+local function TryVanitySlots(self)
+	if self.owner.replica.inventory ~= nil then
+		local vanityslots = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+        
+		if vanityslots ~= nil and vanityslots:HasTag("vanity_slots") then
+			self:Show()
+			return true
+		end
+	end
+	
+	self:Hide()
+	return false
+end
+
 -- GOD I hate making widgets...
-local VanitySlots = Class(Widget, function(self)
+local VanitySlots = Class(Widget, function(self, owner)
+	self.owner = owner
 	Widget._ctor(self, "Vanity Slots")
 	
 	self.root = self:AddChild(Widget("root"))
 	
 	self.tasks = {}
+	
 	self.vanitySlotsBtn = self.root:AddChild(ImageButton(W_ATLAS, "filter_warable.tex", nil, nil, nil, nil, {1,1}, {0,0}))
 	self.vanitySlotsBtn:SetPosition(0, 0, 0)
 	self.vanitySlotsBtn:SetScale(W_SCALE, W_SCALE, W_SCALE)
@@ -50,7 +66,29 @@ local VanitySlots = Class(Widget, function(self)
 	
 	self.VanitySlotsShown = false
 	self:RefreshTooltips()
-	-- self:ShowButton()
+	self:Hide()
+	
+	self.inst:ListenForEvent("refreshinventory", function(inst)
+        TryVanitySlots(self)
+    end, self.owner)
+	
+	self.inst:ListenForEvent("equip", function(inst, data)
+		if data.item ~= nil and data.item:HasTag("vanity_slots") then
+			self:Show()
+		end
+	end, self.owner)
+	
+	self.inst:ListenForEvent("unequip", function(inst, data)
+		if data.eslot == EQUIPSLOTS.VANITY then
+			self:Hide()
+		end
+	end, self.owner)
+	
+	-- Client only event, because when inventory is closed, we will stop
+	-- getting "equip" and "unequip" events, but we can also assume that our inventory is emptied.
+	self.inst:ListenForEvent("inventoryclosed", function()
+		self:Hide()
+    end, self.owner)
 	
 	-----------------------------------------------------------------------------------------------------------------
 	-- Shows x/y position on the screen for easy lookup.
@@ -81,21 +119,6 @@ function VanitySlots:RefreshTooltips()
 	else
 		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_OPEN)
 	end
-end
-
-function VanitySlots:Show()
-	self._base.Show(self)
-	self:RefreshTooltips()
-end
-
-function VanitySlots:ShowButton()
-    self.vanitySlotsBtn:Show()
-	self:RefreshTooltips()
-end
-
-function VanitySlots:HideButton()
-    self.vanitySlotsBtn:Hide()
-	self:RefreshTooltips()
 end
 
 return VanitySlots

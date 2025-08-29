@@ -24,8 +24,15 @@ local ExtraEquipSlotMods =
 }
 
 -- TO DO: Make widget position compatible with EES mods.
-AddClassPostConstruct("widgets/controls", function(self)
-	self.vanitySlotsBtn = self.bottom_root:AddChild(VanitySlots())
+AddClassPostConstruct("widgets/controls", function(self, inst)
+	local owner = self.owner
+	
+	if owner == nil or owner:HasTag("playerghost") then
+		return 
+	end
+	
+	-- print("VANITY SLOTS: SPAWNING VANITY SLOTS FOR PLAYER.")
+	self.vanitySlotsBtn = self.bottom_root:AddChild(VanitySlots(owner))
 	self.vanitySlotsBtn:SetPosition(530, 30)
 end)
 

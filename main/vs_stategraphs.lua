@@ -48,7 +48,7 @@ AddStategraphPostInit("wilson", function(sg)
 	end
 	
 	table.insert(sg.states["hide"].events, EventHandler("equip", function(inst)
-		print("VANITY SLOTS: ITEM WAS EQUIPPED")
+		-- print("VANITY SLOTS: ITEM WAS EQUIPPED")
 	end))
 	
 	sg.states["hide"].onexit = function(inst)

@@ -30,14 +30,10 @@ end
 AddPrefabPostInit("torch", TorchPostInit)
 
 local function LanternPostInit(inst)
-	inst:AddTag("lantern_overlay")
+	inst:AddTag("vanity_lantern")
 
 	inst.onequipvanity = function(inst, owner, from_ground)
-		if owner ~= nil then
-			if inst.components.equippable.onequiptomodelfn ~= nil then
-				inst.components.equippable.onequiptomodelfn(inst, owner)
-			end
-			
+		if owner ~= nil then			
 			if inst.components.fueled ~= nil then
 				inst.components.fueled:StopConsuming()
 				
@@ -45,6 +41,10 @@ local function LanternPostInit(inst)
 					inst.components.fueled.__accepting = inst.components.fueled.accepting
 					inst.components.fueled.accepting = false
 				end
+			end
+			
+			if inst.components.equippable.onequiptomodelfn ~= nil then
+				inst.components.equippable.onequiptomodelfn(inst, owner)
 			end
 			
 			owner.AnimState:Hide("LANTERN_OVERLAY")
@@ -219,3 +219,18 @@ local function LighterPostInit(inst)
 end
 
 AddPrefabPostInit("lighter", LighterPostInit)
+
+local function ShieldPostInit(inst)
+	inst:AddTag("vanity_shield")
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("shieldofterror", ShieldPostInit)
+AddPrefabPostInit("wathgrithr_shield", ShieldPostInit)

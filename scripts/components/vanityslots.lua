@@ -57,7 +57,7 @@ function VanitySlots:UpdateVanitySlotsInventory()
 	
 	local vanitycontainer = self.inst.components.inventory and self.inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 	
-	if vanityslots then
+	if vanityslots and not self.inst:HasTag("playerghost") then
 		if not vanitycontainer then
 			local newcontainer = SpawnPrefab(vanityslots)
 			self.inst.components.inventory:Equip(newcontainer)

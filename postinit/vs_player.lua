@@ -46,8 +46,8 @@ local function AddVanitySlots(inst)
 			vanityitem.components.equippable:Equip(inst)
 			
 			if realitem and realitem.prefab == vanityitem.prefab then 
-				print("VANITY SLOTS: EQUIPPED/VANITY ITEM ARE THE SAME.")
-				print("VANITY SLOTS: YOU SHOULDN'T BE DOING THAT.")
+				-- print("VANITY SLOTS: EQUIPPED/VANITY ITEM ARE THE SAME.")
+				-- print("VANITY SLOTS: YOU SHOULDN'T BE DOING THAT.")
 				if vanityitem.onequipvanity ~= nil then
 					vanityitem.onequipvanity(vanityitem, vanityslots)
 				end
@@ -61,6 +61,12 @@ local function AddVanitySlots(inst)
 			if realitem ~= nil and realitem.fx ~= nil then
 				realitem.fx:Remove()
 				realitem.fx = nil
+			end
+			
+			if realitem and realitem:HasTag("vanity_shield") and
+			vanityitem and not vanityitem:HasTag("vanity_shield") then
+				inst.AnimState:ShowSymbol("swap_object")
+				inst.AnimState:ClearOverrideSymbol("lantern_overlay")
 			end
 			
 			if realitem ~= nil and realitem.components.container ~= nil then
@@ -81,6 +87,11 @@ local function AddVanitySlots(inst)
 			
 			if vanityitem.onequipvanity ~= nil then
 				vanityitem.onequipvanity(vanityitem, inst)
+			end
+			
+			if realitem and realitem:HasTag("vanity_shield") then
+				inst.AnimState:ClearOverrideSymbol("swap_object")
+				inst.AnimState:ShowSymbol("lantern_overlay")
 			end
 		end
 	end

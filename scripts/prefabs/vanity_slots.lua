@@ -10,6 +10,8 @@ local assets =
 -- TO DO: Fix rift items making character symbols vanish.
 -- TO DO: Fix vanityslots widget tooltip when opened.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
+-- TO DO: Fix woodie can't open/close vanity container when returning from wereform.
+-- TO DO: Fix woodie wereform when vanity is equipped.
 -- TO DO: Fix items that can't go in container not swapping with equipped vanity.
 -- TO DO: Fix widget from appearing when dead.
 -- TO DO: Make way to equip backpacks.
@@ -35,14 +37,10 @@ local function ShowEquippedItem(inst, data, owner)
 			
 			local realslot = INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslot]
 			local realitem = owner.components.inventory:GetEquippedItem(realslot)
-			
-			if realitem and realitem.prefab == "lantern" then
-				owner.AnimState:Hide("LANTERN_OVERLAY")
-			end
-            
+
 			if realitem and realitem.prefab == vanityitem.prefab then 
-				print("VANITY SLOTS: VANITY/EQUIPPED ITEM ARE THE SAME.")
-				print("VANITY SLOTS: YOU SHOULDN'T BE DOING THAT.")
+				-- print("VANITY SLOTS: VANITY/EQUIPPED ITEM ARE THE SAME.")
+				-- print("VANITY SLOTS: YOU SHOULDN'T BE DOING THAT.")
 				if vanityitem.onequipvanity ~= nil then
 					vanityitem.onequipvanity(vanityitem, inst)
 				end
@@ -55,19 +53,8 @@ local function ShowEquippedItem(inst, data, owner)
 				realitem.fx = nil
 			end
 			
-			-- You wanted to carry two krampus sacks full of items? 💀💀
-			-- Nah bro, you can't have containers with stuff inside. :steammocking:
-			if vanityitem.components.container ~= nil then
-				vanityitem.components.container:DropEverything(owner:GetPosition())
-				vanityitem.components.container:Close(owner)
-			
-				vanityitem.components.container.__restrictedtag = vanityitem.components.container.restrictedtag
-				vanityitem.components.container.restrictedtag = "steammocking" -- https://tenor.com/view/steammocking-gif-24857170
-			end
-			
-			if realitem ~= nil and realitem.components.container ~= nil then
-				realitem.components.container:Open(owner)
-			end
+			ApplyLanternOverlay(vanityitem, realitem, owner)
+			ApplyContainerEffects(vanityitem, realitem, owner)
 		end
 	end
 end
@@ -83,17 +70,24 @@ local function HideEquippedItem(inst, data, owner)
 	if owner ~= nil then
 		if vanityslot ~= nil then
 			if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+				if vanityitem:HasTag("vanity_equipped") then
+					vanityitem:RemoveTag("vanity_equipped")
+				end
+
 				vanityitem.components.equippable:Unequip(owner)
 				
-				if vanityitem.components.container ~= nil then
-					vanityitem.components.container.restrictedtag = vanityitem.components.container.__restrictedtag
+				if vanityitem.onunequipvanity ~= nil then
+					vanityitem.onunequipvanity(vanityitem, owner)
+				else
+					RemoveVanityEffects(vanityitem, owner)
 				end
-				
-				RemoveVanityEffects(vanityitem, owner)
+
+				RemoveContainerEffects(vanityitem, owner)
+				RemoveLanternOverlay(vanityitem, realitem, owner)
 				
 				-- Show any real item if its equipped.
 				if realitem ~= nil and realitem.components.equippable ~= nil then
-					-- realitem.components.equippable:Unequip(owner)
+					realitem.components.equippable:Unequip(owner)
 					realitem.components.equippable:Equip(owner)
 				end
 			end
