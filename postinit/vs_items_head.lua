@@ -673,11 +673,18 @@ end
 AddPrefabPostInit("slurper", SlurperPostInit)
 
 local function WagpunkHatPostInit(inst)
-	-- local wagpunk_OnAttack = UpvalueHacker.GetUpvalue(_G.Prefabs.wagpunkhat.simple, "onequip", "wagpunk_OnAttack")
+	local _wagpunk_OnAttack = UpvalueHacker.GetUpvalue(_G.Prefabs.wagpunkhat.fn, "wagpunk_OnAttack")
+	
+	local function wagpunk_OnAttack(owner, data)
+		_wagpunk_OnAttack(owner, data)
+	end
+	
+	UpvalueHacker.SetUpvalue(_G.Prefabs.wagpunkhat.fn, wagpunk_OnAttack, "wagpunk_OnAttack")
+	_G.Prefabs.wagpunkhat._wagpunk_OnAttack = _wagpunk_OnAttack
 	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
-			-- inst:RemoveEventCallback("onattackother", wagpunk_OnAttack, owner)
+			inst:RemoveEventCallback("onattackother", wagpunk_OnAttack, owner)
 			
 			if inst._wearer ~= nil then
 				inst._wearer:set(nil)

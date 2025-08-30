@@ -90,6 +90,15 @@ function INVENTORY.useableitem(inst, ...)
 	end
 end
 
+local _INVENTORY_spellcaster = INVENTORY.spellcaster
+function INVENTORY.spellcaster(inst, ...)
+	if inst:HasTag("vanity_equipped") then
+		return
+	else
+		return _INVENTORY_spellcaster(inst, ...)
+	end
+end
+
 local _USEITEM_ghostlyelixir = USEITEM.ghostlyelixir
 function USEITEM.ghostlyelixir(inst, doer, target, ...)
 	if target:HasTag("vanity_equipped") then

@@ -1,4 +1,4 @@
-name                        = "Cosmetic Slots"
+name                        = "Project Vanity"
 version                     = "1.0-A"
 
 description                 = 
@@ -9,8 +9,8 @@ description                 =
 
 󰀏 Beware! Although items equipped in Cosmetic Slots don't lose durability or spoil, they do not provide their benefits to the player. 
 
-󰀌 Mod Version: 1.0-A
-󰀧 Update: Mod Launch
+󰀌 Mod Version: Alpha-1.0-A
+󰀧 Update: In Development
 ]]
 
 author                      = "Kyno"
@@ -21,10 +21,10 @@ dst_compatible              = true
 all_clients_require_mod     = true
 client_only_mod             = false
 
-server_filter_tags          = {"Cosmetic Slots", "Vanity Slots", "CMS", "Entertainment", "Kyno"}
+server_filter_tags          = {"Cosmetic Slots", "Vanity Slots", "VS", "Entertainment", "Kyno"}
 
-icon                        = "ModiconCMS.tex"
-icon_atlas                  = "ModiconCMS.xml"
+icon                        = "ModiconVS.tex"
+icon_atlas                  = "ModiconVS.xml"
 
 -- Localizations.
 if locale == "pt" then

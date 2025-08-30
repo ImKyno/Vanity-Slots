@@ -3,8 +3,8 @@ local _G          = GLOBAL
 local require     = _G.require
 local VanitySlots = require("widgets/vanityslotswidget")
 
--- Why there are so many copycats of EES?
-local ExtraEquipSlotMods =
+-- Why are there so many copycats of EES?
+local ExtraEquipSlotsMods =
 {
 	"1818688368",
 	"2032685784",

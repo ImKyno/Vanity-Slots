@@ -138,6 +138,28 @@ end
 AddPrefabPostInit("thurible", ThuriblePostInit)
 
 local function MiniFanPostInit(inst)
+	inst._onlocomote = function(owner)
+		if owner.components.locomotor.wantstomoveforward then
+			if not inst.components.fueled.consuming then
+				inst.components.fueled:StartConsuming()
+				inst.components.insulator:SetInsulation(TUNING.INSULATION_SMALL)
+				inst.components.heater:SetThermics(false, true)
+				
+				if inst._wheel ~= nil then
+					inst._wheel:SetSpinning(true)
+				end
+			end
+		elseif inst.components.fueled.consuming then
+			inst.components.fueled:StopConsuming()
+			inst.components.insulator:SetInsulation(0)
+			inst.components.heater:SetThermics(false, false)
+			
+			if inst._wheel ~= nil then
+				inst._wheel:SetSpinning(false)
+			end
+		end
+	end
+
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
 			inst:RemoveEventCallback("locomote", inst._onlocomote, owner)
@@ -234,3 +256,56 @@ end
 
 AddPrefabPostInit("shieldofterror", ShieldPostInit)
 AddPrefabPostInit("wathgrithr_shield", ShieldPostInit)
+
+local function BernieInactivePostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.components.equippable.onequiptomodelfn ~= nil then
+				inst.components.equippable.onequiptomodelfn(inst, owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.__no_sewing = inst.components.fueled.no_sewing
+					inst.components.fueled.no_sewing = true
+				end
+			end
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("bernie_inactive", BernieInactivePostInit)
+
+local function VoidClothUmbrellaPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.components.equippable.onequiptomodelfn ~= nil then
+				inst.components.equippable.onequiptomodelfn(inst, owner)
+			end
+		end
+	end
+
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("voidcloth_umbrella", VoidClothUmbrellaPostInit)

@@ -14,8 +14,10 @@ local assets =
 -- TO DO: Fix woodie wereform when vanity is equipped.
 -- TO DO: Fix items that can't go in container not swapping with equipped vanity.
 -- TO DO: Fix widget from appearing when dead.
+-- TO DO: Fix ghost item when unequipping backpacks.
 -- TO DO: Make way to equip backpacks.
 -- TO DO: Swap equipped item with vanity item.
+-- TO DO: Revert item when doing actions (chopping, mining, attacking, etc)
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX =
 {
@@ -48,9 +50,8 @@ local function ShowEquippedItem(inst, data, owner)
 				ApplyVanityEffects(vanityitem, owner)
 			end
 			
-			if realitem ~= nil and realitem.fx ~= nil then
-				realitem.fx:Remove()
-				realitem.fx = nil
+			if realitem ~= nil then
+				RemoveRealItemsFX(realitem, owner)
 			end
 			
 			ApplyLanternOverlay(vanityitem, realitem, owner)

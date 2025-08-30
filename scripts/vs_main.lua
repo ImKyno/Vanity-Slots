@@ -141,6 +141,7 @@ RemoveVanityEffects = function(vanityitem, owner)
 	end
 end
 
+-- Function for blocking containers when equipped as vanity.
 global("ApplyContainerEffects")
 ApplyContainerEffects = function(vanityitem, realitem, owner)	
 	-- You wanted to carry two krampus sacks full of items? 💀💀
@@ -158,6 +159,7 @@ ApplyContainerEffects = function(vanityitem, realitem, owner)
 	end
 end
 
+-- Revert to original container status.
 global("RemoveContainerEffects")
 RemoveContainerEffects = function(vanityitem, owner)
 	if vanityitem ~= nil and vanityitem.components.container ~= nil then
@@ -165,6 +167,7 @@ RemoveContainerEffects = function(vanityitem, owner)
 	end
 end
 
+-- Dirty Fix because Lantern and Shields uses the same symbol.
 global("ApplyLanternOverlay")
 ApplyLanternOverlay = function(vanityitem, realitem, owner)
 	if realitem ~= nil and realitem:HasTag("vanity_lantern") and vanityitem ~= nil and not vanityitem:HasTag("vanity_shield") then
@@ -183,4 +186,45 @@ RemoveLanternOverlay = function(vanityitem, realitem, owner)
 		owner.AnimState:ClearOverrideSymbol("swap_object")
 		owner.AnimState:ShowSymbol("lantern_overlay")
 	end
+end
+
+-- Some items have persistent FX, we need to get rid of them.
+global("RemoveRealItemsFX")
+RemoveRealItemsFX = function(realitem, owner)
+	-- Special case for Trusty Slingshot.
+	if realitem.fx ~= nil and realitem:HasTag("slingshot") then
+		if realitem.fx then
+			for i, v in ipairs(realitem.fx) do
+				v:Remove()
+			end
+			
+			realitem.fx = nil
+		end
+	-- Special case for Shadow Maul.
+	elseif realitem.fx ~= nil and realitem.prefab == "shadow_battleaxe" then
+		realitem.fx:ToggleEquipped(false)
+	elseif realitem.fx ~= nil then
+		realitem.fx:Remove()
+		realitem.fx = nil
+	end
+
+	if realitem._fx ~= nil then
+		realitem._fx:Remove()
+		realitem._fx = nil
+	end
+
+	if realitem.swapfx ~= nil then
+		realitem.swapfx:Remove()
+		realitem.swapfx = nil
+	end
+
+	if realitem.swapfx2 ~= nil then
+		realitem.swapfx2:Remove()
+		realitem.swapfx2 = nil
+	end
+	
+	if realitem._wheel ~= nil then
+        realitem._wheel:Remove()
+		realitem._wheel = nil
+    end
 end

@@ -58,19 +58,18 @@ local function AddVanitySlots(inst)
 			end
 			
 			-- "Hide" animated items for client, fx still exists in the server.
-			if realitem ~= nil and realitem.fx ~= nil then
-				realitem.fx:Remove()
-				realitem.fx = nil
-			end
+			if realitem ~= nil then
+				_G.RemoveRealItemsFX(realitem, inst)
 			
-			if realitem and realitem:HasTag("vanity_shield") and
-			vanityitem and not vanityitem:HasTag("vanity_shield") then
-				inst.AnimState:ShowSymbol("swap_object")
-				inst.AnimState:ClearOverrideSymbol("lantern_overlay")
-			end
+				if realitem and realitem:HasTag("vanity_shield") and
+				vanityitem and not vanityitem:HasTag("vanity_shield") then
+					inst.AnimState:ShowSymbol("swap_object")
+					inst.AnimState:ClearOverrideSymbol("lantern_overlay")
+				end
 			
-			if realitem ~= nil and realitem.components.container ~= nil then
-				realitem.components.container:Open(inst)
+				if realitem ~= nil and realitem.components.container ~= nil then
+					realitem.components.container:Open(inst)
+				end
 			end
 			
 			_G.ApplyVanityEffects(vanityitem, inst)

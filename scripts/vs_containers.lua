@@ -57,16 +57,17 @@ params.vanity_slots =
 }
 
 function params.vanity_slots.itemtestfn(container, item, slot)
-	local isforbid = item:HasTag("vanity_item_forbid") or item:HasTag("heavy")
+	local forbidtags = item:HasTag("vanity_item_forbid") 
+	or item:HasTag("heavy") or item:HasTag("broken")
 
 	if slot == 1 then
-		return item:HasTag("vanity_hand") and not isforbid
+		return item:HasTag("vanity_hand") and not forbidtags
 	elseif slot == 2 then
-		return item:HasTag("vanity_body") and not isforbid
+		return item:HasTag("vanity_body") and not forbidtags
 	elseif slot == 3 then
-		return item:HasTag("vanity_head") and not isforbid
+		return item:HasTag("vanity_head") and not forbidtags
 	elseif slot == nil then
-		return item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head") and not isforbid
+		return item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head") and not forbidtags
 	end
 	
 	return false
