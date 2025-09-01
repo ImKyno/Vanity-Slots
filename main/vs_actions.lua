@@ -19,13 +19,30 @@ local INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX = table.invert(EQUIPSLOTS_VANITYSLOT
 AddAction("EQUIPVANITY", STRINGS.ACTIONS.EQUIPVANITY, function(act)
 	local owner = act.doer
 	local vanityitem = act.target
-	local vanityslot = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-	local equipslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslot.components.equippable.equipslot]
+	local vanityslots = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+	local equipslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslots.components.equippable.equipslot]
+	
+	local equippedslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityitem.components.equippable.equipslot]
+	local equippeditem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(equippedslot)
 
-	if owner ~= nil and vanityslot ~= nil and vanityitem ~= nil then
+	if owner ~= nil and vanityslots ~= nil and vanityitem ~= nil then
 		vanityitem.components.inventoryitem.cangoincontainer = true
 		
-		vanityslot.components.container:GiveItem(vanityitem, equipslot, vanityitem:GetPosition())
+		if equippeditem ~= nil then
+			if owner ~= nil and owner.components.inventory ~= nil then
+				local equippeditem2 = vanityslots.components.container:RemoveItemBySlot(equippedslot)
+				
+				if equippeditem2 ~= nil then
+					equippeditem2.prevcontainer = nil
+					equippeditem2.prevslot = nil
+					owner.components.inventory:GiveItem(equippeditem, nil, owner:GetPosition())
+				end
+			else
+				vanityslots.components.container:DropItem(equippeditem)
+			end
+		end
+		
+		vanityslots.components.container:GiveItem(vanityitem, equipslot, vanityitem:GetPosition())
 		
 		if vanityitem.onequipvanity ~= nil then
 			vanityitem.onequipvanity(vanityitem, owner)
