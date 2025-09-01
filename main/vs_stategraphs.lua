@@ -15,6 +15,8 @@ local EQUIPSLOTS_VANITYSLOTS_INDEX =
     [EQUIPSLOTS.HEAD]  = 3,
 }
 
+local INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX = table.invert(EQUIPSLOTS_VANITYSLOTS_INDEX)
+
 AddStategraphActionHandler("wilson", ActionHandler(ACTIONS.EQUIPVANITY, function(inst, action)
 	return "doshortaction"
 end))
@@ -24,7 +26,7 @@ end))
 
 -- Hack for when player is trying to hide with bush hat but have a vanity item equipped.
 AddStategraphPostInit("wilson", function(sg)
-	-- Bush Hiding State
+	-- Bush Hiding States
 	local _hide_onenter = sg.states["hide"].onenter
 	local _hide_onexit = sg.states["hide"].onexit
 	
@@ -71,7 +73,7 @@ AddStategraphPostInit("wilson", function(sg)
 		return _hide_onexit(inst)
 	end
 	
-	-- Shell Hiding State
+	-- Shell Hiding States
 	local _shell_enter_onenter = sg.states["shell_enter"].onenter
 	local _shell_idle_onenter = sg.states["shell_idle"].onenter
 	local _shell_idle_onexit = sg.states["shell_idle"].onexit
@@ -152,5 +154,38 @@ AddStategraphPostInit("wilson", function(sg)
 		end
 		
 		return _shell_hit_onenter(inst)
+	end
+	
+	-- Weremode States
+	local _transform_wereplayer_onenter = sg.states["transform_wereplayer"].onenter
+	
+	sg.states["transform_wereplayer"].onenter = function(inst, data)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		-- local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
+		
+		-- I can't seem to get a workaround to hide equipped vanity when transforming
+		-- because it messes up the transforming animation and I don't want that.
+		if vanityslots ~= nil then
+			vanityslots.components.container:DropEverything()
+		end
+
+		return _transform_wereplayer_onenter(inst, data)
+	end
+
+	for k, modes in pairs(TUNING.VANITY_WEREMODES) do
+		local _transform_person_onexit = sg.states["transform_"..modes.."_person"].onexit
+		
+		sg.states["transform_"..modes.."_person"].onexit = function(inst, data, ...)
+			if not (inst.components.health:IsDead() or inst:HasTag("wereplayer")) then
+				local vanityslots = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+				-- local vanityitem = vanityslots ~= nil and vanityslots.replica.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
+			
+				if vanityslots ~= nil and not vanityslots.replica.container:IsOpenedBy(inst) then
+					vanityslots.replica.container:Open(inst)
+				end
+			end
+		
+			return _transform_person_onexit(inst, ...)
+		end
 	end
 end)

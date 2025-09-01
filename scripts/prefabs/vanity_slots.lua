@@ -7,14 +7,10 @@ local assets =
 	Asset("ANIM", "anim/ui_chest_3x1.zip"),
 }
 
--- TO DO: Fix rift items making character symbols vanish.
 -- TO DO: Fix vanityslots widget tooltip when opened.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
--- TO DO: Fix woodie can't open/close vanity container when returning from wereform.
--- TO DO: Fix woodie wereform when vanity is equipped.
 -- TO DO: Fix items that can't go in container not swapping with equipped vanity.
 -- TO DO: Fix ghost item when unequipping backpacks.
--- TO DO: Make way to equip backpacks.
 -- TO DO: Swap equipped item with vanity item.
 -- TO DO: Revert item when doing actions (chopping, mining, attacking, etc)
 

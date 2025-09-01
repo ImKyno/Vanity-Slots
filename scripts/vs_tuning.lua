@@ -56,3 +56,11 @@ TUNING.VANITY_FORBID_ITEMS =
 	"rooknose",
 	-- And all other statues, oversized crops, etc.
 }
+
+-- In case some mod adds new Woodie weremodes.
+TUNING.VANITY_WEREMODES =
+{
+	"beaver",
+	"moose",
+	"goose",
+}

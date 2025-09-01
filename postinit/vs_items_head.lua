@@ -725,29 +725,27 @@ end
 AddPrefabPostInit("rabbithat", RabbitHatPostInit)
 
 local function AlterGuardianHatPostInit(inst)
-	local function onsanitychange(inst, owner)
-		if inst._light ~= nil then
-			inst._light:Remove()
-			inst._light = nil
-		end
-	end
-	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
 			if inst._light ~= nil then
 				inst._light:Remove()
 				inst._light = nil
 			end
-			
-			if inst._task then
-				inst._task:Cancel()
-				inst._task = nil
+
+			if inst._front == nil then
+				inst._front = _G.SpawnPrefab("alterguardian_hat_equipped")
+				inst._front:OnActivated(owner, true)
 			end
 			
-			inst._is_active = true
+			if inst._back == nil then
+				inst._back = _G.SpawnPrefab("alterguardian_hat_equipped")
+				inst._back:OnActivated(owner, false)
+			end
+			
+			owner.AnimState:HideSymbol("swap_hat")
 
-			inst:ListenForEvent("sanitydelta", onsanitychange, owner)
-			-- _G.RemoveEventListener(inst, "sanitydelta")
+			_G.RemoveEventListener(inst, "sanitydelta")
+			_G.RemoveEventListener(inst, "onattackother")
 		end
 	end
 	
