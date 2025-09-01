@@ -13,7 +13,6 @@ local assets =
 -- TO DO: Fix woodie can't open/close vanity container when returning from wereform.
 -- TO DO: Fix woodie wereform when vanity is equipped.
 -- TO DO: Fix items that can't go in container not swapping with equipped vanity.
--- TO DO: Fix widget from appearing when dead.
 -- TO DO: Fix ghost item when unequipping backpacks.
 -- TO DO: Make way to equip backpacks.
 -- TO DO: Swap equipped item with vanity item.
@@ -54,7 +53,7 @@ local function ShowEquippedItem(inst, data, owner)
 				RemoveRealItemsFX(realitem, owner)
 			end
 			
-			ApplyLanternOverlay(vanityitem, realitem, owner)
+			ApplyOverlayEffects(vanityitem, realitem, owner)
 			ApplyContainerEffects(vanityitem, realitem, owner)
 		end
 	end
@@ -84,7 +83,7 @@ local function HideEquippedItem(inst, data, owner)
 				end
 
 				RemoveContainerEffects(vanityitem, owner)
-				RemoveLanternOverlay(vanityitem, realitem, owner)
+				RemoveOverlayEffects(vanityitem, realitem, owner)
 				
 				-- Show any real item if its equipped.
 				if realitem ~= nil and realitem.components.equippable ~= nil then

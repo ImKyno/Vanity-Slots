@@ -673,23 +673,14 @@ end
 AddPrefabPostInit("slurper", SlurperPostInit)
 
 local function WagpunkHatPostInit(inst)
-	local _wagpunk_OnAttack = UpvalueHacker.GetUpvalue(_G.Prefabs.wagpunkhat.fn, "wagpunk_OnAttack")
-	
-	local function wagpunk_OnAttack(owner, data)
-		_wagpunk_OnAttack(owner, data)
-	end
-	
-	UpvalueHacker.SetUpvalue(_G.Prefabs.wagpunkhat.fn, wagpunk_OnAttack, "wagpunk_OnAttack")
-	_G.Prefabs.wagpunkhat._wagpunk_OnAttack = _wagpunk_OnAttack
-	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
-			inst:RemoveEventCallback("onattackother", wagpunk_OnAttack, owner)
+			_G.RemoveEventListener(inst, "onattackother")
 			
 			if inst._wearer ~= nil then
 				inst._wearer:set(nil)
 			end
-			
+
 			if owner ~= nil and owner.components.combat ~= nil then
 				owner.components.combat.externaldamagemultipliers:RemoveModifier(inst)
 			end
@@ -734,9 +725,84 @@ end
 AddPrefabPostInit("rabbithat", RabbitHatPostInit)
 
 local function AlterGuardianHatPostInit(inst)
+	local function onsanitychange(inst, owner)
+		if inst._light ~= nil then
+			inst._light:Remove()
+			inst._light = nil
+		end
+	end
+	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
+			if inst._light ~= nil then
+				inst._light:Remove()
+				inst._light = nil
+			end
 			
+			if inst._task then
+				inst._task:Cancel()
+				inst._task = nil
+			end
+			
+			inst._is_active = true
+
+			inst:ListenForEvent("sanitydelta", onsanitychange, owner)
+			-- _G.RemoveEventListener(inst, "sanitydelta")
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
 		end
 	end
 end
+
+AddPrefabPostInit("alterguardianhat", AlterGuardianHatPostInit)
+
+local function LunarPlantHatPostInit(inst)
+	inst:AddTag("vanity_fullhead")
+	
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if owner.components.grue ~= nil then
+				owner.components.grue:RemoveImmunity("lunarplanthat")
+			end
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("lunarplanthat", LunarPlantHatPostInit)
+
+local function VoidClothHatPostInit(inst)
+	inst:AddTag("vanity_fullhead")
+
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			inst:RemoveEventCallback("equip", inst._onownerequip, inst._owner)
+			inst:RemoveEventCallback("unequip", inst._onownerunequip, inst._owner)
+			inst:RemoveEventCallback("attacked", inst._onattacked, inst._owner)
+			inst:RemoveEventCallback("onattackother", inst._onattackother, inst._owner)
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("voidclothhat", VoidClothHatPostInit)

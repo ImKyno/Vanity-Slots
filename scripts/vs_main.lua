@@ -28,7 +28,7 @@ ReEquipVanityItemBodyTall = function(vanityitem, owner)
 	end
 end
 
--- Function to fix issues when vanity item is equipped when hiding.
+-- Issues when vanity item is equipped when hiding.
 global("ReEquipVanityItemHead")
 ReEquipVanityItemHead = function(vanityitem, owner)
 	if vanityitem == nil then
@@ -51,7 +51,7 @@ ReEquipVanityItemHead = function(vanityitem, owner)
 	end
 end
 
--- Function for applying common effects to vanity items.
+-- Applies common effects to vanity items.
 global("ApplyVanityEffects")
 ApplyVanityEffects = function(vanityitem, owner)
 	if vanityitem == nil then
@@ -101,7 +101,7 @@ ApplyVanityEffects = function(vanityitem, owner)
 	end
 end
 
--- Function for removing common effects from vanity items.
+-- Removes common effects from vanity items.
 global("RemoveVanityEffects")
 RemoveVanityEffects = function(vanityitem, owner)
 	if vanityitem == nil then
@@ -141,7 +141,7 @@ RemoveVanityEffects = function(vanityitem, owner)
 	end
 end
 
--- Function for blocking containers when equipped as vanity.
+-- Blocks containers when equipped as vanity.
 global("ApplyContainerEffects")
 ApplyContainerEffects = function(vanityitem, realitem, owner)	
 	-- You wanted to carry two krampus sacks full of items? 💀💀
@@ -167,9 +167,9 @@ RemoveContainerEffects = function(vanityitem, owner)
 	end
 end
 
--- Dirty Fix because Lantern and Shields uses the same symbol.
-global("ApplyLanternOverlay")
-ApplyLanternOverlay = function(vanityitem, realitem, owner)
+-- Dirty fix because Lantern and Shields uses the same symbol.
+global("ApplyOverlayEffects")
+ApplyOverlayEffects = function(vanityitem, realitem, owner)
 	if realitem ~= nil and realitem:HasTag("vanity_lantern") and vanityitem ~= nil and not vanityitem:HasTag("vanity_shield") then
 		owner.AnimState:Hide("LANTERN_OVERLAY")
 	end
@@ -178,17 +178,34 @@ ApplyLanternOverlay = function(vanityitem, realitem, owner)
 		owner.AnimState:ShowSymbol("swap_object")
 		owner.AnimState:ClearOverrideSymbol("lantern_overlay")
 	end
+	
+	if realitem ~= nil and realitem:HasTag("vanity_fullhead") and vanityitem ~= nil and not vanityitem:HasTag("vanity_fullhead") then
+		owner.AnimState:ShowSymbol("swap_hat")
+		owner.AnimState:ClearOverrideSymbol("headbase_hat")
+		
+		owner.AnimState:ShowSymbol("face")
+		owner.AnimState:ShowSymbol("swap_face")
+		owner.AnimState:ShowSymbol("beard")
+		owner.AnimState:ShowSymbol("cheeks")
+		
+		owner.AnimState:UseHeadHatExchange(false)
+	end
 end
 
-global("RemoveLanternOverlay")
-RemoveLanternOverlay = function(vanityitem, realitem, owner)
+global("RemoveOverlayEffects")
+RemoveOverlayEffects = function(vanityitem, realitem, owner)
 	if realitem ~= nil and realitem:HasTag("vanity_shield") then
 		owner.AnimState:ClearOverrideSymbol("swap_object")
 		owner.AnimState:ShowSymbol("lantern_overlay")
 	end
+	
+	if realitem ~= nil and realitem:HasTag("vanity_lunarplanthat") then
+		owner.AnimState:ClearOverrideSymbol("swap_hat")
+		owner.AnimState:ShowSymbol("headbase_hat")
+	end
 end
 
--- Some items have persistent FX, we need to get rid of them.
+-- Some items have persistent FX...
 global("RemoveRealItemsFX")
 RemoveRealItemsFX = function(realitem, owner)
 	-- Special case for Trusty Slingshot.
@@ -227,4 +244,69 @@ RemoveRealItemsFX = function(realitem, owner)
         realitem._wheel:Remove()
 		realitem._wheel = nil
     end
+	
+	if realitem._front ~= nil then
+		realitem._front:Remove()
+		realitem._front = nil
+	end
+				
+	if realitem._back ~= nil then
+		realitem._back:Remove()
+		realitem._back = nil
+	end
 end
+
+-- Removes a specific Event Callback. because RemoveEventCallback requires fn, and
+-- some fn are either hidden or local, some of them I couldn't even get with UpvalueHacker.
+-- Source: https://forums.kleientertainment.com/forums/topic/46524-removing-a-specific-event-from-the-eventcallback-list/
+global("RemoveEventListener")
+RemoveEventListener = function(inst, event, prefab)
+	if inst.event_listening then
+		for e, sources  in pairs(inst.event_listening) do
+			if e == event then
+				for s, _ in pairs(sources) do
+					if prefab == nil and s.event_listeners and s.event_listeners[e] then
+						s.event_listeners[e][inst] = nil
+					elseif s.prefab == prefab and s.event_listeners and s.event_listeners[e] then
+						s.event_listeners[e][inst] = nil	                
+					end
+				end
+			end
+		end
+	end
+	
+	if inst.event_listeners then
+		for e, listeners in pairs(inst.event_listeners) do
+			if e == event then
+				for listener, _ in pairs(listeners) do
+					if listener.event_listening and listener.event_listening[e] then
+						listener.event_listening[e][inst] = nil
+					end
+				end
+			end
+		end
+	end
+end
+
+--[[
+global("RemoveVanityEventCallback")
+RemoveVanityEventCallback = function(inst, eventname, prefabname)
+	-- Will store the callback event set up by the prefab.
+	local eventname
+	if inst.event_listening.eventname and inst.event_listening.eventname[inst] then
+		for _, fn in ipairs(inst.event_listening.eventname[inst]) do
+			local info = _G.debug.getinfo(fn, "S")
+				
+			if info and info.source then
+				if info.source:match(prefabname) then -- "prefabs[/\\]hats.lua$"
+					eventname = fn
+					break
+				end
+			end
+		end
+	end
+	
+	if eventname then
+		inst:RemoveEventCallback(eventname, eventname)
+	end
+]]--

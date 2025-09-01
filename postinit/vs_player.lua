@@ -35,12 +35,6 @@ local function AddVanitySlots(inst)
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
 		local realitem = data.item
 		
-		--[[
-		if realitem ~= nil and realitem:HasTag("lantern_overlay") then
-			inst.AnimState:Hide("LANTERN_OVERLAY")
-		end
-		]]--
-		
 		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 			vanityitem.components.equippable:Unequip(inst)
 			vanityitem.components.equippable:Equip(inst)
@@ -60,12 +54,7 @@ local function AddVanitySlots(inst)
 			-- "Hide" animated items for client, fx still exists in the server.
 			if realitem ~= nil then
 				_G.RemoveRealItemsFX(realitem, inst)
-			
-				if realitem and realitem:HasTag("vanity_shield") and
-				vanityitem and not vanityitem:HasTag("vanity_shield") then
-					inst.AnimState:ShowSymbol("swap_object")
-					inst.AnimState:ClearOverrideSymbol("lantern_overlay")
-				end
+				_G.ApplyOverlayEffects(vanityitem, realitem, inst)
 			
 				if realitem ~= nil and realitem.components.container ~= nil then
 					realitem.components.container:Open(inst)
@@ -88,10 +77,7 @@ local function AddVanitySlots(inst)
 				vanityitem.onequipvanity(vanityitem, inst)
 			end
 			
-			if realitem and realitem:HasTag("vanity_shield") then
-				inst.AnimState:ClearOverrideSymbol("swap_object")
-				inst.AnimState:ShowSymbol("lantern_overlay")
-			end
+			_G.RemoveOverlayEffects(vanityitem, realitem, inst)
 		end
 	end
 
