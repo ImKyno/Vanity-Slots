@@ -61,11 +61,11 @@ function params.vanity_slots.itemtestfn(container, item, slot)
 	local MUST_TAGS = item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head")
 
 	return (slot == 1 and (item:HasTag("vanity_hand") and not CANT_TAGS))
-		or (slot == 2 and (item:HasTag("vanity_body") and not CANT_TAGS))
-		or (slot == 3 and (item:HasTag("vanity_head") and not CANT_TAGS))
+        or (slot == 2 and (item:HasTag("vanity_body") and not CANT_TAGS))
+        or (slot == 3 and (item:HasTag("vanity_head") and not CANT_TAGS))
 		-- This is causing a bug where you can't move items from other containers
 		-- and also it takes priority over other containers when moving.
-		or (slot == nil and (not CANT_TAGS) and MUST_TAGS)
+		-- or (slot == nil and (MUST_TAGS) and not (CANT_TAGS))
 end
 
 -- References:

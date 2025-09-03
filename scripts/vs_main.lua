@@ -190,6 +190,11 @@ ApplyOverlayEffects = function(vanityitem, realitem, owner)
 		
 		owner.AnimState:UseHeadHatExchange(false)
 	end
+	
+	if realitem ~= nil and realitem:HasTag("playerfloater") and vanityitem ~= nil then
+		owner.AnimState:Hide("ARM_carry")
+		owner.AnimState:Show("ARM_normal")
+	end
 end
 
 global("RemoveOverlayEffects")
@@ -199,7 +204,7 @@ RemoveOverlayEffects = function(vanityitem, realitem, owner)
 		owner.AnimState:ShowSymbol("lantern_overlay")
 	end
 	
-	if realitem ~= nil and realitem:HasTag("vanity_lunarplanthat") then
+	if realitem ~= nil and realitem:HasTag("vanity_fullhead") then
 		owner.AnimState:ClearOverrideSymbol("swap_hat")
 		owner.AnimState:ShowSymbol("headbase_hat")
 	end

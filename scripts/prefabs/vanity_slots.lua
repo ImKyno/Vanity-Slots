@@ -7,14 +7,11 @@ local assets =
 	Asset("ANIM", "anim/ui_chest_3x1.zip"),
 }
 
--- TO DO: Fix vanityslots widget tooltip when opened.
+-- TO DO: Fix vanityslots widget tooltip not updating if inventory was hidden and container closed.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
 -- TO DO: Fix ghost item when unequipping backpacks.
 -- TO DO: Fix items that can't go in container unequipping onload.
--- TO DO: Fix willow lighter action when vanity.
--- TO DO: Fix personal floater when vanity.
 -- TO DO: Fix vanity items being removed when transforming to wonkey.
--- TO DO: Hide widget and slots if inventory is hidden.
 -- TO DO: Revert item when doing actions (chopping, mining, attacking, etc)
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX =
@@ -85,7 +82,8 @@ local function HideEquippedItem(inst, data, owner)
 				RemoveOverlayEffects(vanityitem, realitem, owner)
 				
 				-- Show any real item if its equipped.
-				if realitem ~= nil and realitem.components.equippable ~= nil then
+				if realitem ~= nil and realitem.components.equippable ~= nil
+				and not realitem.components.playerfloater then -- Can't unequip floater.
 					realitem.components.equippable:Unequip(owner)
 					realitem.components.equippable:Equip(owner)
 				end

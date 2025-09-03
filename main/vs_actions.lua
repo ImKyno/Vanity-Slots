@@ -124,6 +124,15 @@ function INVENTORY.spellcaster(inst, ...)
 	end
 end
 
+local _INVENTORY_channelcastable = INVENTORY.channelcastable
+function INVENTORY.channelcastable(inst, ...)
+	if inst:HasTag("vanity_equipped") then
+		return
+	else
+		return _INVENTORY_channelcastable(inst, ...)
+	end
+end
+
 local _USEITEM_ghostlyelixir = USEITEM.ghostlyelixir
 function USEITEM.ghostlyelixir(inst, doer, target, ...)
 	if target:HasTag("vanity_equipped") then
