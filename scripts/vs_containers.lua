@@ -49,31 +49,24 @@ params.vanity_slots =
 		pos = Vector3(0, -300, 0),
 	},
 	
-	type = "vanity",
 	acceptsstacks = false,
 	excludefromcrafting = true,
 	lowpriorityselection = true,
 	usespecificslotsforitems = true,
+	type = "vanity",
 }
 
 function params.vanity_slots.itemtestfn(container, item, slot)
-	local forbidtags = item:HasTag("vanity_item_forbid") 
-	or item:HasTag("heavy") or item:HasTag("broken")
+	local CANT_TAGS = item:HasAnyTag("vanity_item_forbid", "heavy", "broken")
+	local MUST_TAGS = item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head")
 
-	if slot == 1 then
-		return item:HasTag("vanity_hand") and not forbidtags
-	elseif slot == 2 then
-		return item:HasTag("vanity_body") and not forbidtags
-	elseif slot == 3 then
-		return item:HasTag("vanity_head") and not forbidtags
-	elseif slot == nil then
-		return item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head") and not forbidtags
-	end
-	
-	return false
+	return (slot == 1 and (item:HasTag("vanity_hand") and not CANT_TAGS))
+		or (slot == 2 and (item:HasTag("vanity_body") and not CANT_TAGS))
+		or (slot == 3 and (item:HasTag("vanity_head") and not CANT_TAGS))
+		-- This is causing a bug where you can't move items from other containers
+		-- and also it takes priority over other containers when moving.
+		or (slot == nil and (not CANT_TAGS) and MUST_TAGS)
 end
-
-params.vanity_slots.priorityfn = params.vanity_slots.itemtestfn
 
 -- References:
 -- pos = Vector3(310, -29, 0), -- hand_inv 
@@ -130,17 +123,18 @@ params.vanity_slots.priorityfn = params.vanity_slots.itemtestfn
 	},
 	
 function params.vanity_slots.itemtestfn(container, item, slot)
-	-- Ugly but it does the job.
+	local forbidtags = item:HasTag("vanity_item_forbid") 
+	or item:HasTag("heavy") or item:HasTag("broken")
+
 	if slot == 1 then
-		return item:HasTag("vanity_hand")
+		return item:HasTag("vanity_hand") and not forbidtags
 	elseif slot == 2 then
-		return item:HasTag("vanity_body")
+		return item:HasTag("vanity_body") and not forbidtags
 	elseif slot == 3 then
-		return item:HasTag("vanity_head") or item:HasTag("hat") -- Why only hats have consistent tag?
+		return item:HasTag("vanity_head") and not forbidtags
 	elseif slot == nil then
-		return item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head", "hat")
+		return item:HasAnyTag("vanity_hand", "vanity_body", "vanity_head") and not forbidtags
 	end
-	
 	return false
 end
 ]]--

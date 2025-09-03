@@ -6,13 +6,15 @@ local Text        = require("widgets/text")
 local ImageButton = require("widgets/imagebutton")
 local TextButton  = require("widgets/textbutton")
 
-local W_SCALE     = .2
+local W_SCALE     = .33 -- .2
 local W_ATLAS     = "images/crafting_menu_icons.xml"
 
 local function TryVanitySlots(self)
-	if self.owner.replica.inventory ~= nil then
-		local vanityslots = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-        
+	local inventory = self.owner.replica.inventory
+	
+	if inventory ~= nil then
+		local vanityslots = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		
 		if vanityslots ~= nil and vanityslots:HasTag("vanity_slots") then
 			self:Show()
 			return true
@@ -35,11 +37,10 @@ local VanitySlots = Class(Widget, function(self, owner)
 	self.vanitySlotsBtn = self.root:AddChild(ImageButton(W_ATLAS, "filter_warable.tex", nil, nil, nil, nil, {1,1}, {0,0}))
 	self.vanitySlotsBtn:SetPosition(0, 0, 0)
 	self.vanitySlotsBtn:SetScale(W_SCALE, W_SCALE, W_SCALE)
-	
-	-- self.vanitySlotsBtn:SetOnClick(ToggleVanitySlots)
+
 	self.vanitySlotsBtn:SetOnClick(function() 
-		local vanitycontainer = ThePlayer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-	
+		local vanitycontainer = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+
 		if vanitycontainer and not vanitycontainer.replica.container:IsOpenedBy(ThePlayer) then
 			vanitycontainer.replica.container:Open(ThePlayer)
 			self.VanitySlotsShown = true
@@ -54,7 +55,7 @@ local VanitySlots = Class(Widget, function(self, owner)
 	-- TO DO: Create setting to let player decide if container starts open or closed.
 	if not TUNING.VANITYSLOTS_STARTOPEN then
 		self.inst:DoTaskInTime(0, function()
-			local vanitycontainer = ThePlayer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+			local vanitycontainer = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 	
 			if vanitycontainer then
 				vanitycontainer.replica.container:Close(ThePlayer)				
@@ -66,10 +67,36 @@ local VanitySlots = Class(Widget, function(self, owner)
 	
 	self.VanitySlotsShown = false
 	self:RefreshTooltips()
-	self:Hide()
+	self:StartUpdating()
+
+	self.inst:ListenForEvent("playerdeactivated", function(inst)
+		local inventory = self.owner.replica.inventory
+		local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		
+		if vanitycontainer ~= nil then
+			vanitycontainer.replica.container:Close(ThePlayer)
+			self.VanitySlotsShown = false
+			self:RefreshTooltips()
+		end
+	end, self.owner)
+	
+	self.inst:ListenForEvent("playeractivated", function(inst)
+		local inventory = self.owner.replica.inventory
+		local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		
+		if vanitycontainer ~= nil then
+			vanitycontainer.replica.container:Open(ThePlayer)
+			self.VanitySlotsShown = true
+			self:RefreshTooltips()
+		end
+	end, self.owner)
 	
 	self.inst:ListenForEvent("refreshinventory", function(inst)
         TryVanitySlots(self)
+    end, self.owner)
+
+    self.inst:ListenForEvent("finishseamlessplayerswap", function()
+		self:Show()
     end, self.owner)
 	
 	self.inst:ListenForEvent("equip", function(inst, data)
@@ -119,6 +146,10 @@ function VanitySlots:RefreshTooltips()
 	else
 		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_OPEN)
 	end
+end
+
+function VanitySlots:OnUpdate(dt)
+	self:RefreshTooltips()
 end
 
 return VanitySlots

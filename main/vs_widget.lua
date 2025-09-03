@@ -30,12 +30,16 @@ AddClassPostConstruct("widgets/controls", function(self, inst)
 	if owner == nil or owner:HasTag("playerghost") then
 		return 
 	end
-	
-	-- print("VANITY SLOTS: SPAWNING VANITY SLOTS FOR PLAYER.")
-	self.vanitySlotsBtn = self.bottom_root:AddChild(VanitySlots(owner))
-	self.vanitySlotsBtn:SetPosition(530, 30)
+
+	self.vanitySlotsBtn = self.inv:AddChild(VanitySlots(owner))
+	self.vanitySlotsBtn:SetPosition(875, 73)
 end)
 
--- Position References
+-- Position References 
+-- (self.bottom_root)
 -- Bottom Right: 530, 30
 -- Bottom Left: -530, 30
+
+-- (self.inv)
+-- Bottom Right: 875, 73
+-- Bottom Left: -875, 73

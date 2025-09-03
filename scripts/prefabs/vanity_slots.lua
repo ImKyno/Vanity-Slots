@@ -9,9 +9,12 @@ local assets =
 
 -- TO DO: Fix vanityslots widget tooltip when opened.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
--- TO DO: Fix items that can't go in container not swapping with equipped vanity.
 -- TO DO: Fix ghost item when unequipping backpacks.
--- TO DO: Swap equipped item with vanity item.
+-- TO DO: Fix items that can't go in container unequipping onload.
+-- TO DO: Fix willow lighter action when vanity.
+-- TO DO: Fix personal floater when vanity.
+-- TO DO: Fix vanity items being removed when transforming to wonkey.
+-- TO DO: Hide widget and slots if inventory is hidden.
 -- TO DO: Revert item when doing actions (chopping, mining, attacking, etc)
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX =
@@ -148,7 +151,7 @@ local function fn()
 
 	inst:AddComponent("container")
 	inst.components.container:WidgetSetup("vanity_slots") 
-	inst.components.container.stay_open_on_hide = true
+	-- inst.components.container.stay_open_on_hide = true
 
 	inst.ShowEquippedItem = ShowEquippedItem
 	inst.HideEquippedItem = HideEquippedItem

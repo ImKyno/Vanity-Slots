@@ -648,6 +648,22 @@ AddPrefabPostInit("nutrientsgoggleshat", PlantRegistryHatPostInit)
 
 local function SlurperPostInit(inst)
 	inst:AddTag("vanity_item_restricted")
+	
+	-- Required for EQUIPVANITY action.
+	inst.onequiprestricted = function(inst, owner, from_ground)
+		if owner ~= nil then
+			local container = inst.components.inventoryitem
+			container.__cangoincontainer = container.cangoincontainer
+			container.cangoincontainer = true
+		end
+	end
+	
+	inst.onunequiprestricted = function(inst, owner)
+		if owner ~= nil then
+			local container = inst.components.inventoryitem
+			container.cangoincontainer = container.__cangoincontainer
+		end
+	end
 
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
