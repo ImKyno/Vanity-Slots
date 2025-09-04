@@ -7,20 +7,9 @@ local UpvalueHacker = require("vs_upvaluehacker")
 require("vs_tuning")
 
 local function RestrictedItemsPostInit(inst)
-	-- Required for EQUIPVANITY action.
-	inst.onequiprestricted = function(inst, owner, from_ground)
-		if owner ~= nil then
-			local container = inst.components.inventoryitem
-			container.__cangoincontainer = container.cangoincontainer
-			container.cangoincontainer = true
-		end
-	end
-	
-	inst.onunequiprestricted = function(inst, owner)
-		if owner ~= nil then
-			local container = inst.components.inventoryitem
-			container.cangoincontainer = container.__cangoincontainer
-		end
+	inst.onpreequipvanity = function(inst, owner, from_ground)
+		inst.components.inventoryitem.__cangoincontainer = inst.components.inventoryitem.cangoincontainer
+		inst.components.inventoryitem.cangoincontainer = true
 	end
 
 	inst.onequipvanity = function(inst, owner, from_ground)
@@ -33,7 +22,7 @@ local function RestrictedItemsPostInit(inst)
 				inst.components.equippable:Unequip(owner)
 			end
 		end
-		
+
 		inst:RemoveTag("vanity_equipped")
 	end
 end

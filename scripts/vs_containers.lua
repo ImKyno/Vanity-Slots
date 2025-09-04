@@ -17,15 +17,15 @@ function containers.widgetsetup(container, prefab, data, ...)
 	end
 end
 
--- I don't think its possible to make a equip slot that 
--- Does not conflict with equippable and inventory components and other slot mods (?) 
--- So... we are making a container attached to the player instead 💀💀
+-- I don't think its possible to make a equip slot that does not
+-- conflict with equippable and inventory components and other slot mods (?) 
+-- so... we are making a container attached to the player instead 💀💀
 
 -- UPDATE: Setting position for both widget and container is a pain in the ass
 -- I'll just hardcode the position below the player, this way I don't need to 
 -- lose my sanity while making it compatible with pesky mods that add 100 inv slots.
 
--- TO DO: Make position compatible with mods that change the inventory size... (?)
+-- TO DO (MAYBE): Make position compatible with mods that change the inventory size.
 params.vanity_slots =
 {
 	widget =
@@ -38,7 +38,7 @@ params.vanity_slots =
 		},
 		
 		slotbg =
-		{
+		{	-- Using game assets, this way it should already be compatible with HUD skin mods.
 			{ image = "equip_slot.tex",      atlas = "images/hud.xml" },
 			{ image = "equip_slot_body.tex", atlas = "images/hud.xml" },
 			{ image = "equip_slot_head.tex", atlas = "images/hud.xml" },
@@ -53,7 +53,7 @@ params.vanity_slots =
 	excludefromcrafting = true,
 	lowpriorityselection = true,
 	usespecificslotsforitems = true,
-	type = "vanity",
+	type = "vanity", -- DO NOT use known same types because opening another will close us.
 }
 
 function params.vanity_slots.itemtestfn(container, item, slot)
@@ -65,7 +65,7 @@ function params.vanity_slots.itemtestfn(container, item, slot)
         or (slot == 3 and (item:HasTag("vanity_head") and not CANT_TAGS))
 		-- This is causing a bug where you can't move items from other containers
 		-- and also it takes priority over other containers when moving.
-		-- or (slot == nil and (MUST_TAGS) and not (CANT_TAGS))
+		or (slot == nil and (MUST_TAGS) and not (CANT_TAGS))
 end
 
 -- References:

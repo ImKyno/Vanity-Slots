@@ -6,13 +6,7 @@ local UpvalueHacker = require("vs_upvaluehacker")
 
 require("vs_tuning")
 
--- TO DO: Fix these items:
--- bushhat (player invisible when equipping vanity animated hat)
-
--- alterguardianhat (gives light when vanity)
--- wagpunkhat (fx does not update when vanity is equipped)
--- voidclothhat (dont hide when vanity equipped)
--- lunarplanthat (dont hide when vanity equipped)
+-- TO DO: Fix wagpunkhat (fx does not update when vanity is equipped)
 
 -- Why the fuck are we not using "onequiptomodel" instead?
 -- onequiptomodel messes up with Mannequin and we don't want that. We are going to
@@ -649,20 +643,9 @@ AddPrefabPostInit("nutrientsgoggleshat", PlantRegistryHatPostInit)
 local function SlurperPostInit(inst)
 	inst:AddTag("vanity_item_restricted")
 	
-	-- Required for EQUIPVANITY action.
-	inst.onequiprestricted = function(inst, owner, from_ground)
-		if owner ~= nil then
-			local container = inst.components.inventoryitem
-			container.__cangoincontainer = container.cangoincontainer
-			container.cangoincontainer = true
-		end
-	end
-	
-	inst.onunequiprestricted = function(inst, owner)
-		if owner ~= nil then
-			local container = inst.components.inventoryitem
-			container.cangoincontainer = container.__cangoincontainer
-		end
+	inst.onpreequipvanity = function(inst, owner, from_ground)
+		inst.components.inventoryitem.__cangoincontainer = inst.components.inventoryitem.cangoincontainer
+		inst.components.inventoryitem.cangoincontainer = true
 	end
 
 	inst.onequipvanity = function(inst, owner, from_ground)

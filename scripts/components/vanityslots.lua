@@ -9,7 +9,6 @@ local VanitySlots = Class(function(self, inst)
 
 	self.callbacks = {}
 	self.bits = 3
-	self.pause = nil
 	self.onreset = nil
 	
 	inst:ListenForEvent("ms_respawnedfromghost", OnRespawn)
@@ -68,10 +67,10 @@ function VanitySlots:UpdateVanitySlotsInventory()
 			end
 		end
 	end
-	
+
 	--[[
 	if vanityslots then
-		if not vanitycontainer then
+		if not vanitycontainer and not self.inst:HasTag("playerghost") then
 			-- Has slots but no container. Give one container.
 			local newcontainer = SpawnPrefab(vanityslots)
 			self.inst.components.inventory:Equip(newcontainer)
@@ -96,6 +95,18 @@ function VanitySlots:UpdateVanitySlotsInventory()
 		end
 	end
 	]]--
+end
+
+function VanitySlots:TransferComponent(newinst)
+	local vanityslots = newinst.components.vanityslots
+	
+	vanityslots.callbacks = self.callbacks
+	vanityslots.bits = self.bits
+	vanityslots.onreset = self.onreset
+	
+	if vanityslots then
+		vanityslots:UpdateVanitySlotsInventory()
+	end
 end
 
 return VanitySlots

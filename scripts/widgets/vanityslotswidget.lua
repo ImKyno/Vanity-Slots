@@ -9,7 +9,7 @@ local TextButton  = require("widgets/textbutton")
 local W_SCALE     = .33 -- .2
 local W_ATLAS     = "images/crafting_menu_icons.xml"
 
-local function TryVanitySlots(self)
+local function RefreshVanitySlots(self)
 	local inventory = self.owner.replica.inventory
 	
 	if inventory ~= nil then
@@ -52,7 +52,8 @@ local VanitySlots = Class(Widget, function(self, owner)
 		end
 	end)
 	
-	-- TO DO: Create setting to let player decide if container starts open or closed.
+	-- TO DO (MAYBE): Create setting to let player decide if container starts open or closed.
+	-- HOW THE fuck do I create a client setting on a server-side mod? Oh, right, Adai did that with Accomplishments Mod.
 	if not TUNING.VANITYSLOTS_STARTOPEN then
 		self.inst:DoTaskInTime(0, function()
 			local vanitycontainer = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
@@ -92,7 +93,7 @@ local VanitySlots = Class(Widget, function(self, owner)
 	end, self.owner)
 	
 	self.inst:ListenForEvent("refreshinventory", function(inst)
-        TryVanitySlots(self)
+        RefreshVanitySlots(self)
     end, self.owner)
 
     self.inst:ListenForEvent("finishseamlessplayerswap", function()

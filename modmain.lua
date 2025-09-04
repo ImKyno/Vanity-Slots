@@ -21,6 +21,7 @@ local init_postinit =
 
 	"vs_player",
 	"vs_inventory",
+	"vs_inventoryitem",
 }
 
 for _, v in pairs(init_main) do

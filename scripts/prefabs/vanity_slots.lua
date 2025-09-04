@@ -10,7 +10,6 @@ local assets =
 -- TO DO: Fix vanityslots widget tooltip not updating if inventory was hidden and container closed.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
 -- TO DO: Fix ghost item when unequipping backpacks.
--- TO DO: Fix items that can't go in container unequipping onload.
 -- TO DO: Fix vanity items being removed when transforming to wonkey.
 -- TO DO: Revert item when doing actions (chopping, mining, attacking, etc)
 
@@ -69,13 +68,17 @@ local function HideEquippedItem(inst, data, owner)
 				if vanityitem:HasTag("vanity_equipped") then
 					vanityitem:RemoveTag("vanity_equipped")
 				end
-
+				
 				vanityitem.components.equippable:Unequip(owner)
 				
 				if vanityitem.onunequipvanity ~= nil then
 					vanityitem.onunequipvanity(vanityitem, owner)
 				else
 					RemoveVanityEffects(vanityitem, owner)
+				end
+				
+				if vanityitem:HasTag("vanity_item_restricted") then
+					vanityitem.components.inventoryitem.cangoincontainer = vanityitem.components.inventoryitem.__cangoincontainer
 				end
 
 				RemoveContainerEffects(vanityitem, owner)

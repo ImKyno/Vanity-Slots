@@ -17,49 +17,44 @@ local INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX = table.invert(EQUIPSLOTS_VANITYSLOT
 
 -- Action for equipping items that can't go in inventory as vanity. i.e Backpacks.
 AddAction("EQUIPVANITY", STRINGS.ACTIONS.EQUIPVANITY, function(act)
-	local owner = act.doer
-	local vanityitem = act.target
-	local vanityslots = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-	local equipslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslots.components.equippable.equipslot]
+    local owner = act.doer
+    local vanityitem = act.target
+    local vanityslots = owner.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+    local equipslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslots.components.equippable.equipslot]
 
-	local equippedslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityitem.components.equippable.equipslot]
-	local equippeditem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(equippedslot)
+    local equippedslot = EQUIPSLOTS_VANITYSLOTS_INDEX[vanityitem.components.equippable.equipslot]
+    local equippeditem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(equippedslot)
 
-	if owner ~= nil and vanityslots ~= nil and vanityitem ~= nil then
-		-- vanityitem.components.inventoryitem.cangoincontainer = true
-		
-		if vanityitem.onequiprestricted ~= nil then
-			vanityitem.onequiprestricted(vanityitem, owner)
+    if owner ~= nil and vanityslots ~= nil and vanityitem ~= nil then
+		if vanityitem.onpreequipvanity ~= nil then
+			vanityitem.onpreequipvanity(vanityitem, owner)
 		end
 
-		if equippeditem ~= nil then
-			if owner ~= nil and owner.components.inventory ~= nil then
-				local equippeditem2 = vanityslots.components.container:RemoveItemBySlot(equippedslot)
+        if equippeditem ~= nil then
+            if owner ~= nil and owner.components.inventory ~= nil then
+                local equippeditem2 = vanityslots.components.container:RemoveItemBySlot(equippedslot)
 
-				if equippeditem2 ~= nil then
-					equippeditem2.prevcontainer = nil
-					equippeditem2.prevslot = nil
-					owner.components.inventory:GiveItem(equippeditem, nil, owner:GetPosition())
-				end
-			else
-				vanityslots.components.container:DropItem(equippeditem)
-			end
-		end
+                if equippeditem2 ~= nil then
+                    equippeditem2.prevcontainer = nil
+                    equippeditem2.prevslot = nil
+                    owner.components.inventory:GiveItem(equippeditem, nil, owner:GetPosition())
+                end
+            else
+                vanityslots.components.container:DropItem(equippeditem)
+            end
+        end
 
-		vanityslots.components.container:GiveItem(vanityitem, equipslot, vanityitem:GetPosition())
-		
-		if vanityitem.onunequiprestricted ~= nil then
-			vanityitem.onunequiprestricted(vanityitem, owner)
-		end
+        vanityslots.components.container:GiveItem(vanityitem, equipslot, vanityitem:GetPosition())
 
-		if vanityitem.onequipvanity ~= nil then
-			vanityitem.onequipvanity(vanityitem, owner)
-		end
+        if vanityitem.onequipvanity ~= nil then
+            vanityitem.onequipvanity(vanityitem, owner)
+        end
 
-		-- vanityitem.components.inventoryitem.cangoincontainer = false
+		-- Can't be set here. Will set on HideEquippedItem function instead.
+		-- keepcangoincontainer.cangoincontainer = keepcangoincontainer.__cangoincontainer
 
-		return true
-	end
+        return true
+    end
 end)
 
 ACTIONS.EQUIPVANITY.priority = 2
@@ -89,11 +84,11 @@ function INVENTORY.magiciantool(inst, ...)
 end
 
 local _INVENTORY_equippable = INVENTORY.equippable
-function INVENTORY.equippable(inst, actions, ...)
+function INVENTORY.equippable(inst, ...)
 	if inst:HasTag("vanity_equipped") then
 		return
 	else
-		return _INVENTORY_equippable(inst, actions, ...)
+		return _INVENTORY_equippable(inst, ...)
 	end
 end
 

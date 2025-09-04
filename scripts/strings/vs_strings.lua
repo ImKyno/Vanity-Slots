@@ -2,4 +2,3 @@ STRINGS.UI.HUD.VANITYSLOTS_CLOSE = "Close Cosmetic Slots"
 STRINGS.UI.HUD.VANITYSLOTS_OPEN = "View Cosmetic Slots"
 
 STRINGS.ACTIONS.EQUIPVANITY = "Equip as Cosmetic"
-STRINGS.ACTIONS.UNEQUIPVANITY = "Unequip Cosmetic" -- Unused.

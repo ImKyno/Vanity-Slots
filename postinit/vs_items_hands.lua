@@ -6,9 +6,6 @@ local UpvalueHacker = require("vs_upvaluehacker")
 
 require("vs_tuning")
 
--- TO DO: Fix these items:
--- shieldofterror (vanity item dont show when its equipped, lantern dont show)
-
 local function TorchPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then

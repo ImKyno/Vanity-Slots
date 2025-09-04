@@ -159,7 +159,7 @@ ApplyContainerEffects = function(vanityitem, realitem, owner)
 	end
 end
 
--- Revert to original container status.
+-- Restore original container effects.
 global("RemoveContainerEffects")
 RemoveContainerEffects = function(vanityitem, owner)
 	if vanityitem ~= nil and vanityitem.components.container ~= nil then

@@ -1,8 +1,7 @@
 -- Common Dependencies.
-local _G           = GLOBAL
-local require      = _G.require
-local EQUIPSLOTS   = _G.EQUIPSLOTS
-local Inventory    = require("components/inventory")
+local _G        = GLOBAL
+local require   = _G.require
+local Inventory = require("components/inventory")
 
 -- Workaround for opening the container when inventory shows up if it was hidden.
 local _Show = Inventory.Show

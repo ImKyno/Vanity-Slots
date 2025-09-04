@@ -42,7 +42,7 @@ if locale == "pt" then
 ]]
 end
 
-if locale == "zh" or locale == "zhr" then
+if locale == "zh" then
 	name                    = "化妆品槽位 (Cosmetic Slots)"
 	description             =
 [[
@@ -54,5 +54,20 @@ if locale == "zh" or locale == "zhr" then
 
 󰀌 Mod 版本： 1.0-A
 󰀧 更新： Mod 发布
+]]
+end
+
+if locale == "zhr" then
+	name                    = "化妝品槽位 (Cosmetic Slots)"
+	description             =
+[[
+󰀞 新增手部、身體和頭部飾品槽，無需放棄現有裝備，即可展現你的時尚渴望！以火辣風格暢遊宇宙！
+
+󰀖 你是否曾經想用某個皮膚，卻因為物品本身不夠好而無法使用？現在，你可以使用任何可裝備的物品，而無需擔心它是否真的被裝備了。
+
+󰀏 注意！雖然裝備在裝飾槽中的物品不會損失耐久度或損壞，但它們不會為玩家帶來好處。
+
+󰀌 Mod 版本: 1.0-A
+󰀧 更新: Mod 發射
 ]]
 end

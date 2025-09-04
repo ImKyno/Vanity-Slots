@@ -23,7 +23,7 @@ local ExtraEquipSlotsMods =
 	"375850593",
 }
 
--- TO DO: Make widget position compatible with EES mods.
+-- TO DO (MAYBE): Make widget position compatible with EES mods.
 AddClassPostConstruct("widgets/controls", function(self, inst)
 	local owner = self.owner
 	
