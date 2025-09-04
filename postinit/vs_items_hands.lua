@@ -306,3 +306,28 @@ local function VoidClothUmbrellaPostInit(inst)
 end
 
 AddPrefabPostInit("voidcloth_umbrella", VoidClothUmbrellaPostInit)
+
+local function PropSignPostInit(inst)
+	inst:AddTag("vanity_item_restricted")
+
+	inst.onpreequipvanity = function(inst, owner, from_ground)
+		inst.components.inventoryitem.__cangoincontainer = inst.components.inventoryitem.cangoincontainer
+		inst.components.inventoryitem.cangoincontainer = true
+	end
+
+	inst.onequipvanity = function(inst, owner, from_ground)
+		inst:AddTag("vanity_equipped")
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+
+		inst:RemoveTag("vanity_equipped")
+	end
+end
+
+AddPrefabPostInit("propsign", PropSignPostInit)
