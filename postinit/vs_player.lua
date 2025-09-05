@@ -35,7 +35,7 @@ local function AddVanitySlots(inst)
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
 		local realitem = data.item
 		
-		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+		if vanityitem ~= nil and vanityitem.components.equippable ~= nil and not realitem:HasTag("heavy") then
 			vanityitem.components.equippable:Unequip(inst)
 			vanityitem.components.equippable:Equip(inst)
 			
