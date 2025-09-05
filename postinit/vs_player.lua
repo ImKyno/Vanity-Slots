@@ -85,7 +85,9 @@ local function AddVanitySlots(inst)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		
 		-- Re-equip vanity items on transform.
-		vanityslots:DoTaskInTime(0, vanityslots.RefreshEquippedItem)
+		if vanityslots ~= nil then
+			vanityslots:DoTaskInTime(0, vanityslots.RefreshEquippedItem)
+		end
 	end
 
 	inst:AddTag("vanityslotsowner")

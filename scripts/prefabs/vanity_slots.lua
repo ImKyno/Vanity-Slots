@@ -10,6 +10,7 @@ local assets =
 -- TO DO: Fix vanityslots widget tooltip not updating if inventory was hidden and container closed.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
 -- TO DO: Fix ghost item when unequipping backpacks.
+-- TO DO: Show player carrying heavy statues if vanity is equipped.
 -- TO DO: Revert item when doing actions (chopping, mining, attacking, etc)
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX =
@@ -59,7 +60,7 @@ local function HideEquippedItem(inst, data, owner)
 	local vanityitem = data.prev_item
 	
 	local realslot = INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslot]
-	local realitem = owner.components.inventory:GetEquippedItem(realslot)
+	local realitem = owner ~= nil and owner.components.inventory:GetEquippedItem(realslot)
 	
 	if owner ~= nil then
 		if vanityslot ~= nil then
@@ -77,8 +78,6 @@ local function HideEquippedItem(inst, data, owner)
 				end
 				
 				if vanityitem:HasTag("vanity_item_restricted") then
-					local newowner = vanityitem.components.inventoryitem:GetGrandOwner()
-					newowner.components.inventory:DropItem(vanityitem)
 					vanityitem.components.inventoryitem.cangoincontainer = vanityitem.components.inventoryitem.__cangoincontainer
 				end
 
@@ -108,11 +107,19 @@ local function OnUnequip(inst, owner)
 	-- inst:RemoveEventCallback("itemlose", inst.HideEquippedItem)
 end
 
+local function OnDropped(inst)
+	if inst:IsValid() then
+		inst.components.container:DropEverything()
+		inst:Remove()
+	end
+end
+
 local function OnEntityRemove(inst, owner)
 	inst.components.container:Close(owner)
 
 	inst:RemoveEventCallback("itemget", ShowEquippedItem)
 	inst:RemoveEventCallback("itemlose", HideEquippedItem)
+	inst:RemoveEventCallback("ondropped", OnDropped)
 end
 
 local function InitVanitySlots(inst, owner)
@@ -139,6 +146,7 @@ local function fn()
 	inst.AnimState:PlayAnimation("anim")
 
 	inst:AddTag("vanity_slots")
+	inst:AddTag("nosteal")
 
 	inst.entity:SetPristine()
 	
@@ -169,8 +177,10 @@ local function fn()
 
 	inst:ListenForEvent("itemget", ShowEquippedItem)
 	inst:ListenForEvent("itemlose", HideEquippedItem)
-	inst:ListenForEvent("onremove", OnEntityRemove)
 	
+	inst:ListenForEvent("ondropped", OnDropped)
+	inst:ListenForEvent("onremove", OnEntityRemove)
+
 	-- Need this because stupid OnLoad won't call equip event.
 	inst:DoTaskInTime(0, InitVanitySlots)
 

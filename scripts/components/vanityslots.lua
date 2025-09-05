@@ -7,6 +7,8 @@ local VanitySlots = Class(function(self, inst)
 	self.maxslots = TUNING.VANITY_SLOTS_MAXSLOTS -- Unused.
 
     self.inst:AddTag("vanityslotsowner")
+	
+	inst:ListenForEvent("ms_respawnedfromghost", OnRespawn)
 end)
 
 function VanitySlots:OnRemoveFromEntity()
