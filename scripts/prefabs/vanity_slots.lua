@@ -10,7 +10,6 @@ local assets =
 -- TO DO: Fix vanityslots widget tooltip not updating if inventory was hidden and container closed.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
 -- TO DO: Fix ghost item when unequipping backpacks.
--- TO DO: Fix vanity items being removed when transforming to wonkey.
 -- TO DO: Revert item when doing actions (chopping, mining, attacking, etc)
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX =
@@ -78,6 +77,8 @@ local function HideEquippedItem(inst, data, owner)
 				end
 				
 				if vanityitem:HasTag("vanity_item_restricted") then
+					local newowner = vanityitem.components.inventoryitem:GetGrandOwner()
+					newowner.components.inventory:DropItem(vanityitem)
 					vanityitem.components.inventoryitem.cangoincontainer = vanityitem.components.inventoryitem.__cangoincontainer
 				end
 
@@ -102,8 +103,16 @@ end
 local function OnUnequip(inst, owner)
 	inst.components.container:Close(owner)
 	
-	inst:RemoveEventCallback("itemget", inst.ShowEquippedItem)
-	inst:RemoveEventCallback("itemlose", inst.HideEquippedItem)
+	-- We get unequipped during seamlessplayerswap, don't remove callback here.
+	-- inst:RemoveEventCallback("itemget", inst.ShowEquippedItem)
+	-- inst:RemoveEventCallback("itemlose", inst.HideEquippedItem)
+end
+
+local function OnEntityRemove(inst, owner)
+	inst.components.container:Close(owner)
+
+	inst:RemoveEventCallback("itemget", ShowEquippedItem)
+	inst:RemoveEventCallback("itemlose", HideEquippedItem)
 end
 
 local function InitVanitySlots(inst, owner)
@@ -143,22 +152,24 @@ local function fn()
 
 	inst:AddComponent("inventoryitem")
 	inst.components.inventoryitem.cangoincontainer = false
+	inst.components.inventoryitem.keepondrown = true
 
 	inst:AddComponent("equippable")
 	inst.components.equippable.equipslot = EQUIPSLOTS.VANITY
-	inst.components.equippable:SetPreventUnequipping(true)
+	inst.components.equippable:SetPreventUnequipping(false) -- if true will prevent transfering items during seamlessplayerswap.
 	inst.components.equippable:SetOnEquip(OnEquip)
 	inst.components.equippable:SetOnUnequip(OnUnequip)
 
 	inst:AddComponent("container")
-	inst.components.container:WidgetSetup("vanity_slots") 
-	-- inst.components.container.stay_open_on_hide = true
+	inst.components.container:WidgetSetup("vanity_slots")
 
 	inst.ShowEquippedItem = ShowEquippedItem
 	inst.HideEquippedItem = HideEquippedItem
+	inst.RefreshEquippedItem = InitVanitySlots
 
 	inst:ListenForEvent("itemget", ShowEquippedItem)
 	inst:ListenForEvent("itemlose", HideEquippedItem)
+	inst:ListenForEvent("onremove", OnEntityRemove)
 	
 	-- Need this because stupid OnLoad won't call equip event.
 	inst:DoTaskInTime(0, InitVanitySlots)

@@ -21,11 +21,11 @@ local function AddVanitySlots(inst)
 			vanityslots:Remove()
 		end
 	end
-	
+
 	local function CheckVanitySlots(inst, owner)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		
-		if not vanityslots then
+		if vanityslots == nil then
 			inst.components.vanityslots:UpdateVanitySlotsInventory()
 		end
 	end
@@ -80,6 +80,13 @@ local function AddVanitySlots(inst)
 			_G.RemoveOverlayEffects(vanityitem, realitem, inst)
 		end
 	end
+	
+	local function OnSeamlessPlayerSwap(inst)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		
+		-- Re-equip vanity items on transform.
+		vanityslots:DoTaskInTime(0, vanityslots.RefreshEquippedItem)
+	end
 
 	inst:AddTag("vanityslotsowner")
 
@@ -88,7 +95,6 @@ local function AddVanitySlots(inst)
 	end
 	
 	inst:AddComponent("vanityslots")
-	inst.components.vanityslots.bits = 3
 	
 	inst.RemoveVanitySlots = RemoveVanitySlots
 	inst:ListenForEvent("death", RemoveVanitySlots)
@@ -98,6 +104,8 @@ local function AddVanitySlots(inst)
 	
 	inst:ListenForEvent("equip", SwapToVanityItem)
 	inst:ListenForEvent("unequip", SwapToRealItem)
+	
+	inst:ListenForEvent("seamlessplayerswap", OnSeamlessPlayerSwap)
 end
 
 AddPlayerPostInit(AddVanitySlots)

@@ -1,5 +1,6 @@
--- Change to true if you want the container to start open.
-TUNING.VANITYSLOTS_STARTOPEN = true
+-- Change to true if you want the container to start closed.
+TUNING.VANITYSLOTS_STARTCLOSED = false
+TUNING.VANITY_SLOTS_MAXSLOTS = 3
 
 TUNING.VANITY_COMMON_HEAD_ITEMS =
 {
@@ -39,9 +40,10 @@ TUNING.VANITY_RESTRICTED_ITEMS =
 	"icepack",
 	"krampus_sack",
 	"piggyback",
-	"propsign",
+	-- "propsign", -- Moved to his own postinit.
 	"seedpouch",
 	"spicepack",
+	-- "slurper", -- Moved to his own postinit.
 }
 
 -- Items that can't be equipped regardless.

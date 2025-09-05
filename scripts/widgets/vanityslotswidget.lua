@@ -11,16 +11,16 @@ local W_ATLAS     = "images/crafting_menu_icons.xml"
 
 local function RefreshVanitySlots(self)
 	local inventory = self.owner.replica.inventory
-	
+
 	if inventory ~= nil then
-		local vanityslots = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		
-		if vanityslots ~= nil and vanityslots:HasTag("vanity_slots") then
+		if vanitycontainer ~= nil and vanitycontainer:HasTag("vanity_slots") then
 			self:Show()
 			return true
 		end
 	end
-	
+
 	self:Hide()
 	return false
 end
@@ -29,11 +29,9 @@ end
 local VanitySlots = Class(Widget, function(self, owner)
 	self.owner = owner
 	Widget._ctor(self, "Vanity Slots")
-	
+
 	self.root = self:AddChild(Widget("root"))
-	
-	self.tasks = {}
-	
+
 	self.vanitySlotsBtn = self.root:AddChild(ImageButton(W_ATLAS, "filter_warable.tex", nil, nil, nil, nil, {1,1}, {0,0}))
 	self.vanitySlotsBtn:SetPosition(0, 0, 0)
 	self.vanitySlotsBtn:SetScale(W_SCALE, W_SCALE, W_SCALE)
@@ -51,15 +49,15 @@ local VanitySlots = Class(Widget, function(self, owner)
 			self:RefreshTooltips()
 		end
 	end)
-	
+
 	-- TO DO (MAYBE): Create setting to let player decide if container starts open or closed.
 	-- HOW THE fuck do I create a client setting on a server-side mod? Oh, right, Adai did that with Accomplishments Mod.
-	if not TUNING.VANITYSLOTS_STARTOPEN then
+	if TUNING.VANITYSLOTS_STARTCLOSED then
 		self.inst:DoTaskInTime(0, function()
 			local vanitycontainer = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
-	
+
 			if vanitycontainer then
-				vanitycontainer.replica.container:Close(ThePlayer)				
+				vanitycontainer.replica.container:Close(ThePlayer)
 				self.VanitySlotsShown = false
 				self:RefreshTooltips()
 			end
@@ -69,7 +67,11 @@ local VanitySlots = Class(Widget, function(self, owner)
 	self.VanitySlotsShown = false
 	self:RefreshTooltips()
 	self:StartUpdating()
-
+	
+	self.inst:ListenForEvent("refreshinventory", function(inst)
+        RefreshVanitySlots(self)
+    end, self.owner)
+--[[
 	self.inst:ListenForEvent("playerdeactivated", function(inst)
 		local inventory = self.owner.replica.inventory
 		local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
@@ -91,54 +93,51 @@ local VanitySlots = Class(Widget, function(self, owner)
 			self:RefreshTooltips()
 		end
 	end, self.owner)
-	
-	self.inst:ListenForEvent("refreshinventory", function(inst)
-        RefreshVanitySlots(self)
-    end, self.owner)
-
-    self.inst:ListenForEvent("finishseamlessplayerswap", function()
-		self:Show()
-    end, self.owner)
-	
+]]--
 	self.inst:ListenForEvent("equip", function(inst, data)
-		if data.item ~= nil and data.item:HasTag("vanity_slots") then
+		if data.eslot == EQUIPSLOTS.VANITY then
 			self:Show()
+			
+			local inventory = self.owner.replica.inventory
+			local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+			
+			if vanitycontainer ~= nil then
+				vanitycontainer.replica.container:Open(ThePlayer)
+				self.VanitySlotsShown = true
+				self:RefreshTooltips()
+			end
 		end
 	end, self.owner)
-	
+
 	self.inst:ListenForEvent("unequip", function(inst, data)
 		if data.eslot == EQUIPSLOTS.VANITY then
 			self:Hide()
+			
+			local inventory = self.owner.replica.inventory
+			local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+			
+			if vanitycontainer ~= nil then
+				vanitycontainer.replica.container:Close(ThePlayer)
+				self.VanitySlotsShown = false
+				self:RefreshTooltips()
+			end
 		end
 	end, self.owner)
-	
+
 	-- Client only event, because when inventory is closed, we will stop
 	-- getting "equip" and "unequip" events, but we can also assume that our inventory is emptied.
 	self.inst:ListenForEvent("inventoryclosed", function()
 		self:Hide()
+		
+		local inventory = self.owner.replica.inventory
+		local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		
+		if vanitycontainer ~= nil then
+			vanitycontainer.replica.container:Close(ThePlayer)
+			self.VanitySlotsShown = false
+			self:RefreshTooltips()
+		end
     end, self.owner)
-	
-	-----------------------------------------------------------------------------------------------------------------
-	-- Shows x/y position on the screen for easy lookup.
-	--[[
-	self.animationUp = self.root:AddChild(Text(NEWFONT_OUTLINE, 30, "Y: ", {unpack(UICOLOURS.RED)}))
-	self.animationUp:SetPosition(-520, -350)
-  
-	self.tasks[#self.tasks + 1] = self.inst:DoPeriodicTask(.1, function()
-		local pos = self.animationUp:GetPosition()
-		self.animationUp:SetPosition(pos.x, pos.y > 350 and -350 or pos.y + 5)
-		self.animationUp:SetString("Y: " .. pos.y)
-	end)
-
-	self.animationRight = self.root:AddChild(Text(NEWFONT_OUTLINE, 30, "X: ", {unpack(UICOLOURS.RED)}))
-	self.animationRight:SetPosition(-600, -290)
- 
-	self.tasks[#self.tasks + 1] = self.inst:DoPeriodicTask(.1, function()
-		local pos = self.animationRight:GetPosition()
-		self.animationRight:SetPosition(pos.x > 600 and -600 or pos.x + 5, pos.y)
-		self.animationRight:SetString("X: " .. pos.x)
-	end)
-	]]--
 end)
 
 function VanitySlots:RefreshTooltips()
