@@ -9,7 +9,7 @@ description                 =
 
 󰀏 Beware! Although items equipped in Cosmetic Slots don't lose durability or spoil, they do not provide their benefits to the player. 
 
-󰀌 Mod Version: Alpha-1.0-A
+󰀌 Mod Version: Alpha-2.0-A
 󰀧 Update: In Development
 ]]
 

@@ -106,7 +106,6 @@ local function AddVanitySlots(inst)
 	
 	inst:ListenForEvent("equip", SwapToVanityItem)
 	inst:ListenForEvent("unequip", SwapToRealItem)
-	
 	inst:ListenForEvent("seamlessplayerswap", OnSeamlessPlayerSwap)
 end
 

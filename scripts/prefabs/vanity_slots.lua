@@ -96,6 +96,7 @@ end
 
 local function OnEquip(inst, owner)
 	inst.components.container:Open(owner)
+	print("VANITY SLOTS: EQUIPPED.")
 end
 
 local function OnUnequip(inst, owner)
@@ -104,6 +105,7 @@ local function OnUnequip(inst, owner)
 	-- We get unequipped during seamlessplayerswap, don't remove callback here.
 	-- inst:RemoveEventCallback("itemget", inst.ShowEquippedItem)
 	-- inst:RemoveEventCallback("itemlose", inst.HideEquippedItem)
+	print("VANITY SLOTS: UNEQUIPPED.")
 end
 
 local function OnDropped(inst)
@@ -169,6 +171,7 @@ local function fn()
 
 	inst:AddComponent("container")
 	inst.components.container:WidgetSetup("vanity_slots")
+	inst.components.container.stay_open_on_hide = true
 
 	inst.ShowEquippedItem = ShowEquippedItem
 	inst.HideEquippedItem = HideEquippedItem

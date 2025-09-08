@@ -46,7 +46,7 @@ params.vanity_slots =
 		
 		animbank = "ui_chest_3x1",
 		animbuild = "ui_chest_3x1",
-		pos = Vector3(0, -300, 0),
+		pos = Vector3(0, 320, 0),
 	},
 	
 	acceptsstacks = false,
@@ -69,6 +69,7 @@ function params.vanity_slots.itemtestfn(container, item, slot)
 end
 
 -- References:
+-- pos = Vector3(0, -300, 0), -- vanity
 -- pos = Vector3(310, -29, 0), -- hand_inv 
 -- pos = Vector3(-240, -448, 0), -- side_inv_behind
 
