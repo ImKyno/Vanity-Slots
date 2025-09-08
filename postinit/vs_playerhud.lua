@@ -31,6 +31,8 @@ AddClassPostConstruct("screens/playerhud", function(self)
 		if parent == self.controls.containerroot then
 			self:CloseSpellWheel()
 		end
+		
+		self.owner:PushEvent("vanityslots_open") -- For refreshing tooltip.
 	end
 	
 	UpvalueHacker.SetUpvalue(self.OpenContainer, OpenContainerWidget, "OpenContainerWidget")

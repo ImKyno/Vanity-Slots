@@ -123,11 +123,20 @@ local VanitySlots = Class(Widget, function(self, owner)
 			end
 		end
 	end, self.owner)
+	
+	self.inst:ListenForEvent("vanityslots_open", function(inst)
+		local inventory = self.owner.replica.inventory
+		local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		
+		if vanitycontainer ~= nil then
+			self.VanitySlotsShown = true
+			self:RefreshTooltips()
+		end
+	end, self.owner)
 
 	-- Client only event, because when inventory is closed, we will stop
 	-- getting "equip" and "unequip" events, but we can also assume that our inventory is emptied.
 	self.inst:ListenForEvent("inventoryclosed", function()
-		print("bingus")
 		self:Hide()
 		
 		local inventory = self.owner.replica.inventory
