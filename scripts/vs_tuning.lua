@@ -32,6 +32,39 @@ TUNING.VANITY_PILLOW_BODY_ITEMS =
 	"bodypillow_steelwool",
 }
 
+TUNING.VANITY_HASFX_ITEMS =
+{
+	"minifan",
+	"shadow_battleaxe",
+	"slingshot",
+	"spear_wathgrithr_lightning_charged",
+	"staff_lunarplant",
+	"sword_lunarplant",
+	"voidcloth_boomerang",
+	"voidcloth_scythe",
+	"voidcloth_umbrella",
+	"winona_telebrella",
+	"wortox_nabbag",
+}
+
+TUNING.VANITY_PERSISTSFX_ITEMS =
+{
+	"staff_lunarplant",
+	"sword_lunarplant",
+}
+
+TUNING.VANITY_MULTIPLEFX_ITEMS =
+{
+	"slingshot",
+}
+
+TUNING.VANITY_TOGGABLEFX_ITEMS =
+{
+	"shadow_battleaxe",
+	"voidcloth_boomerang",
+	"voidcloth_scythe",
+}
+
 -- Items that can't go in containers.
 TUNING.VANITY_RESTRICTED_ITEMS =
 {
@@ -85,18 +118,18 @@ TUNING.VANITY_STATES_ONEXIT =
 	"fishing_ocean_pre",
 	"fishing_pre",
 	"fishing_pst",
-	"play_gnarwail_horn",
-	"play_strum",
 	"oceanfishing_cast",
 	"oceanfishing_linesnapped",
 	"oceanfishing_stop",
+	"play_gnarwail_horn",
+	"play_strum",
+	"quickcastspell",
+	"scythe",
 	"terraform",
+	"throw_keep_equip",
 	"till",
 	"till_start",
-	"throw_keep_equip",
 	"veryquickcastspell",
-	"quickcastspell",
-	-- "row_idle",
 }
 
 TUNING.VANITY_STATES_NAMES =
@@ -137,15 +170,15 @@ TUNING.VANITY_STATES_NAMES =
 	"pour",
 	"quickcastspell",
 	"quicktele",
+	"row",
+	"row_fail",
+	"scythe",
 	"terraform",
 	"throw",
 	"throw_deploy",
 	"throw_keep_equip",
 	"till",
 	"till_start",
-	"veryquickcastspell",
 	"unsaddle",
-	"row",
-	"row_fail",
-	-- "row_idle",
+	"veryquickcastspell",
 }

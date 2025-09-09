@@ -6,11 +6,11 @@ local UpvalueHacker = require("vs_upvaluehacker")
 
 require("vs_tuning")
 
-local function SlingShotPostInit(inst)
-	inst:AddTag("vanity_multiple_fx")
+local function WinonaTelebrellaPostInit(inst)
+	inst:AddTag("vanity_teleporter")
 end
 
-AddPrefabPostInit("slingshot", SlingShotPostInit)
+AddPrefabPostInit("winona_telebrella", WinonaTelebrellaPostInit)
 
 local function TorchPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
@@ -166,7 +166,9 @@ local function MiniFanPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
 			inst:RemoveEventCallback("locomote", inst._onlocomote, owner)
-			inst._wheel:SetSpinning(true)
+			if inst._wheel ~= nil then
+				inst._wheel:SetSpinning(true)
+			end
 		end
 	end
 	

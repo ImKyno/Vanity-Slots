@@ -213,6 +213,30 @@ TUNING.VANITY_SYMBOLNAMES =
 		symbol1 = "yotd_oar",
 		symbol2 = "swap_oar",
 	},
+
+	staff_lunarplant =
+	{
+		symbol1 = "staff_lunarplant",
+		symbol2 = "staff_swap_lunarplant",
+	},
+	
+	voidcloth_boomerang =
+	{
+		symbol1 = "boomerang_voidcloth",
+		symbol2 = "boomerang_voidcloth",
+	},
+	
+	voidcloth_scythe =
+	{
+		symbol1 = "scythe_voidcloth",
+		symbol2 = "swap_scythe",
+	},
+	
+	winona_telebrella =
+	{
+		symbol1 = "winona_telebrella",
+		symbol2 = "swap_winona_telebrella",
+	},
 }
 
 local function SymbolNamePostInit(inst)

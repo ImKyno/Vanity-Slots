@@ -232,6 +232,22 @@ ApplyRealItemsFX = function(realitem, owner)
 			realitem.fx.Follower:FollowSymbol(owner.GUID, "swap_object", offset[1], offset[2], offset[3], true)
 		end
 	end
+	
+	if realitem.prefab == "sword_lunarplant" then
+		if realitem.blade1 ~= nil then
+			realitem.blade1.entity:Show()
+		end
+	
+		if realitem.blade2 ~= nil then
+			realitem.blade2.entity:Show()
+		end
+	end
+	
+	if realitem.prefab == "staff_lunarplant" then
+		if realitem.fx ~= nil then
+			realitem.fx.entity:Show()
+		end
+	end
 end
 
 -- Some items have persistent FX...
@@ -247,8 +263,10 @@ RemoveRealItemsFX = function(realitem, owner)
 			realitem.fx = nil
 		end
 	-- Special case for Shadow Maul.
-	elseif realitem.fx ~= nil and realitem.prefab == "shadow_battleaxe" then
+	elseif realitem.fx ~= nil and realitem:HasTag("vanity_toggable_fx") then
 		realitem.fx:ToggleEquipped(false)
+	elseif realitem.fx ~= nil and realitem:HasTag("vanity_persists_fx") then
+		realitem.fx.entity:Hide()
 	elseif realitem.fx ~= nil then
 		realitem.fx:Remove()
 		realitem.fx = nil
@@ -271,6 +289,14 @@ RemoveRealItemsFX = function(realitem, owner)
 	if realitem.swapfx2 ~= nil then
 		realitem.swapfx2:Remove()
 		realitem.swapfx2 = nil
+	end
+	
+	if realitem.blade1 ~= nil then
+		realitem.blade1.entity:Hide()
+	end
+	
+	if realitem.blade2 ~= nil then
+		realitem.blade2.entity:Hide()
 	end
 	
 	if realitem._wheel ~= nil then

@@ -5,7 +5,6 @@ local ACTIONS       = _G.ACTIONS
 local ActionHandler = _G.ActionHandler
 local EventHandler  = _G.EventHandler
 local EQUIPSLOTS    = _G.EQUIPSLOTS
-local CommonStates  = require("stategraphs/commonstates")
 
 require("vs_main")
 
@@ -223,11 +222,28 @@ AddStategraphPostInit("wilson", function(sg)
 					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 				end
 			end
+			
+			if vanityitem ~= nil and vanityitem:HasTag("vanity_shield") then
+				inst.AnimState:ShowSymbol("swap_object")
+			end
+			
+			if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+				vanityitem.components.equippable:Unequip(inst)
+				
+				if vanityitem.onequipvanity ~= nil then
+					vanityitem.onequipvanity(vanityitem, inst)
+				else
+					_G.ApplyVanityEffects(vanityitem, inst)
+				end
+
+				_G.ApplyContainerEffects(vanityitem, realitem, inst)
+			end
 		
 			return _state_onenter(inst, ...)
 		end
 		
 		sg.states[actions].onexit = function(inst, ...)
+			local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 			local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 			local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
@@ -243,6 +259,18 @@ AddStategraphPostInit("wilson", function(sg)
 				else
 					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 				end
+			end
+			
+			if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+				vanityitem.components.equippable:Equip(inst)
+				
+				if vanityitem.onequipvanity ~= nil then
+					vanityitem.onequipvanity(vanityitem, inst)
+				else
+					_G.ApplyVanityEffects(vanityitem, inst)
+				end
+
+				_G.ApplyContainerEffects(vanityitem, realitem, inst)
 			end
 		
 			return _state_onexit(inst, ...)
@@ -266,6 +294,9 @@ AddStategraphPostInit("wilson", function(sg)
 		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
 		
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+		
 		if realitem ~= nil and realitem.components.equippable ~= nil then
 			local symbol1 = realitem.symbolname1
 			local symbol2 = "swap_wortox_nabbag"..realitem.nabbag_size or realitem.symbolname2
@@ -279,10 +310,27 @@ AddStategraphPostInit("wilson", function(sg)
 			end
 		end
 		
+		if vanityitem ~= nil and vanityitem:HasTag("vanity_shield") then
+			inst.AnimState:ShowSymbol("swap_object")
+		end
+		
+		if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+			vanityitem.components.equippable:Unequip(inst)
+				
+			if vanityitem.onequipvanity ~= nil then
+				vanityitem.onequipvanity(vanityitem, inst)
+			else
+				_G.ApplyVanityEffects(vanityitem, inst)
+			end
+
+			_G.ApplyContainerEffects(vanityitem, realitem, inst)
+		end
+		
 		return _nabbag_onenter(inst, ...)
 	end
 	
 	sg.states["nabbag"].onexit = function(inst, ...)
+		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 		local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
@@ -299,6 +347,18 @@ AddStategraphPostInit("wilson", function(sg)
 				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 			end
 		end
+		
+		if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+			vanityitem.components.equippable:Equip(inst)
+				
+			if vanityitem.onequipvanity ~= nil then
+				vanityitem.onequipvanity(vanityitem, inst)
+			else
+				_G.ApplyVanityEffects(vanityitem, inst)
+			end
+
+			_G.ApplyContainerEffects(vanityitem, realitem, inst)
+		end
 	end
 	
 	local _attack_onenter = sg.states["attack"].onenter
@@ -307,6 +367,9 @@ AddStategraphPostInit("wilson", function(sg)
 	sg.states["attack"].onenter = function(inst, ...)
 		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
+		
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 
 		if realitem ~= nil and realitem:HasAnyTag(TUNING.VANITY_ATTACK_TAGS) and realitem.components.equippable ~= nil then
 			local symbol1 = realitem.symbolname1
@@ -319,12 +382,37 @@ AddStategraphPostInit("wilson", function(sg)
 			else
 				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 			end
+			
+			if realitem:HasTag("vanity_persists_fx") then
+				realitem.fx.entity:Show()
+			end
+			
+			if realitem:HasTag("vanity_toggable_fx") then
+				realitem.fx:ToggleEquipped(true)
+			end
+		end
+		
+		if vanityitem ~= nil and vanityitem:HasTag("vanity_shield") then
+			inst.AnimState:ShowSymbol("swap_object")
+		end
+		
+		if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+			vanityitem.components.equippable:Unequip(inst)
+
+			if vanityitem.onequipvanity ~= nil then
+				vanityitem.onequipvanity(vanityitem, inst)
+			else
+				_G.ApplyVanityEffects(vanityitem, inst)
+			end
+
+			_G.ApplyContainerEffects(vanityitem, realitem, inst)
 		end
 		
 		return _attack_onenter(inst, ...)
 	end
 	
 	sg.states["attack"].onexit = function(inst, ...)
+		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 		local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
@@ -341,7 +429,137 @@ AddStategraphPostInit("wilson", function(sg)
 				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 			end
 		end
+		
+		if realitem ~= nil and realitem:HasTag("vanity_persists_fx") then
+			realitem.fx.entity:Hide()
+		end
+		
+		if realitem ~= nil and realitem:HasTag("vanity_toggable_fx") then
+			realitem.fx:ToggleEquipped(false)
+		end
+		
+		if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+			vanityitem.components.equippable:Equip(inst)
+				
+			if vanityitem.onequipvanity ~= nil then
+				vanityitem.onequipvanity(vanityitem, inst)
+			else
+				_G.ApplyVanityEffects(vanityitem, inst)
+			end
+
+			_G.ApplyContainerEffects(vanityitem, realitem, inst)
+		end
 			
 		return _attack_onexit(inst, ...)
+	end
+	
+	local telebrella_states =
+	{
+		"remote_teleport_in",
+		"remote_teleport_out",
+		"remote_teleport_pre",
+	}
+	
+	for k, actions in pairs(telebrella_states) do
+		local _state_onenter = sg.states[actions].onenter
+		local _state_onexit = sg.states[actions].onexit
+		
+		sg.states[actions].onenter = function(inst, ...)
+			local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
+			
+			local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+		
+			if realitem ~= nil and realitem.components.equippable ~= nil then
+				local symbol1 = realitem.symbolname1
+				local symbol2 = realitem.symbolname2
+				local prefab = realitem.prefab
+
+				if skin_build ~= nil then
+					inst:PushEvent("equipskinneditem", realitem:GetSkinName())
+					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+				else
+					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+				end
+				
+				if realitem:HasTag("vanity_teleporter") then
+					realitem.swapfx = _G.SpawnPrefab("winona_telebrella_swap_fx")
+					realitem.swapfx.entity:SetParent(inst.entity)
+					realitem.swapfx.Follower:FollowSymbol(inst.GUID, "swap_object", nil, nil, nil, true, nil, 0, 19)
+					realitem.swapfx.components.highlightchild:SetOwner(inst)
+
+					realitem.swapfx2 = _G.SpawnPrefab("winona_telebrella_swap_fx")
+					realitem.swapfx2.entity:SetParent(inst.entity)
+					realitem.swapfx2.Follower:FollowSymbol(inst.GUID, "swap_object", nil, nil, nil, true, nil, 19)
+					realitem.swapfx2.components.highlightchild:SetOwner(inst)
+					realitem.swapfx2.AnimState:PlayAnimation("swap20")
+				end
+			end
+			
+			if vanityitem ~= nil and vanityitem:HasTag("vanity_shield") then
+				inst.AnimState:ShowSymbol("swap_object")
+			end
+			
+			if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+				vanityitem.components.equippable:Unequip(inst)
+				
+				if vanityitem.onequipvanity ~= nil then
+					vanityitem.onequipvanity(vanityitem, inst)
+				else
+					_G.ApplyVanityEffects(vanityitem, inst)
+				end
+
+				_G.ApplyContainerEffects(vanityitem, realitem, inst)
+			end
+		
+			return _state_onenter(inst, ...)
+		end
+		
+		sg.states[actions].onexit = function(inst, ...)
+			local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+			local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
+				
+			if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+				local symbol1 = vanityitem.symbolname1
+				local symbol2 = vanityitem.symbolname2
+				local prefab = vanityitem.prefab
+
+				if skin_build ~= nil then
+					inst:PushEvent("equipskinneditem", vanityitem:GetSkinName())
+					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+				else
+					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+				end
+			end
+			
+			if realitem ~= nil and realitem:HasTag("vanity_teleporter") then
+				if realitem.swapfx ~= nil then
+					realitem.swapfx:Remove()
+					realitem.swapfx = nil
+				end
+				
+				if realitem.swapfx2 ~= nil then
+					realitem.swapfx2:Remove()
+					realitem.swapfx2 = nil
+				end
+			end
+			
+			if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+				vanityitem.components.equippable:Equip(inst)
+				
+				if vanityitem.onequipvanity ~= nil then
+					vanityitem.onequipvanity(vanityitem, inst)
+				else
+					_G.ApplyVanityEffects(vanityitem, inst)
+				end
+
+				_G.ApplyContainerEffects(vanityitem, realitem, inst)
+			end
+		
+			return _state_onexit(inst, ...)
+		end
 	end
 end)

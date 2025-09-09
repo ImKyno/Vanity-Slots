@@ -29,6 +29,39 @@ end
 
 AddPrefabPostInitAny(MakeVanityItem)
 
+-- Items that have client-side FX.
+local function ItemsFXPostInit(inst)
+	inst:AddTag("vanity_has_fx")
+end
+
+for k, item in pairs(TUNING.VANITY_HASFX_ITEMS) do
+	AddPrefabPostInit(item, ItemsFXPostInit)
+end
+
+local function ItemsPersistsFXPostInit(inst)
+	inst:AddTag("vanity_persists_fx")
+end
+
+for k, item in pairs(TUNING.VANITY_PERSISTSFX_ITEMS) do
+	AddPrefabPostInit(item, ItemsPersistsFXPostInit)
+end
+
+local function ItemsMultipleFXPostInit(inst)
+	inst:AddTag("vanity_multiple_fx")
+end
+
+for k, item in pairs(TUNING.VANITY_MULTIPLEFX_ITEMS) do
+	AddPrefabPostInit(item, ItemsMultipleFXPostInit)
+end
+
+local function ItemsToggableFXPostInit(inst)
+	inst:AddTag("vanity_toggable_fx")
+end
+
+for k, item in pairs(TUNING.VANITY_TOGGABLEFX_ITEMS) do
+	AddPrefabPostInit(item, ItemsToggableFXPostInit)
+end
+
 -- Items that can't go in containers.
 local function RestrictedItemsPostInit(inst)
 	inst:AddTag("vanity_item_restricted")
