@@ -5,6 +5,7 @@ local ACTIONS       = _G.ACTIONS
 local ActionHandler = _G.ActionHandler
 local EventHandler  = _G.EventHandler
 local EQUIPSLOTS    = _G.EQUIPSLOTS
+local CommonStates  = require("stategraphs/commonstates")
 
 require("vs_main")
 
@@ -190,27 +191,7 @@ AddStategraphPostInit("wilson", function(sg)
 	end
 
 	-- Action States
-	local onexit_names =
-	{
-		"bugnet",
-		"bugnet_start",
-		"catchonfire",
-		"combat_lunge_start",
-		"fishing",
-		"fishing_ocean_pre",
-		"fishing_pre",
-		"fishing_pst",
-		"oceanfishing_cast",
-		"oceanfishing_linesnapped",
-		"oceanfishing_stop",
-		"terraform",
-		"till",
-		"till_start",
-		"throw_keep_equip",
-		"veryquickcastspell",
-	}
-
-	for k, names in pairs(onexit_names) do
+	for k, names in pairs(TUNING.VANITY_STATES_ONEXIT) do
 		local state = sg.states[names]
 
 		state.onexit = function(inst)
@@ -218,7 +199,7 @@ AddStategraphPostInit("wilson", function(sg)
 		end
 	end
 	
-	for k, actions in pairs(TUNING.VANITY_ACTIONS_HANDS) do
+	for k, actions in pairs(TUNING.VANITY_STATES_NAMES) do
 		local _state_onenter = sg.states[actions].onenter
 		local _state_ontimeout = sg.states[actions].ontimeout
 		local _state_onexit = sg.states[actions].onexit
@@ -326,10 +307,8 @@ AddStategraphPostInit("wilson", function(sg)
 	sg.states["attack"].onenter = function(inst, ...)
 		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
-		
-		local ATTACK_TAGS = {"vanity_alt_attack", "whip", "pocketwatch", "book", "jab", "firepen", "firestaff", "icestaff"}
-		
-		if realitem ~= nil and realitem:HasAnyTag(ATTACK_TAGS) and realitem.components.equippable ~= nil then
+
+		if realitem ~= nil and realitem:HasAnyTag(TUNING.VANITY_ATTACK_TAGS) and realitem.components.equippable ~= nil then
 			local symbol1 = realitem.symbolname1
 			local symbol2 = realitem.symbolname2
 			local prefab = realitem.prefab

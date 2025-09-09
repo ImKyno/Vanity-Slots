@@ -94,7 +94,7 @@ local function AddVanitySlots(inst)
 
 	inst:AddTag("vanityslotsowner")
 
-	if not _G.TheWorld.ismastersim then	
+	if not _G.TheWorld.ismastersim then
 		return inst
 	end
 	

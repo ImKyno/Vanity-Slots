@@ -6,47 +6,6 @@ local UpvalueHacker = require("vs_upvaluehacker")
 
 require("vs_tuning")
 
-TUNING.VANITY_ACTIONS_HANDS =
-{
-	"bugnet",
-	"bugnet_start",
-	"catchfish",
-	"catchonfire",
-	"chop",
-	"chop_start",
-	"combat_lunge_start",
-	"combat_lunge",
-	"dig",
-	"dig_start",
-	"doswipeaction",
-	"dojostleaction",
-	"fishing",
-	"fishing_nibble",
-	"fishing_ocean_pre",
-	"fishing_pre",
-	"fishing_pst",
-	"fishing_strain",
-	"hammer",
-	"hammer_start",
-	"mine",
-	"mine_start",
-	"oceanfishing_cast",
-	"oceanfishing_catch",
-	"oceanfishing_idle",
-	"oceanfishing_linesnapped",
-	"oceanfishing_reel",
-	"oceanfishing_sethook",
-	"oceanfishing_stop",
-	"pour",
-	"terraform",
-	"throw",
-	"throw_deploy",
-	"throw_keep_equip",
-	"till",
-	"till_start",
-	"veryquickcastspell",
-}
-
 -- Symbol Names for some items because stupid Klei has inconsistences.
 -- Yes must include "swap_" because some items don't have it? 💀💀
 TUNING.VANITY_SYMBOLNAMES =
@@ -155,7 +114,104 @@ TUNING.VANITY_SYMBOLNAMES =
 	
 	firepen =
 	{
-		symbol1 =
+		symbol1 = "firepen",
+		symbol2 = "swap_firepen",
+	},
+	
+	pocketwatch_weapon =
+	{
+		symbol1 = "pocketwatch_weapon",
+		symbol2 = "swap_object",
+	},
+	
+	firestaff =
+	{
+		symbol1 = "swap_staffs",
+		symbol2 = "swap_redstaff",
+	},
+	
+	icestaff =
+	{
+		symbol1 = "swap_staffs",
+		symbol2 = "swap_bluestaff",
+	},
+	
+	telestaff =
+	{
+		symbol1 = "swap_staffs",
+		symbol2 = "swap_purplestaff",
+	},
+	
+	yellowstaff =
+	{
+		symbol1 = "swap_staffs",
+		symbol2 = "swap_yellowstaff",
+	},
+	
+	orangestaff =
+	{
+		symbol1 = "swap_staffs",
+		symbol2 = "swap_orangestaff",
+	},
+	
+	greenstaff =
+	{
+		symbol1 = "swap_staffs",
+		symbol2 = "swap_greenstaff",
+	},
+	
+	opalstaff =
+	{
+		symbol1 = "swap_staffs",
+		symbol2 = "swap_opalstaff",
+	},
+	
+	staff_tornado =
+	{
+		symbol1 = "swap_tornado_stick",
+		symbol2 = "swap_tornado_stick",
+	},
+	
+	blowdart_pipe =
+	{
+		symbol1 = "swap_blowdart_pipe",
+		symbol2 = "swap_blowdart_pipe",
+	},
+	
+	blowdart_fire =
+	{
+		symbol1 = "swap_blowdart",
+		symbol2 = "swap_blowdart",
+	},
+	
+	blowdart_sleep =
+	{
+		symbol1 = "swap_blowdart",
+		symbol2 = "swap_blowdart",
+	},
+	
+	blowdart_yellow =
+	{
+		symbol1 = "swap_blowdart",
+		symbol2 = "swap_blowdart",
+	},
+	
+	houndstooth_blowpipe =
+	{
+		symbol1 = "swap_houndstooth_blowpipe",
+		symbol2 = "swap_blowdart_pipe",
+	},
+	
+	gnarwail_horn =
+	{
+		symbol1 = "gnarwail_horn",
+		symbol2 = "swap_gnarwailhorn",
+	},
+	
+	yotd_oar =
+	{
+		symbol1 = "yotd_oar",
+		symbol2 = "swap_oar",
 	},
 }
 
