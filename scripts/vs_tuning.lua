@@ -1,6 +1,6 @@
 -- Change to true if you want the container to start closed.
 TUNING.VANITYSLOTS_STARTCLOSED = false
-TUNING.VANITY_SLOTS_MAXSLOTS = 3
+TUNING.VANITY_SLOTS_MAXSLOTS = 3 -- Unused.
 
 TUNING.VANITY_COMMON_HEAD_ITEMS =
 {
@@ -40,10 +40,8 @@ TUNING.VANITY_RESTRICTED_ITEMS =
 	"icepack",
 	"krampus_sack",
 	"piggyback",
-	-- "propsign", -- Moved to his own postinit.
 	"seedpouch",
 	"spicepack",
-	-- "slurper", -- Moved to his own postinit.
 }
 
 -- Items that can't be equipped regardless.
@@ -51,15 +49,12 @@ TUNING.VANITY_FORBID_ITEMS =
 {
 	"bishophead",
 	"knighthead",
-	"mermarmorhat", -- Merm hats are forbid because their animations don't work for players.
+	"mermarmorhat",
 	"mermarmorupgradedhat",
-	-- "merm_tool",
-	-- "merm_tool_upgraded",
 	"rooknose",
 	-- And all other statues, oversized crops, etc.
 }
 
--- In case some mod adds new Woodie weremodes.
 TUNING.VANITY_WEREMODES =
 {
 	"beaver",

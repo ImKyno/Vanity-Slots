@@ -62,6 +62,7 @@ local function AddVanitySlots(inst)
 			end
 			
 			_G.ApplyVanityEffects(vanityitem, inst)
+			_G.ApplyContainerEffects(vanityitem, realitem, inst)
 		end
 	end
 	
@@ -78,6 +79,7 @@ local function AddVanitySlots(inst)
 			end
 			
 			_G.RemoveOverlayEffects(vanityitem, realitem, inst)
+			_G.ApplyContainerEffects(vanityitem, realitem, inst)
 		end
 	end
 	

@@ -6,6 +6,12 @@ local UpvalueHacker = require("vs_upvaluehacker")
 
 require("vs_tuning")
 
+local function SlingShotPostInit(inst)
+	inst:AddTag("vanity_multiple_fx")
+end
+
+AddPrefabPostInit("slingshot", SlingShotPostInit)
+
 local function TorchPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then

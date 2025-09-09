@@ -21,6 +21,7 @@ local init_postinit =
 	"vs_items_body",
 	"vs_items_hands",
 	"vs_items_head",
+	"vs_items_symbols",
 
 	"vs_player",
 	"vs_playerhud",

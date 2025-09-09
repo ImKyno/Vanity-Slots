@@ -210,11 +210,35 @@ RemoveOverlayEffects = function(vanityitem, realitem, owner)
 	end
 end
 
+global("ApplyRealItemsFX")
+ApplyRealItemsFX = function(realitem, owner)
+	local skin_build = realitem:GetSkinBuild()
+
+	if realitem.prefab == "spear_wathgrithr_lightning_charged" then
+		if realitem.fx == nil then
+			local FX_OFFSETS = 
+			{
+				DEFAULT = {0, 0, 0},
+				["spear_wathgrithr_lightning_lunar"]    = {0,  20, 0},
+				["spear_wathgrithr_lightning_valkyrie"] = {0,   0, 0},
+				["spear_wathgrithr_lightning_wrestle"]  = {0, -20, 0},
+				["spear_wathgrithr_lightning_northern"] = {0, -10, 0},
+			}
+	
+			local offset = FX_OFFSETS[skin_build] or FX_OFFSETS.DEFAULT
+	
+			realitem.fx = SpawnPrefab("spear_wathgrithr_lightning_fx")
+			realitem.fx.entity:SetParent(owner.entity)
+			realitem.fx.Follower:FollowSymbol(owner.GUID, "swap_object", offset[1], offset[2], offset[3], true)
+		end
+	end
+end
+
 -- Some items have persistent FX...
 global("RemoveRealItemsFX")
 RemoveRealItemsFX = function(realitem, owner)
-	-- Special case for Trusty Slingshot.
-	if realitem.fx ~= nil and realitem:HasTag("slingshot") then
+	-- Special case for items with multiple fx.
+	if realitem.fx ~= nil and realitem:HasTag("vanity_multiple_fx") then
 		if realitem.fx then
 			for i, v in ipairs(realitem.fx) do
 				v:Remove()
@@ -228,6 +252,10 @@ RemoveRealItemsFX = function(realitem, owner)
 	elseif realitem.fx ~= nil then
 		realitem.fx:Remove()
 		realitem.fx = nil
+		
+		if owner.SoundEmitter ~= nil then
+			owner.SoundEmitter:KillSound("soundloop")
+		end
 	end
 
 	if realitem._fx ~= nil then
@@ -258,6 +286,11 @@ RemoveRealItemsFX = function(realitem, owner)
 	if realitem._back ~= nil then
 		realitem._back:Remove()
 		realitem._back = nil
+	end
+	
+	if realitem.wortox_nabbag_body ~= nil then
+		realitem.wortox_nabbag_body:Remove()
+		realitem.wortox_nabbag_body = nil
 	end
 end
 

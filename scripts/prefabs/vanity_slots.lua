@@ -7,7 +7,6 @@ local assets =
 	Asset("ANIM", "anim/ui_chest_3x1.zip"),
 }
 
--- TO DO: Fix vanityslots widget tooltip not updating if inventory was hidden and container closed.
 -- TO DO: Fix cant move item from containers when vanity is equipped.
 -- TO DO: Fix ghost item when unequipping backpacks.
 -- TO DO: Revert item when doing actions (chopping, mining, attacking, etc)
@@ -78,6 +77,8 @@ local function HideEquippedItem(inst, data, owner)
 				
 				if vanityitem:HasTag("vanity_item_restricted") then
 					vanityitem.components.inventoryitem.cangoincontainer = vanityitem.components.inventoryitem.__cangoincontainer
+					owner.components.inventory:DropItem(vanityitem)
+					owner.components.inventory:SetActiveItem(nil)
 				end
 
 				RemoveContainerEffects(vanityitem, owner)
@@ -88,6 +89,8 @@ local function HideEquippedItem(inst, data, owner)
 				and not realitem.components.playerfloater then -- Can't unequip floater.
 					realitem.components.equippable:Unequip(owner)
 					realitem.components.equippable:Equip(owner)
+					
+					ApplyRealItemsFX(realitem, owner)
 				end
 			end
 		end
@@ -96,7 +99,6 @@ end
 
 local function OnEquip(inst, owner)
 	inst.components.container:Open(owner)
-	print("VANITY SLOTS: EQUIPPED.")
 end
 
 local function OnUnequip(inst, owner)
@@ -105,7 +107,6 @@ local function OnUnequip(inst, owner)
 	-- We get unequipped during seamlessplayerswap, don't remove callback here.
 	-- inst:RemoveEventCallback("itemget", inst.ShowEquippedItem)
 	-- inst:RemoveEventCallback("itemlose", inst.HideEquippedItem)
-	print("VANITY SLOTS: UNEQUIPPED.")
 end
 
 local function OnDropped(inst)

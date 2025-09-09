@@ -188,4 +188,181 @@ AddStategraphPostInit("wilson", function(sg)
 			return _transform_person_onexit(inst, ...)
 		end
 	end
+
+	-- Action States
+	local onexit_names =
+	{
+		"bugnet",
+		"bugnet_start",
+		"catchonfire",
+		"combat_lunge_start",
+		"fishing",
+		"fishing_ocean_pre",
+		"fishing_pre",
+		"fishing_pst",
+		"oceanfishing_cast",
+		"oceanfishing_linesnapped",
+		"oceanfishing_stop",
+		"terraform",
+		"till",
+		"till_start",
+		"throw_keep_equip",
+		"veryquickcastspell",
+	}
+
+	for k, names in pairs(onexit_names) do
+		local state = sg.states[names]
+
+		state.onexit = function(inst)
+			-- print("VANIY SLOTS: THIS STATE DOES NOT HAVE onexit")
+		end
+	end
+	
+	for k, actions in pairs(TUNING.VANITY_ACTIONS_HANDS) do
+		local _state_onenter = sg.states[actions].onenter
+		local _state_ontimeout = sg.states[actions].ontimeout
+		local _state_onexit = sg.states[actions].onexit
+		
+		sg.states[actions].onenter = function(inst, ...)
+			local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+			local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
+			
+			local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+		
+			if realitem ~= nil and realitem.components.equippable ~= nil then
+				local symbol1 = realitem.symbolname1
+				local symbol2 = realitem.symbolname2
+				local prefab = realitem.prefab
+
+				if skin_build ~= nil then
+					inst:PushEvent("equipskinneditem", realitem:GetSkinName())
+					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+				else
+					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+				end
+			end
+		
+			return _state_onenter(inst, ...)
+		end
+		
+		sg.states[actions].onexit = function(inst, ...)
+			local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+			local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
+				
+			if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+				local symbol1 = vanityitem.symbolname1
+				local symbol2 = vanityitem.symbolname2
+				local prefab = vanityitem.prefab
+
+				if skin_build ~= nil then
+					inst:PushEvent("equipskinneditem", vanityitem:GetSkinName())
+					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+				else
+					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+				end
+			end
+		
+			return _state_onexit(inst, ...)
+		end
+	end
+	
+	local _pour_ontimeout = sg.states["pour"].ontimeout
+	sg.states["pour"].ontimeout = function(inst, ...)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+		
+		if vanityitem ~= nil then
+			inst.sg:GoToState("idle") -- Uh... makes the animation a bit faster...
+		else
+			return _pour_ontimeout(inst, ...)
+		end
+	end
+	
+	local _nabbag_onenter = sg.states["nabbag"].onenter
+	sg.states["nabbag"].onenter = function(inst, ...)
+		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
+		
+		if realitem ~= nil and realitem.components.equippable ~= nil then
+			local symbol1 = realitem.symbolname1
+			local symbol2 = "swap_wortox_nabbag"..realitem.nabbag_size or realitem.symbolname2
+			local prefab = realitem.prefab
+
+			if skin_build ~= nil then
+				inst:PushEvent("equipskinneditem", realitem:GetSkinName())
+				inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+			else
+				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+			end
+		end
+		
+		return _nabbag_onenter(inst, ...)
+	end
+	
+	sg.states["nabbag"].onexit = function(inst, ...)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+		local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
+				
+		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+			local symbol1 = vanityitem.symbolname1
+			local symbol2 = vanityitem.symbolname2
+			local prefab = vanityitem.prefab
+
+			if skin_build ~= nil then
+				inst:PushEvent("equipskinneditem", vanityitem:GetSkinName())
+				inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+			else
+				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+			end
+		end
+	end
+	
+	local _attack_onenter = sg.states["attack"].onenter
+	local _attack_onexit = sg.states["attack"].onexit
+	
+	sg.states["attack"].onenter = function(inst, ...)
+		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
+		
+		local ATTACK_TAGS = {"vanity_alt_attack", "whip", "pocketwatch", "book", "jab", "firepen", "firestaff", "icestaff"}
+		
+		if realitem ~= nil and realitem:HasAnyTag(ATTACK_TAGS) and realitem.components.equippable ~= nil then
+			local symbol1 = realitem.symbolname1
+			local symbol2 = realitem.symbolname2
+			local prefab = realitem.prefab
+
+			if skin_build ~= nil then
+				inst:PushEvent("equipskinneditem", realitem:GetSkinName())
+				inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+			else
+				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+			end
+		end
+		
+		return _attack_onenter(inst, ...)
+	end
+	
+	sg.states["attack"].onexit = function(inst, ...)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+		local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
+				
+		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+			local symbol1 = vanityitem.symbolname1
+			local symbol2 = vanityitem.symbolname2
+			local prefab = vanityitem.prefab
+
+			if skin_build ~= nil then
+				inst:PushEvent("equipskinneditem", vanityitem:GetSkinName())
+				inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+			else
+				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+			end
+		end
+			
+		return _attack_onexit(inst, ...)
+	end
 end)
