@@ -181,8 +181,8 @@ AddStategraphPostInit("wilson", function(sg)
 				local vanityslots = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 				-- local vanityitem = vanityslots ~= nil and vanityslots.replica.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
 			
-				if vanityslots ~= nil and not vanityslots.replica.container:IsOpenedBy(inst) then
-					vanityslots.replica.container:Open(inst)
+				if vanityslots == nil then
+					inst.components.vanityslots:UpdateVanitySlotsInventory()
 				end
 			end
 		

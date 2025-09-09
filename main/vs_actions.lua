@@ -61,9 +61,9 @@ ACTIONS.EQUIPVANITY.priority = 2
 ACTIONS.EQUIPVANITY.mount_valid = true
 
 AddComponentAction("SCENE", "inventoryitem", function(inst, doer, actions, right)
-	-- Don't show action if the hovered item is a heavy object (statues).
 	if right then
-		if inst:HasTag("vanity_item_restricted") and not inst:HasTag("heavy") then
+		if inst:HasTag("vanity_item_restricted") and not inst:HasTag("heavy")
+		and doer.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY) then
 			table.insert(actions, ACTIONS.EQUIPVANITY)
 		end
 	end
