@@ -21,25 +21,12 @@ AddComponentPostInit("inventory", function(self)
 end)
 
 --[[
-local OldOpen = self.Open
-	function self:Open(container, doer)
-		OldOpen(self, container, doer)
-		local widget = container.replica.container:GetWidget()
-		if widget and widget.slotbg and type(widget.slotbg) == "table" and widget.isboat then
-			for i, v in ipairs(widget.slotbg) do
-				if self.inv[i] then
-					self.inv[i].bgimage:SetTexture(v.atlas, v.texture)
-				end
-			end
-		end
-		if widget and widget.isboat then
-			self.isboat = true
-			self.boatbadge:Show()
-			self.inst:ListenForEvent("percentusedchange", BoatState, container)
-			if GLOBAL.TheWorld.ismastersim then
-				container:PushEvent("percentusedchange", { percent = container.replica.inventoryitem.classified.percentused:value() / 100 })
-			else
-				container.replica.inventoryitem:DeserializeUsage()
+	local widget = container.replica.container:GetWidget()
+	if widget ~= nil and widget.type == "vanity"
+	if widget and widget.slotbg and type(widget.slotbg) == "table" then
+		for i, v in ipairs(widget.slotbg) do
+			if self.inv[i] then
+				self.inv[i].bgimage:SetTexture(v.atlas, v.texture)
 			end
 		end
 	end

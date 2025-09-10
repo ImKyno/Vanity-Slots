@@ -9,14 +9,9 @@ local assets =
 
 -- TO DO: Fix cant move item from containers when vanity is equipped.
 -- TO DO: Fix ghost item when unequipping backpacks.
+-- TO DO: Swap vanity item with real item.
 
-local EQUIPSLOTS_VANITYSLOTS_INDEX =
-{
-	[EQUIPSLOTS.HANDS] = 1,
-	[EQUIPSLOTS.BODY]  = 2,
-	[EQUIPSLOTS.HEAD]  = 3,
-}
-
+local EQUIPSLOTS_VANITYSLOTS_INDEX = TUNING.EQUIPSLOTS_VANITYSLOTS_INDEX
 local INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX = table.invert(EQUIPSLOTS_VANITYSLOTS_INDEX)
 
 local function ShowEquippedItem(inst, data, owner)
@@ -72,12 +67,6 @@ local function HideEquippedItem(inst, data, owner)
 					vanityitem.onunequipvanity(vanityitem, owner)
 				else
 					RemoveVanityEffects(vanityitem, owner)
-				end
-				
-				if vanityitem:HasTag("vanity_item_restricted") then
-					vanityitem.components.inventoryitem.cangoincontainer = vanityitem.components.inventoryitem.__cangoincontainer
-					owner.components.inventory:DropItem(vanityitem)
-					owner.components.inventory:SetActiveItem(nil)
 				end
 
 				RemoveContainerEffects(vanityitem, owner)

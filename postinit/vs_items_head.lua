@@ -665,6 +665,9 @@ local function SlurperPostInit(inst)
 			if inst.components.equippable ~= nil then
 				inst.components.equippable:Unequip(owner)
 			end
+			
+			inst.components.inventoryitem.cangoincontainer = inst.components.inventoryitem.__cangoincontainer
+			inst.components.inventoryitem.__cangoincontainer = nil
 		end
 	end
 end

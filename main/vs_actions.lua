@@ -6,13 +6,7 @@ local STRINGS       = _G.STRINGS
 local EQUIPSLOTS    = _G.EQUIPSLOTS
 local UpvalueHacker = require("vs_upvaluehacker")
 
-local EQUIPSLOTS_VANITYSLOTS_INDEX =
-{
-    [EQUIPSLOTS.HANDS] = 1,
-    [EQUIPSLOTS.BODY]  = 2,
-    [EQUIPSLOTS.HEAD]  = 3,
-}
-
+local EQUIPSLOTS_VANITYSLOTS_INDEX = TUNING.EQUIPSLOTS_VANITYSLOTS_INDEX
 local INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX = table.invert(EQUIPSLOTS_VANITYSLOTS_INDEX)
 
 -- Action for equipping items that can't go in inventory as vanity. i.e Backpacks.
@@ -45,7 +39,7 @@ AddAction("EQUIPVANITY", STRINGS.ACTIONS.EQUIPVANITY, function(act)
         end
 
         vanityslots.components.container:GiveItem(vanityitem, equipslot, vanityitem:GetPosition())
-
+		
         if vanityitem.onequipvanity ~= nil then
             vanityitem.onequipvanity(vanityitem, owner)
         end
