@@ -314,6 +314,11 @@ RemoveRealItemsFX = function(realitem, owner)
 		realitem._back = nil
 	end
 	
+	if realitem._charged_vfx ~= nil then
+		realitem._charged_vfx:Remove()
+		realitem._charged_vfx = nil
+	end
+	
 	if realitem.wortox_nabbag_body ~= nil then
 		realitem.wortox_nabbag_body:Remove()
 		realitem.wortox_nabbag_body = nil

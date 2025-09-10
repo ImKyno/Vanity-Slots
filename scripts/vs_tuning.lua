@@ -1,6 +1,11 @@
 -- Change to true if you want the container to start closed.
 TUNING.VANITYSLOTS_STARTCLOSED = false
-TUNING.VANITY_SLOTS_MAXSLOTS = 3 -- Unused.
+TUNING.VANITYSLOTS_MAXSLOTS = 3 -- Unused.
+
+TUNING.VANITYSLOTS_WIDGET_XPOS = 875
+TUNING.VANITYSLOTS_WIDGET_YPOS = 73
+TUNING.VANITYSLOTS_WIDGET_XPOS_MOD = 1010
+TUNING.VANITYSLOTS_WIDGET_YPOS_MOD = 73
 
 TUNING.VANITY_COMMON_HEAD_ITEMS =
 {
@@ -45,6 +50,8 @@ TUNING.VANITY_HASFX_ITEMS =
 	"voidcloth_umbrella",
 	"winona_telebrella",
 	"wortox_nabbag",
+	"wurt_swampitem_shadow",
+	"wurt_swampitem_lunar",
 }
 
 TUNING.VANITY_PERSISTSFX_ITEMS =
@@ -110,6 +117,9 @@ TUNING.VANITY_ATTACK_TAGS =
 -- Stategraph events that does not have "onexit" state.
 TUNING.VANITY_STATES_ONEXIT =
 {
+	"attack_pillow",
+	"attack_pillow_pre",
+	"attack_prop_pre",
 	"bugnet",
 	"bugnet_start",
 	"catchonfire",
@@ -125,6 +135,7 @@ TUNING.VANITY_STATES_ONEXIT =
 	"play_strum",
 	"quickcastspell",
 	"scythe",
+	"spray_wax",
 	"terraform",
 	"throw_keep_equip",
 	"till",
@@ -134,6 +145,10 @@ TUNING.VANITY_STATES_ONEXIT =
 
 TUNING.VANITY_STATES_NAMES =
 {
+	"attack_pillow",
+	"attack_pillow_pre",
+	"attack_prop_pre",
+	"attack_prop",
 	"blowdart",
 	"bugnet",
 	"bugnet_start",
@@ -173,6 +188,7 @@ TUNING.VANITY_STATES_NAMES =
 	"row",
 	"row_fail",
 	"scythe",
+	"spray_wax",
 	"terraform",
 	"throw",
 	"throw_deploy",

@@ -4,7 +4,7 @@ end
 
 local VanitySlots = Class(function(self, inst)
     self.inst = inst
-	self.maxslots = TUNING.VANITY_SLOTS_MAXSLOTS -- Unused.
+	self.maxslots = TUNING.VANITYSLOTS_MAXSLOTS -- Unused.
 
     self.inst:AddTag("vanityslotsowner")
 	

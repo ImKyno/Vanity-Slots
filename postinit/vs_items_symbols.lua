@@ -237,6 +237,54 @@ TUNING.VANITY_SYMBOLNAMES =
 		symbol1 = "winona_telebrella",
 		symbol2 = "swap_winona_telebrella",
 	},
+	
+	beeswax_spray =
+	{
+		symbol1 = "plant_spray",
+		symbol2 = "swap_plant_spray",
+	},
+	
+	wurt_swampitem_lunar =
+	{
+		symbol1 = "swap_wurt_swampbomb",
+		symbol2 = "swap_lunar",
+	},
+	
+	wurt_swampitem_shadow =
+	{
+		symbol1 = "swap_wurt_swampbomb",
+		symbol2 = "swap_shadow",
+	},
+	
+	handpillow_petals =
+	{
+		symbol1 = "swap_pillows_petals",
+		symbol2 = "swap_object",
+	},
+	
+	handpillow_kelp =
+	{
+		symbol1 = "swap_pillows_kelp",
+		symbol2 = "swap_object",
+	},
+	
+	handpillow_beefalowool =
+	{
+		symbol1 = "swap_pillows_beefalowool",
+		symbol2 = "swap_object",
+	},
+	
+	handpillow_steelwool =
+	{
+		symbol1 = "swap_pillows_steelwool",
+		symbol2 = "swap_object",
+	},
+	
+	propsign =
+	{
+		symbol1 = "swap_sign_elite",
+		symbol2 = "swap_sign_elite",
+	},
 }
 
 local function SymbolNamePostInit(inst)

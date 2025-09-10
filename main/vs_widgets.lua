@@ -3,9 +3,12 @@ local _G          = GLOBAL
 local require     = _G.require
 local VanitySlots = require("widgets/vanityslotswidget")
 
+require("vs_tuning")
+
 -- Why are there so many copycats of EES?
 local ExtraEquipSlotsMods =
 {
+	-- Extra Equip Slots Mods.
 	"1818688368",
 	"2032685784",
 	"2075943614",
@@ -21,7 +24,33 @@ local ExtraEquipSlotsMods =
 	"3496081977",
 	"3548030233",
 	"375850593",
+	
+	-- 45 Inventory Slots Mods.
+	"1986517346",
+	"2166704267",
+	"2568821043",
+	"2801880191",
+	"2802552738",
+	"2906717350",
+	"2965758547",
+	"3075429483",
+	"3355915604",
+	"3548030233",
+	"786556008",
 }
+
+local X_MOD_POSITION = nil
+local Y_MOD_POSITION = nil
+
+for mod, id in pairs(ExtraEquipSlotsMods) do
+	if _G.KnownModIndex:IsModEnabled("workshop-"..id) then
+		X_MOD_POSITION = TUNING.VANITYSLOTS_WIDGET_XPOS_MOD
+		Y_MOD_POSITION = TUNING.VANITYSLOTS_WIDGET_YPOS_MOD
+	end
+end
+
+local X_POSITION = X_MOD_POSITION or TUNING.VANITYSLOTS_WIDGET_XPOS
+local Y_POSITION = Y_MOD_POSITION or TUNING.VANITYSLOTS_WIDGET_YPOS
 
 -- TO DO (MAYBE): Make widget position compatible with EES mods.
 AddClassPostConstruct("widgets/controls", function(self, inst)
@@ -32,7 +61,7 @@ AddClassPostConstruct("widgets/controls", function(self, inst)
 	end
 
 	self.vanitySlotsBtn = self.inv:AddChild(VanitySlots(owner))
-	self.vanitySlotsBtn:SetPosition(875, 73)
+	self.vanitySlotsBtn:SetPosition(X_POSITION, Y_POSITION)
 end)
 
 -- Position References 
