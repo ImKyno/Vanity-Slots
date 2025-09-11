@@ -262,7 +262,6 @@ RemoveRealItemsFX = function(realitem, owner)
 			
 			realitem.fx = nil
 		end
-	-- Special case for Shadow Maul.
 	elseif realitem.fx ~= nil and realitem:HasTag("vanity_toggable_fx") then
 		realitem.fx:ToggleEquipped(false)
 	elseif realitem.fx ~= nil and realitem:HasTag("vanity_persists_fx") then
@@ -312,6 +311,11 @@ RemoveRealItemsFX = function(realitem, owner)
 	if realitem._back ~= nil then
 		realitem._back:Remove()
 		realitem._back = nil
+	end
+	
+	if realitem._body ~= nil then
+		realitem._body:Remove()
+		realitem._body = nil
 	end
 	
 	if realitem._charged_vfx ~= nil then

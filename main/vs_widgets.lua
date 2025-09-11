@@ -52,7 +52,6 @@ end
 local X_POSITION = X_MOD_POSITION or TUNING.VANITYSLOTS_WIDGET_XPOS
 local Y_POSITION = Y_MOD_POSITION or TUNING.VANITYSLOTS_WIDGET_YPOS
 
--- TO DO (MAYBE): Make widget position compatible with EES mods.
 AddClassPostConstruct("widgets/controls", function(self, inst)
 	local owner = self.owner
 	

@@ -3,12 +3,13 @@
 local assets =
 {
 	Asset("ANIM", "anim/backpack.zip"),
+	Asset("ANIM", "anim/cutgrass.zip"),
 	Asset("ANIM", "anim/swap_krampus_sack.zip"),
 	Asset("ANIM", "anim/ui_chest_3x1.zip"),
 }
 
 -- TO DO: Fix cant move item from containers when vanity is equipped.
--- TO DO: Fix ghost item when unequipping backpacks.
+-- TO DO: Fix ghost item when unequipping backpacks. // Temporary solution: spawn ghost item and remove it immediately.
 -- TO DO: Swap vanity item with real item.
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX = TUNING.EQUIPSLOTS_VANITYSLOTS_INDEX
@@ -61,7 +62,20 @@ local function HideEquippedItem(inst, data, owner)
 					vanityitem:RemoveTag("vanity_equipped")
 				end
 				
-				vanityitem.components.equippable:Unequip(owner)
+				if vanityitem:HasTag("vanity_item_restricted") then
+					local currentowner = vanityitem.components.inventoryitem:GetGrandOwner()
+					local ghostitem = SpawnPrefab("vanity_ghostitem")
+					
+					if currentowner ~= nil and currentowner.components.inventory ~= nil then
+						currentowner.components.inventory:DropItem(vanityitem)
+						currentowner.components.inventory:SetActiveItem(ghostitem)
+
+						vanityitem.components.inventoryitem.cangoincontainer = vanityitem.components.inventoryitem.__cangoincontainer
+						vanityitem.components.inventoryitem.__cangoincontainer = nil
+					end
+				else
+					vanityitem.components.equippable:Unequip(owner)
+				end
 				
 				if vanityitem.onunequipvanity ~= nil then
 					vanityitem.onunequipvanity(vanityitem, owner)
@@ -178,4 +192,38 @@ local function fn()
     return inst
 end
 
-return Prefab("vanity_slots", fn, assets)
+-- WHAT IS this? Its a stupid way to fix a bug.
+-- Equipping items that can't go inside the inventory aka backpacks and such
+-- when unequipping them you'll briefly see a ghost item of them.
+local function ghostfn()
+	local inst = CreateEntity()
+
+	inst.entity:AddTransform()
+	inst.entity:AddAnimState()
+	inst.entity:AddNetwork()
+
+	MakeInventoryPhysics(inst)
+	MakeInventoryFloatable(inst)
+
+	inst.AnimState:SetBank("cutgrass")
+	inst.AnimState:SetBuild("cutgrass")
+	inst.AnimState:PlayAnimation("idle")
+	
+	inst:AddTag("nosteal")
+	inst:AddTag("notarget")
+
+	inst.entity:SetPristine()
+
+	if not TheWorld.ismastersim then
+		return inst
+	end
+
+	inst:AddComponent("inventoryitem")
+
+	inst:DoTaskInTime(0, inst.Remove) -- Kill self before player can interect with us.
+
+	return inst
+end
+
+return Prefab("vanity_slots", fn, assets),
+Prefab("vanity_ghostitem", ghostfn, assets)

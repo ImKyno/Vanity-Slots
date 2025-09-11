@@ -18,6 +18,48 @@ AddStategraphActionHandler("wilson_client", ActionHandler(ACTIONS.EQUIPVANITY, f
 	return "doshortaction"
 end))
 
+local function ActionStatesOnEnter(inst)
+	local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+	local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
+		
+	local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+	local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+	
+	if realitem ~= nil and realitem.components.equippable ~= nil then
+		local symbol1 = realitem.symbolname1
+		local symbol2 = realitem.symbolname2
+		local prefab = realitem.prefab
+
+		if skin_build ~= nil then
+			inst:PushEvent("equipskinneditem", realitem:GetSkinName())
+			inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+		else
+			inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+		end
+	end
+end
+
+local function ActionStatesOnExit(inst)
+	local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
+	local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+
+	local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
+	local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
+				
+	if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
+		local symbol1 = vanityitem.symbolname1
+		local symbol2 = vanityitem.symbolname2
+		local prefab = vanityitem.prefab
+
+		if skin_build ~= nil then
+			inst:PushEvent("equipskinneditem", vanityitem:GetSkinName())
+			inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+		else
+			inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
+		end
+	end
+end
+
 -- Hack for when player is trying to hide with bush hat but have a vanity item equipped.
 AddStategraphPostInit("wilson", function(sg)
 	-- Bush Hiding States
@@ -29,7 +71,6 @@ AddStategraphPostInit("wilson", function(sg)
 		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
 		
 		if realitem ~= nil and realitem.components.equippable ~= nil then
-			-- local prefab = string.gsub(realitem.prefab, "hat", "")
 			local prefab = realitem.symbolname or string.gsub(realitem.prefab, "hat", "")
 			
 			if skin_build ~= nil then
@@ -44,7 +85,7 @@ AddStategraphPostInit("wilson", function(sg)
 	end
 	
 	table.insert(sg.states["hide"].events, EventHandler("equip", function(inst)
-		-- print("VANITY SLOTS: ITEM WAS EQUIPPED")
+
 	end))
 	
 	sg.states["hide"].onexit = function(inst)
@@ -53,7 +94,6 @@ AddStategraphPostInit("wilson", function(sg)
 		local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
 				
 		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
-			-- local prefab = string.gsub(vanityitem.prefab, "hat", "")
 			local prefab = vanityitem.symbolname or string.gsub(vanityitem.prefab, "hat", "")
 			
 			if skin_build ~= nil then
@@ -78,7 +118,6 @@ AddStategraphPostInit("wilson", function(sg)
 		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
 		
 		if realitem ~= nil and realitem.components.equippable ~= nil then
-			-- local prefab = realitem.symbolname or realitem.prefab
 			local prefab = realitem.AnimState:GetBuild() or realitem.prefab
 
 			if skin_build ~= nil then
@@ -97,7 +136,6 @@ AddStategraphPostInit("wilson", function(sg)
 		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
 		
 		if realitem ~= nil and realitem.components.equippable ~= nil then
-			-- local prefab = realitem.symbolname or realitem.prefab
 			local prefab = realitem.AnimState:GetBuild() or realitem.prefab
 
 			if skin_build ~= nil then
@@ -117,7 +155,6 @@ AddStategraphPostInit("wilson", function(sg)
 		local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
 				
 		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
-			-- local prefab = vanityitem.symbolname or vanityitem.prefab
 			local prefab = vanityitem.AnimState:GetBuild() or vanityitem.prefab
 
 			if skin_build ~= nil then
@@ -136,7 +173,6 @@ AddStategraphPostInit("wilson", function(sg)
 		local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
 		
 		if realitem ~= nil and realitem.components.equippable ~= nil then
-			-- local prefab = realitem.symbolname or realitem.prefab
 			local prefab = realitem.AnimState:GetBuild() or realitem.prefab
 
 			if skin_build ~= nil then
@@ -200,10 +236,10 @@ AddStategraphPostInit("wilson", function(sg)
 		sg.states[actions].onenter = function(inst, ...)
 			local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 			local skin_build = realitem ~= nil and realitem:GetSkinBuild() or nil
-			
+
 			local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
-		
+	
 			if realitem ~= nil and realitem.components.equippable ~= nil then
 				local symbol1 = realitem.symbolname1
 				local symbol2 = realitem.symbolname2
@@ -215,6 +251,14 @@ AddStategraphPostInit("wilson", function(sg)
 				else
 					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 				end
+				
+				if realitem:HasTag("vanity_persists_fx") then
+					realitem.fx.entity:Show()
+				end
+			
+				if realitem:HasTag("vanity_toggable_fx") then
+					realitem.fx:ToggleEquipped(true)
+				end
 			end
 			
 			if vanityitem ~= nil and vanityitem:HasTag("vanity_shield") then
@@ -223,6 +267,8 @@ AddStategraphPostInit("wilson", function(sg)
 			
 			if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
 				vanityitem.components.equippable:Unequip(inst)
+				
+				ActionStatesOnEnter(inst)
 				
 				if vanityitem.onequipvanity ~= nil then
 					vanityitem.onequipvanity(vanityitem, inst)
@@ -239,6 +285,7 @@ AddStategraphPostInit("wilson", function(sg)
 		sg.states[actions].onexit = function(inst, ...)
 			local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 			local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+
 			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 			local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
 				
@@ -253,6 +300,14 @@ AddStategraphPostInit("wilson", function(sg)
 				else
 					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 				end
+			end
+			
+			if realitem:HasTag("vanity_persists_fx") then
+				realitem.fx.entity:Hide()
+			end
+			
+			if realitem:HasTag("vanity_toggable_fx") then
+				realitem.fx:ToggleEquipped(false)
 			end
 			
 			if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
