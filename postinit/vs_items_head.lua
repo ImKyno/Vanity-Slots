@@ -672,6 +672,16 @@ end
 AddPrefabPostInit("slurper", SlurperPostInit)
 
 local function WagpunkHatPostInit(inst)
+	-- Stupid klei they don't kill the old fx on equip...
+	local _OnEquip
+	local function OnEquip(inst, owner)
+		if inst.fx ~= nil then
+			inst.fx:Remove()
+		end
+		
+		return _OnEquip(inst, owner)
+	end
+	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
 			_G.RemoveEventListener(inst, "onattackother")
@@ -692,6 +702,15 @@ local function WagpunkHatPostInit(inst)
 				inst.components.equippable:Unequip(owner)
 			end
 		end
+	end
+	
+	if not _G.TheWorld.ismastersim then
+		return inst
+	end
+	
+	if inst.components.equippable ~= nil then
+		_OnEquip = inst.components.equippable.onequipfn
+		inst.components.equippable.onequipfn = OnEquip
 	end
 end
 
@@ -723,7 +742,7 @@ end
 
 AddPrefabPostInit("rabbithat", RabbitHatPostInit)
 
-local function AlterGuardianHatPostInit(inst)
+local function AlterGuardianHatPostInit(inst)	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
 			if inst._light ~= nil then
@@ -740,14 +759,12 @@ local function AlterGuardianHatPostInit(inst)
 				inst._back = _G.SpawnPrefab("alterguardian_hat_equipped")
 				inst._back:OnActivated(owner, false)
 			end
-			
-			owner.AnimState:HideSymbol("swap_hat")
 
-			_G.RemoveEventListener(inst, "sanitydelta")
-			_G.RemoveEventListener(inst, "onattackother")
+			inst:RemoveEventCallback("sanitydelta", inst._onsanitydelta, owner)
+			inst:RemoveEventCallback("onattackother", inst.alterguardian_spawngestalt_fn, owner)
 		end
 	end
-	
+	--[[
 	inst.onunequipvanity = function(inst, owner)
 		if owner ~= nil then
 			if inst.components.equippable ~= nil then
@@ -755,6 +772,7 @@ local function AlterGuardianHatPostInit(inst)
 			end
 		end
 	end
+	]]--
 end
 
 AddPrefabPostInit("alterguardianhat", AlterGuardianHatPostInit)
