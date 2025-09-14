@@ -30,8 +30,12 @@ local function AddVanitySlots(inst)
 		local realitem = data.item
 		
 		if vanityitem ~= nil and vanityitem.components.equippable ~= nil and not realitem:HasTag("heavy") then
-			vanityitem.components.equippable:Unequip(inst)
-			vanityitem.components.equippable:Equip(inst)
+			if vanityitem.prefab == "alterguardianhat" then -- Unequipping it causes assert fail.
+				vanityitem.components.equippable:Equip(inst)
+			else
+				vanityitem.components.equippable:Unequip(inst)
+				vanityitem.components.equippable:Equip(inst)
+			end
 			
 			if realitem and realitem.prefab == vanityitem.prefab then 
 				-- print("VANITY SLOTS: EQUIPPED/VANITY ITEM ARE THE SAME.")

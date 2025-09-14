@@ -742,41 +742,6 @@ end
 
 AddPrefabPostInit("rabbithat", RabbitHatPostInit)
 
-local function AlterGuardianHatPostInit(inst)	
-	inst.onequipvanity = function(inst, owner, from_ground)
-		if owner ~= nil then
-			if inst._light ~= nil then
-				inst._light:Remove()
-				inst._light = nil
-			end
-
-			if inst._front == nil then
-				inst._front = _G.SpawnPrefab("alterguardian_hat_equipped")
-				inst._front:OnActivated(owner, true)
-			end
-			
-			if inst._back == nil then
-				inst._back = _G.SpawnPrefab("alterguardian_hat_equipped")
-				inst._back:OnActivated(owner, false)
-			end
-
-			inst:RemoveEventCallback("sanitydelta", inst._onsanitydelta, owner)
-			inst:RemoveEventCallback("onattackother", inst.alterguardian_spawngestalt_fn, owner)
-		end
-	end
-	--[[
-	inst.onunequipvanity = function(inst, owner)
-		if owner ~= nil then
-			if inst.components.equippable ~= nil then
-				inst.components.equippable:Unequip(owner)
-			end
-		end
-	end
-	]]--
-end
-
-AddPrefabPostInit("alterguardianhat", AlterGuardianHatPostInit)
-
 local function LunarPlantHatPostInit(inst)
 	inst:AddTag("vanity_fullhead")
 	
@@ -821,3 +786,49 @@ local function VoidClothHatPostInit(inst)
 end
 
 AddPrefabPostInit("voidclothhat", VoidClothHatPostInit)
+
+local function AlterGuardianHatPostInit(inst)	
+	local function RefreshEquippedHat(inst, owner)
+		local hat = owner ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
+		
+		if hat ~= nil then
+			hat.components.equippable:Unequip(owner)
+			hat.components.equippable:Equip(owner)
+		end
+	end
+
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then		
+			if inst._light ~= nil then
+				inst._light:Remove()
+				inst._light = nil
+			end
+
+			if inst._front == nil then
+				inst._front = _G.SpawnPrefab("alterguardian_hat_equipped")
+				inst._front:OnActivated(owner, true)
+			end
+			
+			if inst._back == nil then
+				inst._back = _G.SpawnPrefab("alterguardian_hat_equipped")
+				inst._back:OnActivated(owner, false)
+			end
+			
+			owner.AnimState:ClearOverrideSymbol("swap_hat")
+			RefreshEquippedHat(inst, owner)
+
+			_G.RemoveEventListener(inst, "sanitydelta")
+			_G.RemoveEventListener(inst, "onattackother")
+		end
+	end
+
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("alterguardianhat", AlterGuardianHatPostInit)
