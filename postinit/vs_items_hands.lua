@@ -203,11 +203,42 @@ end
 
 AddPrefabPostInit("nightstick", NightStickPostInit)
 
+local function BalloonsPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.components.fueled ~= nil then
+				inst.components.fueled:StopConsuming()
+			end
+
+			if inst.onownerattackedfn ~= nil then
+				inst:RemoveEventCallback("attacked", inst.onownerattackedfn, owner)
+				inst.onownerattackedfn = nil
+			end
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("balloon", BalloonsPostInit)
+AddPrefabPostInit("balloonparty", BalloonsPostInit)
+
 local function BalloonSpeedPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
 			if inst.components.fueled ~= nil then
 				inst.components.fueled:StopConsuming()
+			end
+			
+			if inst.onownerattackedfn ~= nil then
+				inst:RemoveEventCallback("attacked", inst.onownerattackedfn, owner)
+				inst.onownerattackedfn = nil
 			end
 		end
 	end

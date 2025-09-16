@@ -10,7 +10,6 @@ local assets =
 
 -- TO DO: Fix cant move item from containers when vanity is equipped. // Temporary solution: if slot is nill only allow restricted items.
 -- TO DO: Fix ghost item when unequipping backpacks. // Temporary solution: spawn ghost item and remove it immediately.
--- TO DO: Fix frog can unequip balloons.
 -- TO DO: Swap vanity item with real item.
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX = TUNING.EQUIPSLOTS_VANITYSLOTS_INDEX
