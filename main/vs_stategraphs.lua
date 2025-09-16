@@ -288,7 +288,8 @@ AddStategraphPostInit("wilson", function(sg)
 
 			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 			local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
-				
+
+			--[[
 			if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 				local symbol1 = vanityitem.symbolname1
 				local symbol2 = vanityitem.symbolname2
@@ -301,16 +302,9 @@ AddStategraphPostInit("wilson", function(sg)
 					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 				end
 			end
+			]]--
 			
-			if realitem:HasTag("vanity_persists_fx") then
-				realitem.fx.entity:Hide()
-			end
-			
-			if realitem:HasTag("vanity_toggable_fx") then
-				realitem.fx:ToggleEquipped(false)
-			end
-			
-			if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+			if vanityitem ~= nil then
 				vanityitem.components.equippable:Equip(inst)
 				
 				if vanityitem.onequipvanity ~= nil then
@@ -320,6 +314,18 @@ AddStategraphPostInit("wilson", function(sg)
 				end
 
 				_G.ApplyContainerEffects(vanityitem, realitem, inst)
+				
+				if realitem ~= nil and realitem:HasTag("vanity_persists_fx") then
+					if realitem.fx ~= nil then
+						realitem.fx.entity:Hide()
+					end
+				end
+			
+				if realitem ~= nil and realitem:HasTag("vanity_toggable_fx") then
+					if realitem.fx ~= nil then
+						realitem.fx:ToggleEquipped(false)
+					end
+				end
 			end
 		
 			return _state_onexit(inst, ...)
@@ -381,9 +387,11 @@ AddStategraphPostInit("wilson", function(sg)
 	sg.states["nabbag"].onexit = function(inst, ...)
 		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HANDS)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 		local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
-				
+
+		--[[
 		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 			local symbol1 = vanityitem.symbolname1
 			local symbol2 = vanityitem.symbolname2
@@ -396,8 +404,9 @@ AddStategraphPostInit("wilson", function(sg)
 				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 			end
 		end
+		]]--
 		
-		if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+		if vanityitem ~= nil then
 			vanityitem.components.equippable:Equip(inst)
 				
 			if vanityitem.onequipvanity ~= nil then
@@ -433,11 +442,15 @@ AddStategraphPostInit("wilson", function(sg)
 			end
 			
 			if realitem:HasTag("vanity_persists_fx") then
-				realitem.fx.entity:Show()
+				if realitem.fx ~= nil then
+					realitem.fx.entity:Show()
+				end
 			end
 			
 			if realitem:HasTag("vanity_toggable_fx") then
-				realitem.fx:ToggleEquipped(true)
+				if realitem.fx ~= nil then
+					realitem.fx:ToggleEquipped(true)
+				end
 			end
 		end
 		
@@ -465,7 +478,8 @@ AddStategraphPostInit("wilson", function(sg)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 		local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
-				
+
+		--[[
 		if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 			local symbol1 = vanityitem.symbolname1
 			local symbol2 = vanityitem.symbolname2
@@ -478,16 +492,9 @@ AddStategraphPostInit("wilson", function(sg)
 				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 			end
 		end
+		]]--
 		
-		if realitem ~= nil and realitem:HasTag("vanity_persists_fx") then
-			realitem.fx.entity:Hide()
-		end
-		
-		if realitem ~= nil and realitem:HasTag("vanity_toggable_fx") then
-			realitem.fx:ToggleEquipped(false)
-		end
-		
-		if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+		if vanityitem ~= nil then
 			vanityitem.components.equippable:Equip(inst)
 				
 			if vanityitem.onequipvanity ~= nil then
@@ -497,6 +504,18 @@ AddStategraphPostInit("wilson", function(sg)
 			end
 
 			_G.ApplyContainerEffects(vanityitem, realitem, inst)
+			
+			if realitem ~= nil and realitem:HasTag("vanity_persists_fx") then
+				if realitem.fx ~= nil then
+					realitem.fx.entity:Hide()
+				end
+			end
+		
+			if realitem ~= nil and realitem:HasTag("vanity_toggable_fx") then
+				if realitem.fx ~= nil then
+					realitem.fx:ToggleEquipped(false)
+				end
+			end
 		end
 			
 		return _attack_onexit(inst, ...)
@@ -570,7 +589,8 @@ AddStategraphPostInit("wilson", function(sg)
 			local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 			local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(1) or nil
 			local skin_build = vanityitem ~= nil and vanityitem:GetSkinBuild() or nil
-				
+
+			--[[
 			if vanityitem ~= nil and vanityitem.components.equippable ~= nil then
 				local symbol1 = vanityitem.symbolname1
 				local symbol2 = vanityitem.symbolname2
@@ -583,20 +603,9 @@ AddStategraphPostInit("wilson", function(sg)
 					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 				end
 			end
+			]]--
 			
-			if realitem ~= nil and realitem:HasTag("vanity_teleporter") then
-				if realitem.swapfx ~= nil then
-					realitem.swapfx:Remove()
-					realitem.swapfx = nil
-				end
-				
-				if realitem.swapfx2 ~= nil then
-					realitem.swapfx2:Remove()
-					realitem.swapfx2 = nil
-				end
-			end
-			
-			if vanityitem ~= nil and vanityitem:HasTag("vanity_has_fx") then
+			if vanityitem ~= nil then
 				vanityitem.components.equippable:Equip(inst)
 				
 				if vanityitem.onequipvanity ~= nil then
@@ -606,6 +615,18 @@ AddStategraphPostInit("wilson", function(sg)
 				end
 
 				_G.ApplyContainerEffects(vanityitem, realitem, inst)
+
+				if realitem ~= nil and realitem:HasTag("vanity_teleporter") then
+					if realitem.swapfx ~= nil then
+						realitem.swapfx:Remove()
+						realitem.swapfx = nil
+					end
+				
+					if realitem.swapfx2 ~= nil then
+						realitem.swapfx2:Remove()
+						realitem.swapfx2 = nil
+					end
+				end
 			end
 		
 			return _state_onexit(inst, ...)
