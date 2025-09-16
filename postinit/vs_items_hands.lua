@@ -370,3 +370,73 @@ local function PropSignPostInit(inst)
 end
 
 AddPrefabPostInit("propsign", PropSignPostInit)
+
+local function ShadowBattleAxePostInit(inst)
+	local _OnBroken = UpvalueHacker.GetUpvalue(_G.Prefabs.shadow_battleaxe.fn, "OnBroken")
+	
+	local function OnBroken(inst)
+		local owner = inst.components.inventoryitem:GetGrandOwner() or nil
+		local vanityslots = owner ~= nil and owner.components.inventory ~= nil and 
+		owner.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY) or nil
+	
+		if owner ~= nil and inst:HasTag("vanity_equipped") then
+			if vanityslots ~= nil then
+				local broken_item = vanityslots.components.container:RemoveItemBySlot(1)
+			
+				if broken_item ~= nil then
+					broken_item.prevcontainer = nil
+					broken_item.prevslot = nil
+					
+					if owner.components.inventory ~= nil then
+						owner.components.inventory:GiveItem(broken_item, nil, owner:GetPosition())
+					else
+						vanityslots.components.container:DropItem(broken_item)
+					end
+				end
+			end
+		end
+		
+		_OnBroken(inst)
+	end
+	
+	UpvalueHacker.SetUpvalue(_G.Prefabs.shadow_battleaxe.fn, OnBroken, "OnBroken")
+	_G.Prefabs.shadow_battleaxe._OnBroken = _OnBroken
+end
+
+AddPrefabPostInit("shadow_battleaxe", ShadowBattleAxePostInit)
+
+local function WalkingStickPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.components.fueled ~= nil then
+				inst.components.fueled:StopConsuming()
+				
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.__no_sewing = inst.components.fueled.no_sewing
+					inst.components.fueled.no_sewing = true
+				end
+			end
+	
+			if inst._owner ~= nil then
+				inst._owner = owner
+				inst:RemoveEventCallback("locomote", inst._onlocomote, inst._owner)
+			end
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("walking_stick", WalkingStickPostInit)
