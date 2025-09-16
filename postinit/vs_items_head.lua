@@ -586,18 +586,11 @@ end
 AddPrefabPostInit("dreadstonehat", DreadstoneHatPostInit)
 
 local function BushHatPostInit(inst)
-	local _stopusingbush = UpvalueHacker.GetUpvalue(_G.Prefabs.bushhat.fn, "stopusingbush")
-	
-	local function stopusingbush(inst, data)
-		_stopusingbush(inst, data)
-	end
-	
-	UpvalueHacker.SetUpvalue(_G.Prefabs.bushhat.fn, stopusingbush, "stopusingbush")
-	_G.Prefabs.bushhat._stopusingbush = _stopusingbush
+	inst:AddTag("vanity_equip_onload")
 	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
-			inst:RemoveEventCallback("newstate", stopusingbush, owner)
+			_G.RemoveEventListener(inst, "newstate")
 		end
 	end
 	
@@ -613,18 +606,11 @@ end
 AddPrefabPostInit("bushhat", BushHatPostInit)
 
 local function PlantRegistryHatPostInit(inst)
-	local _stopusingplantregistry = UpvalueHacker.GetUpvalue(_G.Prefabs.plantregistryhat.fn, "stopusingplantregistry")
-
-	local function stopusingplantregistry(inst, data)
-		_stopusingplantregistry(inst, data)
-	end
-	
-	UpvalueHacker.SetUpvalue(_G.Prefabs.plantregistryhat.fn, stopusingplantregistry, "stopusingplantregistry")
-	_G.Prefabs.plantregistryhat._stopusingplantregistry = _stopusingplantregistry
+	inst:AddTag("vanity_equip_onload")
 	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
-			inst:RemoveEventCallback("newstate", stopusingplantregistry, owner)
+			_G.RemoveEventListener(inst, "newstate")
 		end
 	end
 	
@@ -787,18 +773,47 @@ end
 
 AddPrefabPostInit("voidclothhat", VoidClothHatPostInit)
 
-local function AlterGuardianHatPostInit(inst)	
+local function AlterGuardianHatPostInit(inst)
+	inst:AddTag("vanity_equip_onload")
+
 	local function RefreshEquippedHat(inst, owner)
-		local hat = owner ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
+		local realitem = owner ~= nil and owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
 		
-		if hat ~= nil then
-			hat.components.equippable:Unequip(owner)
-			hat.components.equippable:Equip(owner)
+		if realitem ~= nil then
+			realitem.components.equippable:Unequip(owner)
+			realitem.components.equippable:Equip(owner)
+			
+			if realitem.prefab == "alterguardianhat" then
+				if realitem._front ~= nil then
+					realitem._front.entity:Hide()
+				end
+			
+				if realitem._back ~= nil then
+					realitem._back.entity:Hide()
+				end
+				
+				owner.AnimState:ClearOverrideSymbol("swap_hat")
+			end
 		end
 	end
 
 	inst.onequipvanity = function(inst, owner, from_ground)
-		if owner ~= nil then		
+		local realowner = inst.components.inventoryitem:GetGrandOwner()
+		local realitem = realowner ~= nil and realowner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
+		
+		if realitem ~= nil and realitem.prefab == "alterguardianhat" then
+			if realitem._front ~= nil then
+				realitem._front.entity:Hide()
+			end
+			
+			if realitem._back ~= nil then
+				realitem._back.entity:Hide()
+			end
+			
+			realowner.AnimState:ClearOverrideSymbol("swap_hat")
+		end
+
+		if owner ~= nil then
 			if inst._light ~= nil then
 				inst._light:Remove()
 				inst._light = nil
@@ -813,8 +828,7 @@ local function AlterGuardianHatPostInit(inst)
 				inst._back = _G.SpawnPrefab("alterguardian_hat_equipped")
 				inst._back:OnActivated(owner, false)
 			end
-			
-			owner.AnimState:ClearOverrideSymbol("swap_hat")
+
 			RefreshEquippedHat(inst, owner)
 
 			_G.RemoveEventListener(inst, "sanitydelta")

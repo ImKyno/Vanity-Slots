@@ -303,6 +303,7 @@ RemoveRealItemsFX = function(realitem, owner)
 		realitem._wheel = nil
     end
 	
+	--[[
 	if realitem._front ~= nil then
 		realitem._front:Remove()
 		realitem._front = nil
@@ -312,6 +313,7 @@ RemoveRealItemsFX = function(realitem, owner)
 		realitem._back:Remove()
 		realitem._back = nil
 	end
+	]]--
 	
 	if realitem._body ~= nil then
 		realitem._body:Remove()

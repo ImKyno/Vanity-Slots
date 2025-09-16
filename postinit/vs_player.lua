@@ -30,7 +30,7 @@ local function AddVanitySlots(inst)
 		local realitem = data.item
 		
 		if vanityitem ~= nil and vanityitem.components.equippable ~= nil and not realitem:HasTag("heavy") then
-			if vanityitem.prefab == "alterguardianhat" then -- Unequipping it causes assert fail.
+			if vanityitem:HasTag("vanity_equip_onload") then -- Unequipping it causes assert fail.
 				vanityitem.components.equippable:Equip(inst)
 			else
 				vanityitem.components.equippable:Unequip(inst)
