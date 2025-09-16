@@ -146,16 +146,30 @@ global("ApplyContainerEffects")
 ApplyContainerEffects = function(vanityitem, realitem, owner)	
 	-- You wanted to carry two krampus sacks full of items? 💀💀
 	-- Nah bro, you can't have containers with stuff inside. :steammocking:
+	
+	-- Anyway, valid containers can keep their content stashed, but can't be
+	-- opened or changed when its vanity, you must unequip first.
+	-- useful for items such as alterguardianhat colorful spores or celestial jewels.
 	if vanityitem ~= nil and vanityitem.components.container ~= nil then
-		vanityitem.components.container:DropEverything(owner:GetPosition())
-		vanityitem.components.container:Close(owner)
-			
-		vanityitem.components.container.__restrictedtag = vanityitem.components.container.restrictedtag
-		vanityitem.components.container.restrictedtag = "steammocking" -- https://tenor.com/view/steammocking-gif-24857170
+		if vanityitem:HasTag("vanity_container_valid") then
+			vanityitem.components.container:Close(owner)
+		else
+			vanityitem.components.container:DropEverything(owner:GetPosition())
+			vanityitem.components.container:Close(owner)
+		end
+
+		if vanityitem.components.container.restrictedtag ~= nil then
+			vanityitem.components.container.__restrictedtag = vanityitem.components.container.restrictedtag
+			vanityitem.components.container.restrictedtag = "steammocking" -- https://tenor.com/view/steammocking-gif-24857170
+		end
 	end
-			
+	
 	if realitem ~= nil and realitem.components.container ~= nil then
-		realitem.components.container:Open(owner)
+		if realitem.prefab == "alterguardianhat" then
+			-- Empty because we standby.
+		else
+			realitem.components.container:Open(owner)
+		end
 	end
 end
 
@@ -163,7 +177,8 @@ end
 global("RemoveContainerEffects")
 RemoveContainerEffects = function(vanityitem, owner)
 	if vanityitem ~= nil and vanityitem.components.container ~= nil then
-		vanityitem.components.container.restrictedtag = vanityitem.components.container.__restrictedtag
+		vanityitem.components.container.restrictedtag = vanityitem.components.container.__restrictedtag or nil
+		vanityitem.components.container.__restrictedtag = nil
 	end
 end
 

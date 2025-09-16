@@ -775,6 +775,7 @@ AddPrefabPostInit("voidclothhat", VoidClothHatPostInit)
 
 local function AlterGuardianHatPostInit(inst)
 	inst:AddTag("vanity_equip_onload")
+	inst:AddTag("vanity_container_valid")
 
 	local function RefreshEquippedHat(inst, owner)
 		if inst:HasTag("vanity_equipped") then
@@ -820,6 +821,15 @@ local function AlterGuardianHatPostInit(inst)
 		end
 
 		if owner ~= nil then
+			if inst.lunarseedsmaxed then
+				inst:RemoveTag("lunarseedmaxed")
+				
+				if owner.components.sanity ~= nil then
+					owner.components.sanity:SetInducedLunacy(inst, false)
+					owner.components.sanity:EnableLunacy(false, "lunacyhat")
+				end
+			end
+			
 			if inst._light ~= nil then
 				inst._light:Remove()
 				inst._light = nil
