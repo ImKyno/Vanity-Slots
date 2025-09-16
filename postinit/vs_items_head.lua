@@ -777,22 +777,28 @@ local function AlterGuardianHatPostInit(inst)
 	inst:AddTag("vanity_equip_onload")
 
 	local function RefreshEquippedHat(inst, owner)
-		local realitem = owner ~= nil and owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
-		
-		if realitem ~= nil then
-			realitem.components.equippable:Unequip(owner)
-			realitem.components.equippable:Equip(owner)
-			
-			if realitem.prefab == "alterguardianhat" then
-				if realitem._front ~= nil then
-					realitem._front.entity:Hide()
+		if inst:HasTag("vanity_equipped") then
+			local realitem = owner ~= nil and owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
+
+			if realitem ~= nil then
+				if realitem.prefab == "alterguardianhat" then
+					-- Empty because we standby.
+				else
+					realitem.components.equippable:Unequip(owner)
+					realitem.components.equippable:Equip(owner)
 				end
 			
-				if realitem._back ~= nil then
-					realitem._back.entity:Hide()
-				end
+				if realitem.prefab == "alterguardianhat" then
+					if realitem._front ~= nil then
+						realitem._front.entity:Hide()
+					end
+			
+					if realitem._back ~= nil then
+						realitem._back.entity:Hide()
+					end
 				
-				owner.AnimState:ClearOverrideSymbol("swap_hat")
+					owner.AnimState:ClearOverrideSymbol("swap_hat")
+				end
 			end
 		end
 	end
@@ -834,6 +840,8 @@ local function AlterGuardianHatPostInit(inst)
 			_G.RemoveEventListener(inst, "sanitydelta")
 			_G.RemoveEventListener(inst, "onattackother")
 		end
+		
+		inst:AddTag("vanity_equipped")
 	end
 
 	inst.onunequipvanity = function(inst, owner)
@@ -841,8 +849,16 @@ local function AlterGuardianHatPostInit(inst)
 			if inst.components.equippable ~= nil then
 				inst.components.equippable:Unequip(owner)
 			end
+			
+			inst:RemoveTag("vanity_equipped")
 		end
 	end
+	
+	if not _G.TheWorld.ismastersim then
+		return inst
+	end
+	
+	inst:DoTaskInTime(0, RefreshEquippedHat)
 end
 
 AddPrefabPostInit("alterguardianhat", AlterGuardianHatPostInit)
