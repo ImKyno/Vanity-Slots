@@ -5,6 +5,12 @@ local require = _G.require
 -- Load everything needed.
 require("vs_main")
 
+-- Mod Strings Localization.
+local localization = GetModConfigData("LANGUAGE", true)
+if localization then
+	require("strings/vs_strings_"..localization)
+end
+
 local init_main =
 {
 	"vs_actions",

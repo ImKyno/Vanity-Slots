@@ -152,9 +152,17 @@ end)
 
 function VanitySlots:RefreshTooltips()
 	if self.VanitySlotsShown then
-		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_CLOSE)
+		if VANITYSLOTS_KEYBIND == false then
+			self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_CLOSE)
+		else
+			self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_CLOSE.."\n("..tostring(VANITYSLOTS_KEYBIND.name)..")")
+		end
 	else
-		self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_OPEN)
+		if VANITYSLOTS_KEYBIND == false then
+			self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_OPEN)
+		else
+			self.vanitySlotsBtn:SetTooltip(STRINGS.UI.HUD.VANITYSLOTS_OPEN.."\n("..tostring(VANITYSLOTS_KEYBIND.name)..")")
+		end
 	end
 end
 
