@@ -167,6 +167,15 @@ function USEITEM.edible(inst, doer, target, ...)
 	end
 end
 
+local _USEITEM_cookable = USEITEM.cookable
+function USEITEM.cookable(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_cookable(inst, doer, target, ...)
+	end
+end
+
 local _USEITEM_fuel = USEITEM.fuel
 function USEITEM.fuel(inst, doer, target, ...)
 	if target:HasTag("vanity_equipped") then

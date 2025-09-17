@@ -14,6 +14,7 @@ end
 local init_main =
 {
 	"vs_actions",
+	"vs_extraequipslots",
 	"vs_stategraphs",
 	"vs_widgets",
 }

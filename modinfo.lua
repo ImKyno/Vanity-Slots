@@ -6,7 +6,7 @@ local STRINGS =
 {
 	NAME = 
 	{
-		"Project Vanity (Alpha)",
+		"Cosmetic Slots",
 		zh  = "化妆品槽位 (Cosmetic Slots)",
 		zht = "化妝品槽位 (Cosmetic Slots)",
 		pt  = "Slots Cosméticos",
@@ -24,8 +24,8 @@ local STRINGS =
 󰀏 Mod Configuration is entirely client. You can access it in: 
 Main Menu → Mods → Server Mods → Cosmetic Slots
 
-󰀌 Mod Version: Alpha-1.3-A
-󰀧 Update: Work In Progress
+󰀌 Mod Version: 1.0-A
+󰀧 Update: Mod Launch
 ]],
 		zh  =
 [[
@@ -34,6 +34,9 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀖 你是否曾想过给某个物品添加皮肤，却因为物品本身不够好而无法实现？别担心！现在你可以使用任何可装备的物品，无需担心它是否真的被装备了。
 
 󰀏 注意！虽然装备在装饰槽中的物品不会损失耐久度或损坏，但它们不会给玩家带来好处。
+
+󰀏 模组配置完全在客户端进行。您可以通过以下方式访问：
+主菜单 → 模组 → 服务器模组 → 外观栏
 
 󰀌 Mod 版本： 1.0-A
 󰀧 更新： Mod 发布
@@ -46,6 +49,9 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 
 󰀏 注意！虽然装备在装饰槽中的物品不会损失耐久度或损坏，但它们不会给玩家带来好处。
 
+󰀏 處置 模組配置完全在客戶端進行。您可以透過以下方式存取：
+主選單 → 模組 → 伺服器模組 → 外觀欄
+
 󰀌 Mod 版本： 1.0-A
 󰀧 更新： Mod 发布
 ]],	
@@ -56,6 +62,9 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀖 Sempre quis utilizar aquela skin mas nunca fez por que o item não era tão bom assim? Sem problemas! Agora você pode equipar qualquer item sem precisar realmente equipá-lo!
 	
 󰀏 Atenção! Apesar de itens equipados nos Slots Cosméticos não perderem durabilidade ou estragarem, eles não garantem nenhum de seus benefícios ao jogador.
+
+󰀏 A configuração do Mod é totalmente do cliente. Você pode acessá-la em:
+Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 	
 󰀌 Versão do Mod: 1.0-A
 󰀧 Atualização: Lançamento do Mod
@@ -159,7 +168,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 }
 
 name                        = ChooseTranslationTable(STRINGS.NAME)
-version                     = "Alpha-1.3-A"
+version                     = "1.0-A"
 
 description                 = ChooseTranslationTable(STRINGS.DESCRIPTION)
 
