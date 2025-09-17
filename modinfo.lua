@@ -24,7 +24,7 @@ local STRINGS =
 󰀏 Mod Configuration is entirely client. You can access it in: 
 Main Menu → Mods → Server Mods → Cosmetic Slots
 
-󰀌 Mod Version: Alpha-1.2-A
+󰀌 Mod Version: Alpha-1.3-A
 󰀧 Update: Work In Progress
 ]],
 		zh  =
@@ -159,7 +159,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 }
 
 name                        = ChooseTranslationTable(STRINGS.NAME)
-version                     = "Alpha-1.2-A"
+version                     = "Alpha-1.3-A"
 
 description                 = ChooseTranslationTable(STRINGS.DESCRIPTION)
 

@@ -66,7 +66,11 @@ AddClassPostConstruct("widgets/controls", function(self, inst)
 	self.vanitySlotsBtn:SetPosition(X_POSITION, Y_POSITION)
 end)
 
-_G.VANITYSLOTS_KEYBIND = _G.json.decode(GetModConfigData("KEYBIND", true))
+_G.VANITYSLOTS_KEYBIND = GetModConfigData("KEYBIND", true) 
+
+if _G.VANITYSLOTS_KEYBIND ~= false then
+	_G.VANITYSLOTS_KEYBIND = _G.json.decode(_G.VANITYSLOTS_KEYBIND)
+end
 
 -- KEYBIND can be false.
 if type(_G.VANITYSLOTS_KEYBIND) ~= "table" then
