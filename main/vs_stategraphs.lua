@@ -247,7 +247,11 @@ AddStategraphPostInit("wilson", function(sg)
 
 				if skin_build ~= nil then
 					inst:PushEvent("equipskinneditem", realitem:GetSkinName())
-					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+					if realitem:HasTag("vanity_inverted_skin_symbol") then -- Somehow skinned items have inverted symbols ???
+						inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol2 or "swap_"..prefab, realitem.GUID, symbol1 or "swap_"..prefab)
+					else
+						inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+					end
 				else
 					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 				end
