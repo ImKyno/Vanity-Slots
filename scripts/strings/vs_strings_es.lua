@@ -1,0 +1,4 @@
+STRINGS.UI.HUD.VANITYSLOTS_CLOSE = "Cerrar Cosméticas"
+STRINGS.UI.HUD.VANITYSLOTS_OPEN = "Ver Cosméticas"
+
+STRINGS.ACTIONS.EQUIPVANITY = "Equipar como Cosmética"

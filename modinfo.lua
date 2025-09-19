@@ -10,6 +10,7 @@ local STRINGS =
 		zh  = "化妆品槽位 (Cosmetic Slots)",
 		zht = "化妝品槽位 (Cosmetic Slots)",
 		pt  = "Slots Cosméticos",
+		es  = "Ranuras Cosméticas",
 	},
 	
 	DESCRIPTION =
@@ -24,7 +25,7 @@ local STRINGS =
 󰀏 Mod Configuration is entirely client. You can access it in: 
 Main Menu → Mods → Server Mods → Cosmetic Slots
 
-󰀌 Mod Version: 1.0-A
+󰀌 Mod Version: 1.1-A
 󰀧 Update: Mod Launch
 ]],
 		zh  =
@@ -38,7 +39,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 模组配置完全在客户端进行。您可以通过以下方式访问：
 主菜单 → 模组 → 服务器模组 → 外观栏
 
-󰀌 Mod 版本： 1.0-A
+󰀌 Mod 版本： 1.1-A
 󰀧 更新： Mod 发布
 ]],	
 		zht =
@@ -52,7 +53,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 處置 模組配置完全在客戶端進行。您可以透過以下方式存取：
 主選單 → 模組 → 伺服器模組 → 外觀欄
 
-󰀌 Mod 版本： 1.0-A
+󰀌 Mod 版本： 1.1-A
 󰀧 更新： Mod 发布
 ]],	
 		pt  = 
@@ -66,8 +67,22 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 A configuração do Mod é totalmente do cliente. Você pode acessá-la em:
 Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 	
-󰀌 Versão do Mod: 1.0-A
+󰀌 Versão do Mod: 1.1-A
 󰀧 Atualização: Lançamento do Mod
+]],
+		es  =
+[[
+󰀞 Añade Ranuras Cosméticas para Manos, Cuerpo y Cabeza para expresar tus deseos de moda sin renunciar a tu equipamiento real! ¡Viaja por la Constante con un estilo candente!
+
+󰀖 ¿Alguna vez has querido usar un aspecto pero no has podido porque el objeto en sí no era muy bueno? Ahora puedes usar cualquier objeto equipable sin preocuparte de si en realidad está equipado.
+
+󰀏 ¡Atención! Aunque los objetos equipados en las Ranuras Cosméticas no pierden durabilidad ni se pudren, no proporcionan sus beneficios al jugador.
+
+󰀏 La Configuración del Mod es completamente de cliente. Puedes acceder a ella en:
+Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
+
+󰀌 Versión del Mod: 1.1-A
+󰀧 Actualización: Lanzamiento del Mod
 ]],
 	},
 
@@ -81,6 +96,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "",
 				zht = "",
 				pt  = "",
+				es  = "",
 			},
 			
 			DESCRIPTION =
@@ -89,6 +105,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "这些 Mod 选项仅适用于您自己。",
 				zht = "這些 Mod 選項僅適用於您自己。",
 				pt  = "Estas opções do Mod se aplicam somente a você.",
+				es  = "Estas Opciones del Mod sólo se aplican a ti.",
 			},
 		},
 		
@@ -100,6 +117,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "",
 				zht = "",
 				pt  = "",
+				es  = "",
 			},
 			
 			DESCRIPTION =
@@ -108,6 +126,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "Mod 配置完全由客户端完成。\n您可以通过以下方式访问：主菜单 → Mods → 服务器 Mods → 装饰槽",
 				zht = "Mod 配置完全由客戶端完成。 \n您可以透過以下方式存取：主選單 → Mods → 伺服器 Mods → 裝飾槽",
 				pt  = "A configuração do Mod é inteiramente cliente.\nVocê pode acessá-la em: Menu Principal → Mods → Mods de Servidor → Slots Cosméticos",
+				es  = "Configuraciones del Mod son enteramente de cliente.\nPuedes acceder a ellas en: Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas",
 			},
 		},
 		
@@ -119,6 +138,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "语",
 				zht = "話",
 				pt  = "Idioma",
+				es  = "Idioma",
 			},
 			
 			DESCRIPTION =
@@ -127,6 +147,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "选择模块的语言。 \n您可以在我们的 Discord 中提交您的翻译。",
 				zht = "選擇模組的語言。 \n您可以在我們的 Discord 中提交您的翻譯。",
 				pt  = "Escolha o idioma do Mod.\nVocê pode enviar sua tradução em nosso Discord.",
+				es  = "Elige el idioma para el mod.\nPuedes enviar tu traducción en nuestro Discord.",
 			},
 			
 			OPTIONS_DESCRIPTION =
@@ -135,6 +156,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "简体中文",
 				zht = "繁體中文",
 				pt  = "Português",
+				es  = "Español",
 			},
 		},
 		
@@ -146,6 +168,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "快捷键",
 				zht = "快速鍵",
 				pt  = "Tecla de Atalho",
+				es  = "Tecla de Atajo",
 			},
 			
 			DESCRIPTION = 
@@ -154,6 +177,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "选择装饰槽小部件的快捷键。 \n默认快捷键：已禁用",
 				zht = "選擇裝飾槽小工具的快速鍵。 \n預設快速鍵：已停用",
 				pt  = "Selecione a Tecla de Atalho para o widget dos Slots Cosméticos.\nTecla de Atalho padrão: Desativada",
+				es  = "Selecciona la Tecla de Atajo para el widget de Ranuras Cosméticas.\nTecla de Atajo predeterminada: Desactivada",
 			},
 			
 			DISABLED = 
@@ -162,13 +186,14 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 				zh  = "残疾人",
 				zht = "殘障人士",
 				pt  = "Desativado",
+				es  = "Desactivada",
 			},
 		},
 	},
 }
 
 name                        = ChooseTranslationTable(STRINGS.NAME)
-version                     = "1.0-A"
+version                     = "1.1-A"
 
 description                 = ChooseTranslationTable(STRINGS.DESCRIPTION)
 
@@ -241,6 +266,10 @@ local LANGUAGE_OPTIONS      =
 	{
 		description         = STRINGS.SETTINGS.LANGUAGE.OPTIONS_DESCRIPTION.pt,
 		data                = "pt",
+	},
+	{
+		description         = STRINGS.SETTINGS.LANGUAGE.OPTIONS_DESCRIPTION.es,
+		data                = "es",
 	},
 }
 
