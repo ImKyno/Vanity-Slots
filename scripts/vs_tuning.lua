@@ -1,5 +1,3 @@
--- Change to true if you want the container to start closed.
-TUNING.VANITYSLOTS_STARTCLOSED = false
 TUNING.VANITYSLOTS_MAXSLOTS = 3 -- Unused.
 
 TUNING.VANITYSLOTS_WIDGET_XPOS = 875

@@ -88,6 +88,24 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 
 	SETTINGS = 
 	{
+		DISABLED =
+		{
+			"Disabled",
+			zh  = "残疾人",
+			zht = "殘障人士",
+			pt  = "Desativado",
+			es  = "Desactivada",
+		},
+		
+		ENABLED =
+		{
+			"Enabled",
+			zh  = "启用",
+			zht = "啟用",
+			pt  = "Ativado",
+			es  = "Activada",
+		},
+		
 		CLIENT =
 		{
 			NAME =
@@ -176,17 +194,29 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 				"Choose the Shortcut Key for the Cosmetic Slots widget.\nDefault Shortcut Key: Disabled",
 				zh  = "选择装饰槽小部件的快捷键。 \n默认快捷键：已禁用",
 				zht = "選擇裝飾槽小工具的快速鍵。 \n預設快速鍵：已停用",
-				pt  = "Selecione a Tecla de Atalho para o widget dos Slots Cosméticos.\nTecla de Atalho padrão: Desativada",
+				pt  = "Selecione a Tecla de Atalho para o widget dos Slots Cosméticos.\nTecla de Atalho padrão: Desativado",
 				es  = "Selecciona la Tecla de Atajo para el widget de Ranuras Cosméticas.\nTecla de Atajo predeterminada: Desactivada",
 			},
-			
-			DISABLED = 
+		},
+		
+		CONTAINER =
+		{
+			NAME =
 			{
-				"Disabled",
-				zh  = "残疾人",
-				zht = "殘障人士",
-				pt  = "Desativado",
-				es  = "Desactivada",
+				"Start Closed",
+				zh  = "开始关闭",
+				zht = "開始關閉",
+				pt  = "Começar Fechado",
+				es  = "Comienza Cerrado",
+			},
+			
+			DESCRIPTION =
+			{
+				"Choose if Cosmetic Slots should start closed when joining the world or migrating server shards. Default: Disabled",
+				zh  = "选择在加入世界或迁移碎片时是否应关闭装饰槽。 默认：禁用",
+				zht = "選擇在加入世界或遷移碎片時是否應關閉裝飾槽。 預設：停用",
+				pt  = "Escolha se os Slots Cosméticos devem começar fechados ao entrar no mundo ou migrar de shards. Padrão: Desativado",
+				es  = "Elige si las Ranuras Cosméticas deben comenzar cerradas al unirse al mundo o migrar shards. Predeterminada: Desactivada",
 			},
 		},
 	},
@@ -234,7 +264,7 @@ local KEY_NAMES             =
     "Arrow ↑", "Arrow ↓", "Arrow →", "Arrow ←", "Page Up", "Page Down",
 }
 
-local KEYLIST_DESCRIPTION   = ChooseTranslationTable(STRINGS.SETTINGS.KEYBIND.DISABLED)
+local KEYLIST_DESCRIPTION   = ChooseTranslationTable(STRINGS.SETTINGS.DISABLED)
 local keylist               = {{description = KEYLIST_DESCRIPTION, data = false}}
 
 for i = 1, #KEY_IDS do
@@ -276,6 +306,20 @@ local LANGUAGE_OPTIONS      =
 local KEYBIND_LABEL         = ChooseTranslationTable(STRINGS.SETTINGS.KEYBIND.NAME)
 local KEYBIND_HOVER         = ChooseTranslationTable(STRINGS.SETTINGS.KEYBIND.DESCRIPTION)
 
+local CONTAINER_LABEL       = ChooseTranslationTable(STRINGS.SETTINGS.CONTAINER.NAME)
+local CONTAINER_HOVER       = ChooseTranslationTable(STRINGS.SETTINGS.CONTAINER.DESCRIPTION)
+local CONTAINER_OPTIONS     =
+{
+	{
+		description         = ChooseTranslationTable(STRINGS.SETTINGS.DISABLED),
+		data                = false,
+	},
+	{
+		description         = ChooseTranslationTable(STRINGS.SETTINGS.ENABLED),
+		data                = true,
+	},
+}
+
 local SERVER_LABEL          = ChooseTranslationTable(STRINGS.SETTINGS.SERVER.NAME)
 local SERVER_HOVER          = ChooseTranslationTable(STRINGS.SETTINGS.SERVER.DESCRIPTION)
 local SERVER_OPTIONS        =
@@ -288,7 +332,8 @@ local SERVER_OPTIONS        =
 
 configuration_options       =
 {
-	{name                   = "LANGUAGE", label = LANGUAGE_LABEL, hover = LANGUAGE_HOVER, client = true,  options = LANGUAGE_OPTIONS, default = false},
-	{name                   = "KEYBIND",  label = KEYBIND_LABEL,  hover = KEYBIND_HOVER,  client = true,  options = keylist,          default = false},
-	{name                   = "SERVER",   label = SERVER_LABEL,   hover = SERVER_HOVER,   client = false, options = SERVER_OPTIONS,   default = false},
+	{name                   = "LANGUAGE",  label = LANGUAGE_LABEL,  hover = LANGUAGE_HOVER,  client = true,  options = LANGUAGE_OPTIONS,  default = false},
+	{name                   = "CONTAINER", label = CONTAINER_LABEL, hover = CONTAINER_HOVER, client = true,  options = CONTAINER_OPTIONS, default = false},
+	{name                   = "KEYBIND",   label = KEYBIND_LABEL,   hover = KEYBIND_HOVER,   client = true,  options = keylist,           default = false},
+	{name                   = "SERVER",    label = SERVER_LABEL,    hover = SERVER_HOVER,    client = false, options = SERVER_OPTIONS,    default = false},
 }

@@ -36,7 +36,7 @@ local VanitySlots = Class(Widget, function(self, owner)
 	self.vanitySlotsBtn:SetPosition(0, 0, 0)
 	self.vanitySlotsBtn:SetScale(W_SCALE, W_SCALE, W_SCALE)
 
-	self.vanitySlotsBtn:SetOnClick(function() 
+	self.vanitySlotsBtn:SetOnClick(function()
 		local vanitycontainer = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 
 		if vanitycontainer and not vanitycontainer.replica.container:IsOpenedBy(ThePlayer) then
@@ -50,10 +50,10 @@ local VanitySlots = Class(Widget, function(self, owner)
 		end
 	end)
 
-	-- TO DO (MAYBE): Create setting to let player decide if container starts open or closed.
-	-- HOW THE fuck do I create a client setting on a server-side mod? Oh, right, Adai did that with Accomplishments Mod.
-	if TUNING.VANITYSLOTS_STARTCLOSED then
-		self.inst:DoTaskInTime(0, function()
+	-- Vanity Slosts starts closed when joining a world/migrating shards.
+	-- Thing is: if you open the container and migrate shards, it will close again...
+	if VANITYSLOTS_CONTAINER then
+		self.inst:DoTaskInTime(0.1, function()
 			local vanitycontainer = self.owner.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 
 			if vanitycontainer then
@@ -72,6 +72,7 @@ local VanitySlots = Class(Widget, function(self, owner)
         RefreshVanitySlots(self)
     end, self.owner)
 
+	--[[
 	self.inst:ListenForEvent("playerdeactivated", function(inst)
 		local inventory = self.owner.replica.inventory
 		local vanitycontainer = inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
@@ -93,6 +94,7 @@ local VanitySlots = Class(Widget, function(self, owner)
 			self:RefreshTooltips()
 		end
 	end, self.owner)
+	]]--
 
 	self.inst:ListenForEvent("equip", function(inst, data)
 		if data.eslot == EQUIPSLOTS.VANITY then
