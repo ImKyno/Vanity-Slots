@@ -1,0 +1,9 @@
+<Atlas>
+    <Texture filename="vanity_clothing.tex" />
+    <Elements>
+        <Element name="vanity_body_item.tex" u1="0.00390625" u2="0.496094" v1="0.503906" v2="0.996094" />
+        <Element name="vanity_hands_item.tex" u1="0.00390625" u2="0.496094" v1="0.00390625" v2="0.496094" />
+        <Element name="vanity_head_item.tex" u1="0.503906" u2="0.996094" v1="0.503906" v2="0.996094" />
+    </Elements>
+    <StraightAlpha>false</StraightAlpha>
+</Atlas>

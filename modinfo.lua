@@ -219,6 +219,27 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 				es  = "Elige si las Ranuras Cosméticas deben comenzar cerradas al unirse al mundo o migrar shards. Predeterminada: Desactivada",
 			},
 		},
+		
+		CLOTHING =
+		{
+			NAME =
+			{
+				"Invisible Items",
+				zh  = "隐形物品",
+				zht = "隱形物品",
+				pt  = "Itens Invisíveis",
+				es  = "Objetos Invisibles",
+			},
+			
+			DESCRIPTION =
+			{
+				"Choose if players are able to craft \"Pantomimed Items\" used to hide pieces of clothing equipped in regular slots. Default: Disabled",
+				zh  = "选择玩家是否可以制作“哑剧物品”，用于隐藏装备在常规栏位的衣物。默认：禁用",
+				zht = "選擇玩家是否可以製作「啞劇物品」，用於隱藏裝備在常規欄位的衣物。默認：禁用",
+				pt  = "Escolha se os jogadores podem criar \"Itens de Mímica\" usados para esconder peças de roupa equipadas em slots regulares. Padrão: Desabilitado",
+				es  = "Elige si los jugadores pueden fabricar \"Objetos de Mímica\" para ocultar ropas equipadas en las ranuras habituales. Predeterminada: Desactivada",
+			},
+		},
 	},
 }
 
@@ -308,17 +329,9 @@ local KEYBIND_HOVER         = ChooseTranslationTable(STRINGS.SETTINGS.KEYBIND.DE
 
 local CONTAINER_LABEL       = ChooseTranslationTable(STRINGS.SETTINGS.CONTAINER.NAME)
 local CONTAINER_HOVER       = ChooseTranslationTable(STRINGS.SETTINGS.CONTAINER.DESCRIPTION)
-local CONTAINER_OPTIONS     =
-{
-	{
-		description         = ChooseTranslationTable(STRINGS.SETTINGS.DISABLED),
-		data                = false,
-	},
-	{
-		description         = ChooseTranslationTable(STRINGS.SETTINGS.ENABLED),
-		data                = true,
-	},
-}
+
+local CLOTHING_LABEL        = ChooseTranslationTable(STRINGS.SETTINGS.CLOTHING.NAME)
+local CLOTHING_HOVER        = ChooseTranslationTable(STRINGS.SETTINGS.CLOTHING.DESCRIPTION)
 
 local SERVER_LABEL          = ChooseTranslationTable(STRINGS.SETTINGS.SERVER.NAME)
 local SERVER_HOVER          = ChooseTranslationTable(STRINGS.SETTINGS.SERVER.DESCRIPTION)
@@ -330,10 +343,23 @@ local SERVER_OPTIONS        =
 	},
 }
 
+local GENERIC_OPTIONS       =
+{
+	{
+		description         = ChooseTranslationTable(STRINGS.SETTINGS.DISABLED),
+		data                = false,
+	},
+	{
+		description         = ChooseTranslationTable(STRINGS.SETTINGS.ENABLED),
+		data                = true,
+	},
+}
+
 configuration_options       =
 {
 	{name                   = "LANGUAGE",  label = LANGUAGE_LABEL,  hover = LANGUAGE_HOVER,  client = true,  options = LANGUAGE_OPTIONS,  default = false},
-	{name                   = "CONTAINER", label = CONTAINER_LABEL, hover = CONTAINER_HOVER, client = true,  options = CONTAINER_OPTIONS, default = false},
+	{name                   = "CONTAINER", label = CONTAINER_LABEL, hover = CONTAINER_HOVER, client = true,  options = GENERIC_OPTIONS,   default = false},
 	{name                   = "KEYBIND",   label = KEYBIND_LABEL,   hover = KEYBIND_HOVER,   client = true,  options = keylist,           default = false},
+	{name                   = "CLOTHING",  label = CLOTHING_LABEL,  hover = CLOTHING_HOVER,  client = false, options = GENERIC_OPTIONS,   default = false},
 	{name                   = "SERVER",    label = SERVER_LABEL,    hover = SERVER_HOVER,    client = false, options = SERVER_OPTIONS,    default = false},
 }

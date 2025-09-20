@@ -331,7 +331,7 @@ local function SkeletonHatPostInit(inst)
 				owner.components.sanity:SetInducedInsanity(inst, false)
 			end
 			
-			inst:RemoveTag("shadowdominance")
+			owner:RemoveTag("shadowdominance")
 		end
 	end
 	
@@ -340,8 +340,6 @@ local function SkeletonHatPostInit(inst)
 			if inst.components.equippable ~= nil then
 				inst.components.equippable:Unequip(owner)
 			end
-			
-			inst:AddTag("shadowdominance")
 		end
 	end
 end
@@ -658,6 +656,8 @@ end
 AddPrefabPostInit("slurper", SlurperPostInit)
 
 local function WagpunkHatPostInit(inst)
+	inst:AddTag("vanity_hat_fx")
+
 	-- Stupid klei they don't kill the old fx on equip...
 	local _OnEquip
 	local function OnEquip(inst, owner)
@@ -703,6 +703,8 @@ end
 AddPrefabPostInit("wagpunkhat", WagpunkHatPostInit)
 
 local function RabbitHatPostInit(inst)
+	inst:AddTag("vanity_hat_fx")
+
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
 			if inst.components.perishable ~= nil then
@@ -730,6 +732,7 @@ AddPrefabPostInit("rabbithat", RabbitHatPostInit)
 
 local function LunarPlantHatPostInit(inst)
 	inst:AddTag("vanity_fullhead")
+	inst:AddTag("vanity_hat_fx")
 	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
@@ -752,6 +755,7 @@ AddPrefabPostInit("lunarplanthat", LunarPlantHatPostInit)
 
 local function VoidClothHatPostInit(inst)
 	inst:AddTag("vanity_fullhead")
+	inst:AddTag("vanity_hat_fx")
 
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
@@ -776,6 +780,35 @@ AddPrefabPostInit("voidclothhat", VoidClothHatPostInit)
 local function AlterGuardianHatPostInit(inst)
 	inst:AddTag("vanity_equip_onload")
 	inst:AddTag("vanity_container_valid")
+	
+	local CROWN_EVENT_HACKED = false
+
+	local _OnEquip
+	local function OnEquip(inst, owner)
+		local ret = {_OnEquip(inst, owner)}
+
+		if not CROWN_EVENT_HACKED then
+			local _alterguardian_activate = UpvalueHacker.GetUpvalue(inst._onsanitydelta, "alterguardian_onsanitydelta", "alterguardian_activate")
+			local _alterguardian_deactivate = UpvalueHacker.GetUpvalue(inst._onsanitydelta, "alterguardian_onsanitydelta", "alterguardian_deactivate")
+		
+			local function alterguardian_activate(inst, owner)
+				owner:PushEvent("crownsanitydelta")
+				_alterguardian_activate(inst, owner)
+			end
+		
+			local function alterguardian_deactivate(inst, owner)
+				owner:PushEvent("crownsanitydelta")
+				_alterguardian_activate(inst, owner)
+			end
+			
+			UpvalueHacker.SetUpvalue(inst._onsanitydelta, alterguardian_activate, "alterguardian_activate")
+			UpvalueHacker.SetUpvalue(inst._onsanitydelta, alterguardian_deactivate, "alterguardian_deactivate")
+			
+			CROWN_EVENT_HACKED = true
+		end
+
+		return _G.unpack(ret)
+	end
 
 	local function RefreshEquippedHat(inst, owner)
 		if inst:HasTag("vanity_equipped") then
@@ -867,7 +900,12 @@ local function AlterGuardianHatPostInit(inst)
 	if not _G.TheWorld.ismastersim then
 		return inst
 	end
-	
+
+	if inst.components.equippable ~= nil then
+		_OnEquip = inst.components.equippable.onequipfn
+		inst.components.equippable.onequipfn = OnEquip
+	end
+
 	inst:DoTaskInTime(0, RefreshEquippedHat)
 end
 

@@ -89,35 +89,37 @@ local function AddVanitySlots(inst)
 			vanityslots:DoTaskInTime(0, vanityslots.RefreshEquippedItem)
 		end
 	end
-	
+
 	local function OnSanityDelta(inst)
 		-- This is for refreshing vanity items when alterguardianhat becomes active/inactive.
+		print("VANITY SLOTS: CROWNSANITYDELTA")
 		local equippedhat = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD)
 		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(3) or nil
 
 		if equippedhat ~= nil and equippedhat.prefab == "alterguardianhat" then
 			if vanityslots ~= nil and vanityitem ~= nil then
-				
-				if vanityitem:HasTag("vanity_equip_onload") then
-					-- Empty because we standby.
-				else
-					vanityitem.components.equippable:Unequip(inst)
-					vanityitem.components.equippable:Equip(inst)
-				end
+				inst:DoTaskInTime(0.25, function()
+					if vanityitem:HasTag("vanity_equip_onload") then
+						-- Empty because we standby.
+					else
+						vanityitem.components.equippable:Unequip(inst)
+						vanityitem.components.equippable:Equip(inst)
+					end
 			
-				if equippedhat and equippedhat.prefab == vanityitem.prefab then
-					if vanityitem.onequipvanity ~= nil then
-						vanityitem.onequipvanity(vanityitem, vanityslots)
+					if equippedhat and equippedhat.prefab == vanityitem.prefab then
+						if vanityitem.onequipvanity ~= nil then
+							vanityitem.onequipvanity(vanityitem, vanityslots)
+						end
+					else
+						if vanityitem.onequipvanity ~= nil then
+							vanityitem.onequipvanity(vanityitem, inst)
+						end
 					end
-				else
-					if vanityitem.onequipvanity ~= nil then
-						vanityitem.onequipvanity(vanityitem, inst)
-					end
-				end
 
-				_G.ApplyVanityEffects(vanityitem, inst)
-				_G.ApplyContainerEffects(vanityitem, equippedhat, inst)
+					_G.ApplyVanityEffects(vanityitem, inst)
+					_G.ApplyContainerEffects(vanityitem, equippedhat, inst)
+				end)
 			end
 		end
 	end
@@ -139,7 +141,7 @@ local function AddVanitySlots(inst)
 	inst:ListenForEvent("equip", SwapToVanityItem)
 	inst:ListenForEvent("unequip", SwapToRealItem)
 	inst:ListenForEvent("seamlessplayerswap", OnSeamlessPlayerSwap)
-	inst:ListenForEvent("sanitydelta", OnSanityDelta)
+	inst:ListenForEvent("crownsanitydelta", OnSanityDelta)
 end
 
 AddPlayerPostInit(AddVanitySlots)

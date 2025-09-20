@@ -34,6 +34,17 @@ local init_postinit =
 	"vs_playerhud",
 }
 
+local init_icons =
+{
+	"vanity_hands_item",
+	"vanity_body_item",
+	"vanity_head_item",
+}
+
+for icon, name in pairs(init_icons) do
+	RegisterInventoryItemAtlas("images/inventoryimages/vanity_clothing.xml", name..".tex")
+end
+
 for _, v in pairs(init_main) do
 	modimport("main/"..v)
 end
@@ -46,3 +57,10 @@ PrefabFiles =
 {
 	"vanity_slots",
 }
+
+_G.VANITYSLOTS_VANITYCLOTHING = GetModConfigData("CLOTHING")
+
+if _G.VANITYSLOTS_VANITYCLOTHING then
+	modimport("main/vs_recipes")
+	table.insert(PrefabFiles, "vanity_clothing")
+end
