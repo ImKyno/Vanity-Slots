@@ -110,11 +110,11 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 		{
 			NAME =
 			{
-				"",
-				zh  = "",
-				zht = "",
-				pt  = "",
-				es  = "",
+				"Client-side Options",
+				zh  = "客户端选项",
+				zht = "客戶端選項",
+				pt  = "Opções de Servidor",
+				es  = "Opciones del cliente",
 			},
 			
 			DESCRIPTION =
@@ -131,11 +131,11 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 		{
 			NAME =
 			{
-				"",
-				zh  = "",
-				zht = "",
-				pt  = "",
-				es  = "",
+				"Server-side Options",
+				zh  = "服务器端选项",
+				zht = "伺服器端選項",
+				pt  = "Opções de Cliente",
+				es  = "Opciones del servidor",
 			},
 			
 			DESCRIPTION =
@@ -343,6 +343,16 @@ local SERVER_OPTIONS        =
 	},
 }
 
+local CLIENT_LABEL          = ChooseTranslationTable(STRINGS.SETTINGS.CLIENT.NAME)
+local CLIENT_HOVER          = ChooseTranslationTable(STRINGS.SETTINGS.CLIENT.DESCRIPTION)
+local CLIENT_OPTIONS        =
+{
+	{
+		description         = "",
+		data                = false,
+	},
+}
+
 local GENERIC_OPTIONS       =
 {
 	{
@@ -357,9 +367,11 @@ local GENERIC_OPTIONS       =
 
 configuration_options       =
 {
+	{name                   = "SERVER",    label = SERVER_LABEL,    hover = SERVER_HOVER,    client = false, options = SERVER_OPTIONS,    default = false},
+	{name                   = "CLOTHING",  label = CLOTHING_LABEL,  hover = CLOTHING_HOVER,  client = false, options = GENERIC_OPTIONS,   default = false},
+	
+	{name                   = "CLIENT",    label = CLIENT_LABEL,    hover = CLIENT_HOVER,    client = true,  options = CLIENT_OPTIONS,    default = false},
 	{name                   = "LANGUAGE",  label = LANGUAGE_LABEL,  hover = LANGUAGE_HOVER,  client = true,  options = LANGUAGE_OPTIONS,  default = false},
 	{name                   = "CONTAINER", label = CONTAINER_LABEL, hover = CONTAINER_HOVER, client = true,  options = GENERIC_OPTIONS,   default = false},
 	{name                   = "KEYBIND",   label = KEYBIND_LABEL,   hover = KEYBIND_HOVER,   client = true,  options = keylist,           default = false},
-	{name                   = "CLOTHING",  label = CLOTHING_LABEL,  hover = CLOTHING_HOVER,  client = false, options = GENERIC_OPTIONS,   default = false},
-	{name                   = "SERVER",    label = SERVER_LABEL,    hover = SERVER_HOVER,    client = false, options = SERVER_OPTIONS,    default = false},
 }

@@ -781,34 +781,40 @@ local function AlterGuardianHatPostInit(inst)
 	inst:AddTag("vanity_equip_onload")
 	inst:AddTag("vanity_container_valid")
 	
-	local CROWN_EVENT_HACKED = false
-
-	local _OnEquip
-	local function OnEquip(inst, owner)
-		local ret = {_OnEquip(inst, owner)}
-
-		if not CROWN_EVENT_HACKED then
-			local _alterguardian_activate = UpvalueHacker.GetUpvalue(inst._onsanitydelta, "alterguardian_onsanitydelta", "alterguardian_activate")
-			local _alterguardian_deactivate = UpvalueHacker.GetUpvalue(inst._onsanitydelta, "alterguardian_onsanitydelta", "alterguardian_deactivate")
-		
-			local function alterguardian_activate(inst, owner)
-				owner:PushEvent("crownsanitydelta")
-				_alterguardian_activate(inst, owner)
-			end
-		
-			local function alterguardian_deactivate(inst, owner)
-				owner:PushEvent("crownsanitydelta")
-				_alterguardian_activate(inst, owner)
-			end
-			
-			UpvalueHacker.SetUpvalue(inst._onsanitydelta, alterguardian_activate, "alterguardian_activate")
-			UpvalueHacker.SetUpvalue(inst._onsanitydelta, alterguardian_deactivate, "alterguardian_deactivate")
-			
-			CROWN_EVENT_HACKED = true
+	local _alterguardian_activate = UpvalueHacker.GetUpvalue(_G.Prefabs.alterguardianhat.fn, "alterguardian_onequip", 
+	"alterguardian_onsanitydelta", "alterguardian_activate")
+	
+	local _alterguardian_deactivate = UpvalueHacker.GetUpvalue(_G.Prefabs.alterguardianhat.fn, "alterguardian_onequip", 
+	"alterguardian_onsanitydelta", "alterguardian_deactivate")
+	
+	local function alterguardian_activate(inst, owner)
+		if inst._is_active then
+			return
 		end
 
-		return _G.unpack(ret)
+		if owner ~= nil then
+			owner:PushEvent("crownsanitydelta")
+		end
+		
+		return _alterguardian_activate(inst, owner)
 	end
+	
+	local function alterguardian_deactivate(inst, owner)
+		if not inst._is_active then
+			return
+		end
+	
+		if owner ~= nil then
+			owner:PushEvent("crownsanitydelta")
+		end
+
+		return _alterguardian_deactivate(inst, owner)
+	end
+
+	UpvalueHacker.SetUpvalue(_G.Prefabs.alterguardianhat.fn, alterguardian_activate, "alterguardian_onequip", 
+	"alterguardian_onsanitydelta", "alterguardian_activate")
+	UpvalueHacker.SetUpvalue(_G.Prefabs.alterguardianhat.fn, alterguardian_deactivate, "alterguardian_onequip", 
+	"alterguardian_onsanitydelta", "alterguardian_deactivate")
 
 	local function RefreshEquippedHat(inst, owner)
 		if inst:HasTag("vanity_equipped") then
@@ -899,11 +905,6 @@ local function AlterGuardianHatPostInit(inst)
 	
 	if not _G.TheWorld.ismastersim then
 		return inst
-	end
-
-	if inst.components.equippable ~= nil then
-		_OnEquip = inst.components.equippable.onequipfn
-		inst.components.equippable.onequipfn = OnEquip
 	end
 
 	inst:DoTaskInTime(0, RefreshEquippedHat)
