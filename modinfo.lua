@@ -26,7 +26,7 @@ local STRINGS =
 Main Menu → Mods → Server Mods → Cosmetic Slots
 
 󰀌 Mod Version: 1.1-A
-󰀧 Update: Mod Launch
+󰀧 Update: Pantomimed Items
 ]],
 		zh  =
 [[
@@ -40,7 +40,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 主菜单 → 模组 → 服务器模组 → 外观栏
 
 󰀌 Mod 版本： 1.1-A
-󰀧 更新： Mod 发布
+󰀧 更新： 哑剧项目
 ]],	
 		zht =
 [[
@@ -54,7 +54,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 主選單 → 模組 → 伺服器模組 → 外觀欄
 
 󰀌 Mod 版本： 1.1-A
-󰀧 更新： Mod 发布
+󰀧 更新： 啞劇項目
 ]],	
 		pt  = 
 [[
@@ -68,7 +68,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 	
 󰀌 Versão do Mod: 1.1-A
-󰀧 Atualização: Lançamento do Mod
+󰀧 Atualização: Itens Pantomimados
 ]],
 		es  =
 [[
@@ -82,7 +82,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 
 󰀌 Versión del Mod: 1.1-A
-󰀧 Actualización: Lanzamiento del Mod
+󰀧 Actualización: Objetos de Mímica
 ]],
 	},
 
@@ -236,7 +236,7 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 				"Choose if players are able to craft \"Pantomimed Items\" used to hide pieces of clothing equipped in regular slots. Default: Disabled",
 				zh  = "选择玩家是否可以制作“哑剧物品”，用于隐藏装备在常规栏位的衣物。默认：禁用",
 				zht = "選擇玩家是否可以製作「啞劇物品」，用於隱藏裝備在常規欄位的衣物。默認：禁用",
-				pt  = "Escolha se os jogadores podem criar \"Itens de Mímica\" usados para esconder peças de roupa equipadas em slots regulares. Padrão: Desabilitado",
+				pt  = "Escolha se os jogadores podem criar \"Itens Pantomimados\" usados para esconder peças de roupa equipadas em slots regulares. Padrão: Desabilitado",
 				es  = "Elige si los jugadores pueden fabricar \"Objetos de Mímica\" para ocultar ropas equipadas en las ranuras habituales. Predeterminada: Desactivada",
 			},
 		},
