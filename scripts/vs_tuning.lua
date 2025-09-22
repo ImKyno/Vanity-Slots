@@ -77,6 +77,20 @@ TUNING.VANITY_TOGGABLEFX_ITEMS =
 	"voidcloth_scythe",
 }
 
+-- Items that have inverted symbols when skinned. (Using our crap system)
+TUNING.VANITY_INVERTEDSYMBOL_ITEMS =
+{
+	"spear_wathgrithr_lightning",
+	"spear_wathgrithr_lightning_charged",
+	"firestaff",
+	"icestaff",
+	"orangestaff",
+	"yellowstaff",
+	"greenstaff",
+	"telestaff",
+	"opalstaff",
+}
+
 -- Items that can't go in containers.
 TUNING.VANITY_RESTRICTED_ITEMS =
 {

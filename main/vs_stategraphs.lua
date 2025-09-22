@@ -247,7 +247,7 @@ AddStategraphPostInit("wilson", function(sg)
 
 				if skin_build ~= nil then
 					inst:PushEvent("equipskinneditem", realitem:GetSkinName())
-					if realitem:HasTag("vanity_inverted_skin_symbol") then -- Somehow skinned items have inverted symbols ???
+					if realitem:HasTag("vanity_inverted_skin_symbol") then
 						inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol2 or "swap_"..prefab, realitem.GUID, symbol1 or "swap_"..prefab)
 					else
 						inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
@@ -363,7 +363,11 @@ AddStategraphPostInit("wilson", function(sg)
 
 			if skin_build ~= nil then
 				inst:PushEvent("equipskinneditem", realitem:GetSkinName())
-				inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+				if realitem:HasTag("vanity_inverted_skin_symbol") then
+					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol2 or "swap_"..prefab, realitem.GUID, symbol1 or "swap_"..prefab)
+				else
+					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+				end
 			else
 				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 			end
@@ -440,7 +444,11 @@ AddStategraphPostInit("wilson", function(sg)
 
 			if skin_build ~= nil then
 				inst:PushEvent("equipskinneditem", realitem:GetSkinName())
-				inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+				if realitem:HasTag("vanity_inverted_skin_symbol") then
+					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol2 or "swap_"..prefab, realitem.GUID, symbol1 or "swap_"..prefab)
+				else
+					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+				end
 			else
 				inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 			end
@@ -550,22 +558,17 @@ AddStategraphPostInit("wilson", function(sg)
 
 				if skin_build ~= nil then
 					inst:PushEvent("equipskinneditem", realitem:GetSkinName())
-					inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+					if realitem:HasTag("vanity_inverted_skin_symbol") then
+						inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol2 or "swap_"..prefab, realitem.GUID, symbol1 or "swap_"..prefab)
+					else
+						inst.AnimState:OverrideItemSkinSymbol("swap_object", skin_build, symbol1 or "swap_"..prefab, realitem.GUID, symbol2 or "swap_"..prefab)
+					end
 				else
 					inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 				end
 				
 				if realitem:HasTag("vanity_teleporter") then
-					realitem.swapfx = _G.SpawnPrefab("winona_telebrella_swap_fx")
-					realitem.swapfx.entity:SetParent(inst.entity)
-					realitem.swapfx.Follower:FollowSymbol(inst.GUID, "swap_object", nil, nil, nil, true, nil, 0, 19)
-					realitem.swapfx.components.highlightchild:SetOwner(inst)
-
-					realitem.swapfx2 = _G.SpawnPrefab("winona_telebrella_swap_fx")
-					realitem.swapfx2.entity:SetParent(inst.entity)
-					realitem.swapfx2.Follower:FollowSymbol(inst.GUID, "swap_object", nil, nil, nil, true, nil, 19)
-					realitem.swapfx2.components.highlightchild:SetOwner(inst)
-					realitem.swapfx2.AnimState:PlayAnimation("swap20")
+					realitem.components.equippable:Equip(inst)
 				end
 			end
 			

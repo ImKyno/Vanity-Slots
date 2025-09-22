@@ -62,6 +62,15 @@ for k, item in pairs(TUNING.VANITY_TOGGABLEFX_ITEMS) do
 	AddPrefabPostInit(item, ItemsToggableFXPostInit)
 end
 
+-- Items that have inverted symbols when skinned. (Using our crap system)
+local function InvertedSymbolItemsPostInit(inst)
+	inst:AddTag("vanity_inverted_skin_symbol")
+end
+
+for k, item in pairs(TUNING.VANITY_INVERTEDSYMBOL_ITEMS) do
+	AddPrefabPostInit(item, InvertedSymbolItemsPostInit)
+end
+
 -- Items that can't go in containers.
 local function RestrictedItemsPostInit(inst)
 	inst:AddTag("vanity_item_restricted")

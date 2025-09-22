@@ -440,10 +440,3 @@ local function WalkingStickPostInit(inst)
 end
 
 AddPrefabPostInit("walking_stick", WalkingStickPostInit)
-
-local function WathgrithrSpearPostInit(inst)
-	inst:AddTag("vanity_inverted_skin_symbol")
-end
-
-AddPrefabPostInit("spear_wathgrithr_lightning", WathgrithrSpearPostInit)
-AddPrefabPostInit("spear_wathgrithr_lightning_charged", WathgrithrSpearPostInit)
