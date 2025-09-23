@@ -65,8 +65,19 @@ end)
 
 -- Hack to prevent players from doing actions when item is equipped as vanity.
 local COMPONENT_ACTIONS = UpvalueHacker.GetUpvalue(_G.EntityScript.CollectActions, "COMPONENT_ACTIONS")
+local EQUIPPED = COMPONENT_ACTIONS.EQUIPPED
 local INVENTORY = COMPONENT_ACTIONS.INVENTORY
+local POINT = COMPONENT_ACTIONS.POINT
 local USEITEM = COMPONENT_ACTIONS.USEITEM
+
+local _EQUIPPED_complexprojectile = EQUIPPED.complexprojectile
+function EQUIPPED.complexprojectile(inst, ...)
+	if inst:HasTag("vanity_equipped") then
+		return false
+	else
+		return _EQUIPPED_complexprojectile(inst, ...)
+	end
+end
 
 local _INVENTORY_magiciantool = INVENTORY.magiciantool
 function INVENTORY.magiciantool(inst, ...)
@@ -119,6 +130,15 @@ function INVENTORY.channelcastable(inst, ...)
 		return
 	else
 		return _INVENTORY_channelcastable(inst, ...)
+	end
+end
+
+local _POINT_complexprojectile = POINT.complexprojectile
+function POINT.complexprojectile(inst, ...)
+	if inst:HasTag("vanity_equipped") then
+		return false
+	else
+		return _POINT_complexprojectile(inst, ...)
 	end
 end
 

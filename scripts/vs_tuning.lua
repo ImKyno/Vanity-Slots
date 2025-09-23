@@ -42,11 +42,24 @@ TUNING.VANITY_PILLOW_BODY_ITEMS =
 	"bodypillow_steelwool",
 }
 
+TUNING.VANITY_SLINGSHOT_ITEMS =
+{
+	"slingshot",
+	"slingshot2",
+	"slingshot2ex",
+	"slingshot999ex",
+	"slingshotex",
+}
+
 TUNING.VANITY_HASFX_ITEMS =
 {
 	"minifan",
 	"shadow_battleaxe",
 	"slingshot",
+	"slingshot2",
+	"slingshot2ex",
+	"slingshot999ex",
+	"slingshotex",
 	"spear_wathgrithr_lightning_charged",
 	"staff_lunarplant",
 	"sword_lunarplant",
@@ -68,6 +81,10 @@ TUNING.VANITY_PERSISTSFX_ITEMS =
 TUNING.VANITY_MULTIPLEFX_ITEMS =
 {
 	"slingshot",
+	"slingshot2",
+	"slingshot2ex",
+	"slingshot999ex",
+	"slingshotex",
 }
 
 TUNING.VANITY_TOGGABLEFX_ITEMS =
@@ -154,6 +171,8 @@ TUNING.VANITY_STATES_ONEXIT =
 	"play_strum",
 	"quickcastspell",
 	"scythe",
+	"slingshot_special",
+	"slingshot_special2",
 	"spray_wax",
 	"terraform",
 	"throw_keep_equip",
@@ -206,6 +225,11 @@ TUNING.VANITY_STATES_NAMES =
 	"quicktele",
 	"row",
 	"row_fail",
+	"slingshot_charge",
+	"slingshot_shoot",
+	"slingshot_shoot2",
+	"slingshot_special",
+	"slingshot_special2",
 	"scythe",
 	"spray_wax",
 	"terraform",

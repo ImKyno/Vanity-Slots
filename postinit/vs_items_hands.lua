@@ -12,6 +12,14 @@ end
 
 AddPrefabPostInit("winona_telebrella", WinonaTelebrellaPostInit)
 
+local function SlingshotItemsPostInit(inst)
+	inst:AddTag("vanity_slingshot")
+end
+
+for k, item in pairs(TUNING.VANITY_SLINGSHOT_ITEMS) do
+	AddPrefabPostInit(item, SlingshotItemsPostInit)
+end
+
 local function TorchPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then

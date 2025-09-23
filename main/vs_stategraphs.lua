@@ -36,6 +36,10 @@ local function ActionStatesOnEnter(inst)
 		else
 			inst.AnimState:OverrideSymbol("swap_object", symbol1 or "swap_"..prefab, symbol2 or "swap_"..prefab)
 		end
+		
+		if realitem:HasTag("vanity_slingshot") then
+			realitem.components.equippable:Equip(inst)
+		end
 	end
 end
 
@@ -263,6 +267,10 @@ AddStategraphPostInit("wilson", function(sg)
 				if realitem:HasTag("vanity_toggable_fx") then
 					realitem.fx:ToggleEquipped(true)
 				end
+				
+				if realitem:HasTag("vanity_slingshot") then
+					realitem.components.equippable:Equip(inst)
+				end
 			end
 			
 			if vanityitem ~= nil and vanityitem:HasTag("vanity_shield") then
@@ -328,6 +336,16 @@ AddStategraphPostInit("wilson", function(sg)
 				if realitem ~= nil and realitem:HasTag("vanity_toggable_fx") then
 					if realitem.fx ~= nil then
 						realitem.fx:ToggleEquipped(false)
+					end
+				end
+
+				if realitem ~= nil and realitem:HasTag("vanity_slingshot") then
+					if realitem.fx then
+						for i, v in ipairs(realitem.fx) do
+							v:Remove()
+						end
+			
+						realitem.fx = nil
 					end
 				end
 			end
