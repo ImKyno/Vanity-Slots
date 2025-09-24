@@ -380,6 +380,8 @@ end
 AddPrefabPostInit("propsign", PropSignPostInit)
 
 local function ShadowBattleAxePostInit(inst)
+	inst:AddTag("vanity_axe_fx")
+
 	local _OnBroken = UpvalueHacker.GetUpvalue(_G.Prefabs.shadow_battleaxe.fn, "OnBroken")
 	
 	local function OnBroken(inst)
@@ -448,3 +450,27 @@ local function WalkingStickPostInit(inst)
 end
 
 AddPrefabPostInit("walking_stick", WalkingStickPostInit)
+
+local function LucyPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.components.talker ~= nil then
+				inst.components.talker:IgnoreAll("vanity")
+			end
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.talker ~= nil then
+				inst.components.talker:StopIgnoringAll("vanity")
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("lucy", LucyPostInit)

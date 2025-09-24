@@ -41,6 +41,14 @@ local function ActionStatesOnEnter(inst)
 			realitem.components.equippable:Equip(inst)
 		end
 	end
+	
+	if inst:HasTag("woodcutter") then -- Items can go invisible on characters that chops fast.
+		if vanityitem ~= nil and vanityitem:HasTag("vanity_axe_fx") then
+			if realitem ~= nil then
+				realitem.components.equippable:Equip(inst)
+			end
+		end
+	end
 end
 
 local function ActionStatesOnExit(inst)
@@ -272,7 +280,7 @@ AddStategraphPostInit("wilson", function(sg)
 					realitem.components.equippable:Equip(inst)
 				end
 			end
-			
+
 			if vanityitem ~= nil and vanityitem:HasTag("vanity_shield") then
 				inst.AnimState:ShowSymbol("swap_object")
 			end

@@ -1,7 +1,10 @@
 -- Common Dependencies.
-local _G           = GLOBAL
-local require      = _G.require
-local EQUIPSLOTS   = _G.EQUIPSLOTS
+local _G            = GLOBAL
+local require       = _G.require
+local SpawnPrefab   = _G.SpawnPrefab
+local ACTIONS       = _G.ACTIONS
+local EQUIPSLOTS    = _G.EQUIPSLOTS
+local UpvalueHacker = require("vs_upvaluehacker")
 
 local EQUIPSLOTS_VANITYSLOTS_INDEX = TUNING.EQUIPSLOTS_VANITYSLOTS_INDEX
 local INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX = table.invert(EQUIPSLOTS_VANITYSLOTS_INDEX)
@@ -94,7 +97,7 @@ local function AddVanitySlots(inst)
 		if vanityitem:HasTag("vanity_equip_onload") then
 			-- Empty because we standby.
 		else
-			--vanityitem.components.equippable:Unequip(inst)
+			-- vanityitem.components.equippable:Unequip(inst)
 			vanityitem.components.equippable:Equip(inst)
 		end
 			
@@ -156,3 +159,23 @@ local function AddVanitySlots(inst)
 end
 
 AddPlayerPostInit(AddVanitySlots)
+
+local function KeepLucyAsVanityItem(inst)
+	local function IsLucy(item)
+		return item.prefab == "lucy"
+	end
+	
+	local _onworked = UpvalueHacker.GetUpvalue(_G.Prefabs.woodie.fn, "master_postinit", "onpreload", "onbecamebeaver", "SetWereWorker", "onworked")
+	
+	local function onworked(inst, data)
+		if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY).components.container:FindItem(IsLucy) ~= nil then
+			return
+		end
+		
+		return _onworked(inst, data)
+	end
+	
+	UpvalueHacker.SetUpvalue(_G.Prefabs.woodie.fn, onworked, "master_postinit", "onpreload", "onbecamebeaver", "SetWereWorker", "onworked")
+end
+
+AddPrefabPostInit("woodie", KeepLucyAsVanityItem)

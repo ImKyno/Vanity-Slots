@@ -42,6 +42,15 @@ TUNING.VANITY_PILLOW_BODY_ITEMS =
 	"bodypillow_steelwool",
 }
 
+TUNING.VANITY_GOLD_ITEMS =
+{
+	"golden_farm_hoe",
+	"goldenaxe",
+	"goldenpickaxe",
+	"goldenpitchfork",
+	"goldenshovel",
+}
+
 TUNING.VANITY_SLINGSHOT_ITEMS =
 {
 	"slingshot",
