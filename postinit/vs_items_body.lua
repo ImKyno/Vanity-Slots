@@ -96,6 +96,8 @@ end
 AddPrefabPostInit("blueamulet", BlueAmuletPostInit)
 
 local function PurpleAmuletPostInit(inst)
+	inst:AddTag("vanity_affects_crown")
+
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil and owner.components.sanity ~= nil then
 			owner.components.sanity:SetInducedInsanity(inst, false)

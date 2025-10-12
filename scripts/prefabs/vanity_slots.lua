@@ -21,7 +21,7 @@ local function ShowEquippedItem(inst, data, owner)
 	local vanityslot = data.slot
 
 	if owner ~= nil then
-		if vanityitem ~= nil then
+		if vanityitem ~= nil then			
 			vanityitem.components.equippable:Equip(owner)
 			
 			local realslot = INVERTED_EQUIPSLOTS_VANITYSLOTS_INDEX[vanityslot]

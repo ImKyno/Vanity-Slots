@@ -324,28 +324,6 @@ end
 
 AddPrefabPostInit("hivehat", HiveHatPostInit)
 
-local function SkeletonHatPostInit(inst)
-	inst.onequipvanity = function(inst, owner, from_ground)
-		if owner ~= nil then
-			if owner.components.sanity ~= nil then
-				owner.components.sanity:SetInducedInsanity(inst, false)
-			end
-			
-			owner:RemoveTag("shadowdominance")
-		end
-	end
-	
-	inst.onunequipvanity = function(inst, owner)
-		if owner ~= nil then
-			if inst.components.equippable ~= nil then
-				inst.components.equippable:Unequip(owner)
-			end
-		end
-	end
-end
-
-AddPrefabPostInit("skeletonhat", SkeletonHatPostInit)
-
 local function AntlionHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
@@ -777,6 +755,34 @@ end
 
 AddPrefabPostInit("voidclothhat", VoidClothHatPostInit)
 
+local function SkeletonHatPostInit(inst)
+    inst:AddTag("vanity_affects_crown")
+
+    inst.onequipvanity = function(inst, owner, from_ground)
+        if owner ~= nil then
+			inst.vanity_insanity_blocker = true
+
+			if owner.components.sanity ~= nil then
+				owner.components.sanity:SetInducedInsanity(inst, false)
+			end
+
+            owner:RemoveTag("shadowdominance")
+        end
+    end
+
+    inst.onunequipvanity = function(inst, owner)
+        if owner ~= nil then
+			inst.vanity_insanity_blocker = false
+
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+        end
+    end
+end
+
+AddPrefabPostInit("skeletonhat", SkeletonHatPostInit)
+
 local function AlterGuardianHatPostInit(inst)
 	inst:AddTag("vanity_equip_onload")
 	inst:AddTag("vanity_container_valid")
@@ -819,6 +825,7 @@ local function AlterGuardianHatPostInit(inst)
 	local function RefreshEquippedHat(inst, owner)
 		if inst:HasTag("vanity_equipped") then
 			local realitem = owner ~= nil and owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
+			local realitem2 = owner ~= nil and owner.components.inventory ~= nil and owner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY) or nil
 
 			if realitem ~= nil then
 				if realitem.prefab == "alterguardianhat" then
@@ -846,6 +853,7 @@ local function AlterGuardianHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		local realowner = inst.components.inventoryitem:GetGrandOwner()
 		local realitem = realowner ~= nil and realowner.components.inventory:GetEquippedItem(EQUIPSLOTS.HEAD) or nil
+		local realitem2 = realowner ~= nil and realowner.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY) or nil
 		
 		if realitem ~= nil and realitem.prefab == "alterguardianhat" then
 			if realitem._front ~= nil then
@@ -857,6 +865,12 @@ local function AlterGuardianHatPostInit(inst)
 			end
 			
 			realowner.AnimState:ClearOverrideSymbol("swap_hat")
+		end
+		
+		if realitem2 ~= nil and realitem2:HasTag("vanity_affects_crown") then
+			if not realitem then
+				realowner.AnimState:ClearOverrideSymbol("swap_hat")
+			end
 		end
 
 		if owner ~= nil then

@@ -23,6 +23,7 @@ local init_postinit =
 {
 	"vs_inventory",
 	"vs_inventoryitem",
+	"vs_sanity",
 
 	"vs_items",
 	"vs_items_body",

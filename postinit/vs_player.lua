@@ -32,7 +32,7 @@ local function AddVanitySlots(inst)
 		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
 		local realitem = data.item
 		
-		if vanityitem ~= nil and vanityitem.components.equippable ~= nil and not realitem:HasTag("heavy") then
+		if vanityitem ~= nil and vanityitem.components.equippable ~= nil and not realitem:HasTag("heavy") then	
 			if vanityitem:HasTag("vanity_equip_onload") then -- Unequipping it causes assert fail.
 				vanityitem.components.equippable:Equip(inst)
 			else
@@ -124,6 +124,18 @@ local function AddVanitySlots(inst)
 		local sanity = inst.components.sanity ~= nil and inst.components.sanity:GetPercentWithPenalty() or 0
 
 		if realitem ~= nil and realitem.prefab == "alterguardianhat" then
+			if vanityslots ~= nil and vanityitem ~= nil then
+				if sanity > TUNING.SANITY_BECOME_ENLIGHTENED_THRESH then
+					inst:DoTaskInTime(0, function()
+						RefreshCrownItem(inst, vanityslots, vanityitem, realitem)
+					end)
+				else
+					inst:DoTaskInTime(0.2699, function()
+						RefreshCrownItem(inst, vanityslots, vanityitem, realitem)
+					end)
+				end
+			end
+		elseif realitem ~= nil and realitem:HasTag("vanity_affects_crown") then
 			if vanityslots ~= nil and vanityitem ~= nil then
 				if sanity > TUNING.SANITY_BECOME_ENLIGHTENED_THRESH then
 					inst:DoTaskInTime(0, function()
