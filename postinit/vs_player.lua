@@ -171,23 +171,3 @@ local function AddVanitySlots(inst)
 end
 
 AddPlayerPostInit(AddVanitySlots)
-
-local function KeepLucyAsVanityItem(inst)
-	local function IsLucy(item)
-		return item.prefab == "lucy"
-	end
-	
-	local _onworked = UpvalueHacker.GetUpvalue(_G.Prefabs.woodie.fn, "master_postinit", "onpreload", "onbecamebeaver", "SetWereWorker", "onworked")
-	
-	local function onworked(inst, data)
-		if inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY).components.container:FindItem(IsLucy) ~= nil then
-			return
-		end
-		
-		return _onworked(inst, data)
-	end
-	
-	UpvalueHacker.SetUpvalue(_G.Prefabs.woodie.fn, onworked, "master_postinit", "onpreload", "onbecamebeaver", "SetWereWorker", "onworked")
-end
-
-AddPrefabPostInit("woodie", KeepLucyAsVanityItem)

@@ -18,6 +18,52 @@ AddComponentPostInit("inventory", function(self)
 		
 		_Open(self, ...)
 	end
+	
+	--[[
+	local _FindItem = self.FindItem
+	
+	function self:FindItem(fn)
+		local result = _FindItem(self, fn)
+
+		if result then
+			return result
+		end
+
+		local vanityslots = self:GetEquippedItem(EQUIPSLOTS.VANITY)
+        
+		if vanityslots and vanityslots.components.container then
+			for _, item in pairs(vanityslots.components.container.slots) do
+				if item and item.prefab == "lucy" and fn(item) then
+					return item
+				end
+			end
+		end
+
+		return nil
+	end
+	]]--
+	
+	local function IsLucy(item)
+		return item.prefab == "lucy"
+	end
+	
+	local _FindItem = self.FindItem
+
+	function self:FindItem(fn, ...)
+		local result = _FindItem(self, fn, ...)
+
+		if result ~= nil then
+			return result
+		end
+
+		local vanityslots = self:GetEquippedItem(EQUIPSLOTS.VANITY)
+    
+		if vanityslots ~= nil and vanityslots.components.container ~= nil then
+			return vanityslots.components.container:FindItem(function(item) 
+				return IsLucy(item) and fn(item) 
+			end)
+		end
+	end
 end)
 
 --[[

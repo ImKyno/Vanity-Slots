@@ -219,7 +219,7 @@ AddStategraphPostInit("wilson", function(sg)
 		
 		sg.states["transform_"..modes.."_person"].onexit = function(inst, data, ...)
 			if not (inst.components.health:IsDead() or inst:HasTag("wereplayer")) then
-				local vanityslots = inst.replica.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+				local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
 				-- local vanityitem = vanityslots ~= nil and vanityslots.replica.container:GetItemInSlot(EQUIPSLOTS_VANITYSLOTS_INDEX[data.eslot]) or nil
 			
 				if vanityslots == nil then
