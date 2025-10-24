@@ -25,7 +25,7 @@ local STRINGS =
 󰀏 Mod Configuration is entirely client. You can access it in: 
 Main Menu → Mods → Server Mods → Cosmetic Slots
 
-󰀌 Mod Version: 1.5-A
+󰀌 Mod Version: 1.6-A
 󰀧 Update: Pantomimed Items
 ]],
 		zh  =
@@ -39,7 +39,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 模组配置完全在客户端进行。您可以通过以下方式访问：
 主菜单 → 模组 → 服务器模组 → 外观栏
 
-󰀌 Mod 版本： 1.5-A
+󰀌 Mod 版本： 1.6-A
 󰀧 更新： 哑剧项目
 ]],	
 		zht =
@@ -53,7 +53,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 處置 模組配置完全在客戶端進行。您可以透過以下方式存取：
 主選單 → 模組 → 伺服器模組 → 外觀欄
 
-󰀌 Mod 版本： 1.5-A
+󰀌 Mod 版本： 1.6-A
 󰀧 更新： 啞劇項目
 ]],	
 		pt  = 
@@ -67,7 +67,7 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 A configuração do Mod é totalmente do cliente. Você pode acessá-la em:
 Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 	
-󰀌 Versão do Mod: 1.5-A
+󰀌 Versão do Mod: 1.6-A
 󰀧 Atualização: Itens Pantomimados
 ]],
 		es  =
@@ -81,7 +81,7 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 󰀏 La Configuración del Mod es completamente de cliente. Puedes acceder a ella en:
 Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 
-󰀌 Versión del Mod: 1.5-A
+󰀌 Versión del Mod: 1.6-A
 󰀧 Actualización: Objetos de Mímica
 ]],
 	},
@@ -244,7 +244,7 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 }
 
 name                        = ChooseTranslationTable(STRINGS.NAME)
-version                     = "1.5-A"
+version                     = "1.6-A"
 
 description                 = ChooseTranslationTable(STRINGS.DESCRIPTION)
 

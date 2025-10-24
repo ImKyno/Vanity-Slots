@@ -213,3 +213,12 @@ function USEITEM.inventoryitem(inst, doer, target, ...)
 		return _USEITEM_inventoryitem(inst, doer, target, ...)
 	end
 end
+
+local _USEITEM_weapon = USEITEM.weapon
+function USEITEM.weapon(inst, doer, target, ...)
+	if target:HasTag("vanity_equipped") then
+		return
+	else
+		return _USEITEM_weapon(inst, doer, target, ...)
+	end
+end

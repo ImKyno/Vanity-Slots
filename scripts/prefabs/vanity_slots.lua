@@ -68,7 +68,14 @@ local function HideEquippedItem(inst, data, owner)
 					
 					if currentowner ~= nil and currentowner.components.inventory ~= nil then
 						currentowner.components.inventory:DropItem(vanityitem)
+						
+						local activeitem = currentowner.components.inventory:GetActiveItem()
+						if activeitem ~= nil then
+							currentowner.components.inventory:ReturnActiveItem()
+						end
+						
 						currentowner.components.inventory:SetActiveItem(ghostitem)
+						currentowner.components.inventory:DropActiveItem()
 
 						vanityitem.components.inventoryitem.cangoincontainer = vanityitem.components.inventoryitem.__cangoincontainer
 						vanityitem.components.inventoryitem.__cangoincontainer = nil
@@ -195,6 +202,12 @@ end
 -- WHAT IS this? Its a stupid way to fix a bug.
 -- Equipping items that can't go inside the inventory aka backpacks and such
 -- when unequipping them you'll briefly see a ghost item of them.
+local function OnDroppedGhostItem(inst)
+	inst:DoTaskInTime(0.5, function()
+		inst:Remove()
+	end)
+end
+
 local function ghostfn()
 	local inst = CreateEntity()
 
@@ -203,14 +216,14 @@ local function ghostfn()
 	inst.entity:AddNetwork()
 
 	MakeInventoryPhysics(inst)
-	MakeInventoryFloatable(inst)
 
-	inst.AnimState:SetBank("cutgrass")
-	inst.AnimState:SetBuild("cutgrass")
-	inst.AnimState:PlayAnimation("idle")
+	-- inst.AnimState:SetBank("cutgrass")
+	-- inst.AnimState:SetBuild("cutgrass")
+	-- inst.AnimState:PlayAnimation("idle")
 	
 	inst:AddTag("nosteal")
 	inst:AddTag("notarget")
+	inst:AddTag("NOCLICK")
 
 	inst.entity:SetPristine()
 
@@ -220,7 +233,11 @@ local function ghostfn()
 
 	inst:AddComponent("inventoryitem")
 
-	inst:DoTaskInTime(0, inst.Remove) -- Kill self before player can interect with us.
+	-- This can led to crashes because we are removed before the ActiveItem is set.
+	-- inst:DoTaskInTime(0.5, inst.Remove)
+	
+	-- Kill self before player can interect with us.
+	inst:ListenForEvent("ondropped", OnDroppedGhostItem)
 
 	return inst
 end
