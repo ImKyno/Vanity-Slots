@@ -42,7 +42,7 @@ AddComponentPostInit("inventory", function(self)
 		return nil
 	end
 	]]--
-	
+
 	local function IsLucy(item)
 		return item.prefab == "lucy"
 	end

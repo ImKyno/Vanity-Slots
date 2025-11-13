@@ -635,6 +635,7 @@ AddPrefabPostInit("slurper", SlurperPostInit)
 
 local function WagpunkHatPostInit(inst)
 	inst:AddTag("vanity_hat_fx")
+	inst:AddTag("vanity_affects_crown")
 
 	-- Stupid klei they don't kill the old fx on equip...
 	local _OnEquip
@@ -682,6 +683,7 @@ AddPrefabPostInit("wagpunkhat", WagpunkHatPostInit)
 
 local function RabbitHatPostInit(inst)
 	inst:AddTag("vanity_hat_fx")
+	inst:AddTag("vanity_affects_crown")
 
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
@@ -711,6 +713,7 @@ AddPrefabPostInit("rabbithat", RabbitHatPostInit)
 local function LunarPlantHatPostInit(inst)
 	inst:AddTag("vanity_fullhead")
 	inst:AddTag("vanity_hat_fx")
+	inst:AddTag("vanity_affects_crown")
 	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
@@ -734,6 +737,7 @@ AddPrefabPostInit("lunarplanthat", LunarPlantHatPostInit)
 local function VoidClothHatPostInit(inst)
 	inst:AddTag("vanity_fullhead")
 	inst:AddTag("vanity_hat_fx")
+	inst:AddTag("vanity_affects_crown")
 
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
@@ -925,3 +929,91 @@ local function AlterGuardianHatPostInit(inst)
 end
 
 AddPrefabPostInit("alterguardianhat", AlterGuardianHatPostInit)
+
+local function PumpkinHatPostInit(inst)
+	inst:AddTag("vanity_fullhead")
+	inst:AddTag("vanity_hat_fx")
+	inst:AddTag("vanity_affects_crown")
+	
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if owner.components.sanity ~= nil then
+				owner.components.sanity:SetLightDrainImmune(false, inst)
+				owner.components.sanity:SetPlayerGhostImmunity(false, inst)
+				owner.components.sanity:RemoveSanityAuraImmunity("ghost", inst)
+			end
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.perishable ~= nil then
+				inst.components.perishable:StartPerishing()
+			end
+			
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+	
+	if not _G.TheWorld.ismastersim then
+		return inst
+	end
+	
+	-- Can only equip if the hat has a face carved on it.
+	local _SetFaceSymbols = inst.SetFaceSymbols
+
+	inst.SetFaceSymbols = function(inst, reye, leye, mouth, ...)
+		_SetFaceSymbols(inst, reye, leye, mouth, ...)
+
+		local face = inst.face and inst.face:value() or 0
+		
+		if face > 0 then
+			if not inst:HasTag("vanity_head") then
+				inst:AddTag("vanity_head")
+			end
+		else
+			if inst:HasTag("vanity_head") then
+				inst:RemoveTag("vanity_head")
+			end
+		end
+	end
+	
+	local _OnSave = inst.OnSave
+	local _OnLoad = inst.OnLoad
+	
+	inst.OnSave = function(inst, data)
+		if _OnSave then
+			_OnSave(inst, data)
+		end
+		
+		local face = inst.face and inst.face:value() or 0
+		
+		if face > 0 or inst:HasTag("vanity_head") then
+			data.has_vanity_tag = true
+		end
+	end
+
+	inst.OnLoad = function(inst, data)
+		if _OnLoad then
+			_OnLoad(inst, data)
+		end
+
+		if data and data.has_vanity_tag then
+			inst:AddTag("vanity_head")
+		else
+			inst:RemoveTag("vanity_head")
+		end
+	end
+
+	inst:DoTaskInTime(0, function()
+		local face = inst.face and inst.face:value() or 0
+		
+		if face > 0 then
+			inst:AddTag("vanity_head")
+		end
+	end)
+end
+
+AddPrefabPostInit("pumpkinhat", PumpkinHatPostInit)
