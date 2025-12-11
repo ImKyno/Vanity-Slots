@@ -149,6 +149,28 @@ local function AddVanitySlots(inst)
 			end
 		end
 	end
+	
+	local function OnBackpackFxSwap(inst)
+		local vanityslots = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.VANITY)
+		local vanityitem = vanityslots ~= nil and vanityslots.components.container:GetItemInSlot(2) or nil
+		local realitem = inst.components.inventory:GetEquippedItem(EQUIPSLOTS.BODY) or nil
+		
+		if realitem ~= nil and realitem.prefab == "backpack" then
+			local skin_build = realitem:GetSkinBuild()
+			
+			if skin_build ~= nil and skin_build == "backpack_labrat" then	
+				if realitem.swapfx ~= nil and realitem:HasTag("vanity_multiple_fx") then
+					if realitem.swapfx then
+						for i, v in ipairs(realitem.swapfx) do
+							v:Remove()
+						end
+			
+						realitem.swapfx = nil
+					end
+				end
+			end
+		end
+	end
 
 	inst:AddTag("vanityslotsowner")
 
@@ -168,6 +190,12 @@ local function AddVanitySlots(inst)
 	inst:ListenForEvent("unequip", SwapToRealItem)
 	inst:ListenForEvent("seamlessplayerswap", OnSeamlessPlayerSwap)
 	inst:ListenForEvent("crownsanitydelta", OnCrownSanityDelta)
+	
+	-- For Spectraflux Pack Backpack skin.
+	inst:ListenForEvent("playerlightningtargeted", OnBackpackFxSwap)
+	inst:ListenForEvent("attacked", OnBackpackFxSwap)
+	inst:ListenForEvent("haunted", OnBackpackFxSwap)
+	inst:ListenForEvent("freeze", OnBackpackFxSwap)
 end
 
 AddPlayerPostInit(AddVanitySlots)

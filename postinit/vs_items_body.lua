@@ -476,3 +476,46 @@ local function ArmorWagPunkPostInit(inst)
 end
 
 AddPrefabPostInit("armorwagpunk", ArmorWagPunkPostInit)
+
+local function BackpackPostInit(inst)
+	inst:AddTag("vanity_multiple_fx")
+	
+	local _DetachSkinEquipFollowFxFromOwner = UpvalueHacker.GetUpvalue(_G.Prefabs.backpack.fn, "onunequip", "DetachSkinEquipFollowFxFromOwner")
+
+	local function DetachSkinEquipFollowFxFromOwner(inst, owner)
+		if owner == nil or owner ~= inst.swapfxowner then
+			return
+		end
+
+        return _DetachSkinEquipFollowFxFromOwner(inst, owner)
+    end
+
+    UpvalueHacker.SetUpvalue(_G.Prefabs.backpack.fn, DetachSkinEquipFollowFxFromOwner, "onunequip", "DetachSkinEquipFollowFxFromOwner")
+	
+	inst.onequipvanity = function(inst, owner, from_ground)
+		inst:AddTag("vanity_equipped")
+		
+		if owner ~= nil then
+			local skin_build = inst:GetSkinBuild()
+			
+			if skin_build ~= nil and skin_build == "backpack_labrat" then
+				_G.RemoveEventListener(inst, "playerlightningtargeted")
+				_G.RemoveEventListener(inst, "attacked")
+				_G.RemoveEventListener(inst, "haunted")
+				_G.RemoveEventListener(inst, "freeze")
+			end
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		inst:RemoveTag("vanity_equipped")
+
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("backpack", BackpackPostInit)

@@ -295,7 +295,17 @@ RemoveRealItemsFX = function(realitem, owner)
 		realitem._fx = nil
 	end
 
-	if realitem.swapfx ~= nil then
+	if realitem.swapfx ~= nil and realitem:HasTag("vanity_multiple_fx") then
+		if realitem.swapfx then
+			for i, v in ipairs(realitem.swapfx) do
+				v:Remove()
+			end
+			
+			realitem.swapfx = nil
+		end
+	elseif realitem.swapfx ~= nil and realitem:HasTag("vanity_persists_fx") then
+		realitem.swapfx.entity:Hide()
+	elseif realitem.swapfx ~= nil then
 		realitem.swapfx:Remove()
 		realitem.swapfx = nil
 	end
@@ -343,6 +353,11 @@ RemoveRealItemsFX = function(realitem, owner)
 	if realitem.wortox_nabbag_body ~= nil then
 		realitem.wortox_nabbag_body:Remove()
 		realitem.wortox_nabbag_body = nil
+	end
+
+	if realitem.idlefx ~= nil then
+		realitem.idlefx:Remove()
+		realitem.idlefx = nil
 	end
 end
 
