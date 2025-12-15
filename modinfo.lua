@@ -25,8 +25,8 @@ local STRINGS =
 󰀏 Mod Configuration is entirely client. You can access it in: 
 Main Menu → Mods → Server Mods → Cosmetic Slots
 
-󰀌 Mod Version: 1.8-A
-󰀧 Update: Hallowed Cosmetics
+󰀌 Mod Version: 1.9-A
+󰀧 Update: Festive Cosmetics
 ]],
 		zh  =
 [[
@@ -39,8 +39,8 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 模组配置完全在客户端进行。您可以通过以下方式访问：
 主菜单 → 模组 → 服务器模组 → 外观栏
 
-󰀌 Mod 版本： 1.8-A
-󰀧 更新： 闹鬼化妆品
+󰀌 Mod 版本： 1.9-A
+󰀧 更新： 节日化妆品
 ]],	
 		zht =
 [[
@@ -53,8 +53,8 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 處置 模組配置完全在客戶端進行。您可以透過以下方式存取：
 主選單 → 模組 → 伺服器模組 → 外觀欄
 
-󰀌 Mod 版本： 1.8-A
-󰀧 更新： 鬧鬼化妝品
+󰀌 Mod 版本： 1.9-A
+󰀧 更新： 節日化妝品
 ]],	
 		pt  = 
 [[
@@ -67,8 +67,8 @@ Main Menu → Mods → Server Mods → Cosmetic Slots
 󰀏 A configuração do Mod é totalmente do cliente. Você pode acessá-la em:
 Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 	
-󰀌 Versão do Mod: 1.8-A
-󰀧 Atualização: Cosméticos Assombrosos
+󰀌 Versão do Mod: 1.9-A
+󰀧 Atualização: Cosméticos Festivos
 ]],
 		es  =
 [[
@@ -81,8 +81,8 @@ Menu Principal → Mods → Mods de Servidor → Slots Cosméticos
 󰀏 La Configuración del Mod es completamente de cliente. Puedes acceder a ella en:
 Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 
-󰀌 Versión del Mod: 1.8-A
-󰀧 Actualización: Cosméticos Embrujados
+󰀌 Versión del Mod: 1.9-A
+󰀧 Actualización: Cosméticos Festivos
 ]],
 	},
 
@@ -244,7 +244,7 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 }
 
 name                        = ChooseTranslationTable(STRINGS.NAME)
-version                     = "1.8-A"
+version                     = "1.9-A"
 
 description                 = ChooseTranslationTable(STRINGS.DESCRIPTION)
 

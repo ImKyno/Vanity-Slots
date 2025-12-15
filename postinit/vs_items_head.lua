@@ -389,6 +389,50 @@ end
 
 AddPrefabPostInit("polly_rogershat", PollyRogersHatPostInit)
 
+local function SaltyDogHatPostInit(inst)
+	inst.onequipvanity = function(inst, owner, from_ground)
+		if owner ~= nil then
+			if inst.components.fueled ~= nil then
+				inst.components.fueled:StopConsuming()
+				
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.__no_sewing = inst.components.fueled.no_sewing
+					inst.components.fueled.no_sewing = true
+				end
+			end
+			
+			if inst.pollytask ~= nil then
+				inst.pollytask:Cancel()
+				inst.pollytask = nil
+			end
+
+			if inst.polly ~= nil then
+				if inst.polly.sg then
+					inst.polly.sg.statemem.queueresummon = nil
+				end
+				
+				inst.polly:PushEvent("desummon")
+			end
+		end
+	end
+	
+	inst.onunequipvanity = function(inst, owner)
+		if owner ~= nil then
+			if inst.components.equippable ~= nil then
+				inst.components.equippable:Unequip(owner)
+			end
+			
+			if inst.components.fueled ~= nil then
+				if inst.components.fueled.no_sewing ~= nil then
+					inst.components.fueled.no_sewing = inst.components.fueled.__no_sewing
+				end
+			end
+		end
+	end
+end
+
+AddPrefabPostInit("salty_doghat", SaltyDogHatPostInit)
+
 local function MonkeySmallHatPostInit(inst)
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
@@ -935,6 +979,25 @@ local function PumpkinHatPostInit(inst)
 	inst:AddTag("vanity_hat_fx")
 	inst:AddTag("vanity_affects_crown")
 	
+	-- Can only equip if the hat has a face carved on it.
+	local function CheckForFace(inst)
+		local face = inst.face and inst.face:value() or 0
+		
+		if inst.components.equippable then
+			if not inst:HasTag("vanity_head") then
+				inst:AddTag("vanity_head")
+			end
+		elseif face > 0 and inst.components.equippable then
+			if not inst:HasTag("vanity_head") then
+				inst:AddTag("vanity_head")
+			end
+		else
+			if inst:HasTag("vanity_head") then
+				inst:RemoveTag("vanity_head")
+			end
+		end
+	end
+	
 	inst.onequipvanity = function(inst, owner, from_ground)
 		if owner ~= nil then
 			if owner.components.sanity ~= nil then
@@ -961,25 +1024,6 @@ local function PumpkinHatPostInit(inst)
 		return inst
 	end
 	
-	-- Can only equip if the hat has a face carved on it.
-	local _SetFaceSymbols = inst.SetFaceSymbols
-
-	inst.SetFaceSymbols = function(inst, reye, leye, mouth, ...)
-		_SetFaceSymbols(inst, reye, leye, mouth, ...)
-
-		local face = inst.face and inst.face:value() or 0
-		
-		if face > 0 then
-			if not inst:HasTag("vanity_head") then
-				inst:AddTag("vanity_head")
-			end
-		else
-			if inst:HasTag("vanity_head") then
-				inst:RemoveTag("vanity_head")
-			end
-		end
-	end
-	
 	local _OnSave = inst.OnSave
 	local _OnLoad = inst.OnLoad
 	
@@ -1001,7 +1045,9 @@ local function PumpkinHatPostInit(inst)
 		end
 
 		if data and data.has_vanity_tag then
-			inst:AddTag("vanity_head")
+			if not inst:HasTag("vanity_head") then
+				inst:AddTag("vanity_head")
+			end
 		else
 			inst:RemoveTag("vanity_head")
 		end
@@ -1011,9 +1057,21 @@ local function PumpkinHatPostInit(inst)
 		local face = inst.face and inst.face:value() or 0
 		
 		if face > 0 then
-			inst:AddTag("vanity_head")
+			if not inst:HasTag("vanity_head") then
+				inst:AddTag("vanity_head")
+			end
+		end
+		
+		if inst.components.equippable then
+			if not inst:HasTag("vanity_head") then
+				inst:AddTag("vanity_head")
+			end
 		end
 	end)
+	
+	-- inst:DoPeriodicTask(1, CheckForFace)
+	inst:ListenForEvent("ondropped", CheckForFace)
+	inst:ListenForEvent("onputininventory", CheckForFace)
 end
 
 AddPrefabPostInit("pumpkinhat", PumpkinHatPostInit)
