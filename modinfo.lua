@@ -198,7 +198,7 @@ Menú principal → Mods → Mods de Servidor → Ranuras Cosméticas
 				es  = "Selecciona la Tecla de Atajo para el widget de Ranuras Cosméticas.\nTecla de Atajo predeterminada: Desactivada",
 			},
 		},
-		
+
 		CONTAINER =
 		{
 			NAME =
@@ -367,11 +367,11 @@ local GENERIC_OPTIONS       =
 
 configuration_options       =
 {
-	{name                   = "SERVER",    label = SERVER_LABEL,    hover = SERVER_HOVER,    client = false, options = SERVER_OPTIONS,    default = false},
-	{name                   = "CLOTHING",  label = CLOTHING_LABEL,  hover = CLOTHING_HOVER,  client = false, options = GENERIC_OPTIONS,   default = false},
+	{ name                  = "SERVER",    label = SERVER_LABEL,    hover = SERVER_HOVER,    client = false, options = SERVER_OPTIONS,    default = false },
+	{ name                  = "CLOTHING",  label = CLOTHING_LABEL,  hover = CLOTHING_HOVER,  client = false, options = GENERIC_OPTIONS,   default = false },
 	
-	{name                   = "CLIENT",    label = CLIENT_LABEL,    hover = CLIENT_HOVER,    client = true,  options = CLIENT_OPTIONS,    default = false},
-	{name                   = "LANGUAGE",  label = LANGUAGE_LABEL,  hover = LANGUAGE_HOVER,  client = true,  options = LANGUAGE_OPTIONS,  default = false},
-	{name                   = "CONTAINER", label = CONTAINER_LABEL, hover = CONTAINER_HOVER, client = true,  options = GENERIC_OPTIONS,   default = false},
-	{name                   = "KEYBIND",   label = KEYBIND_LABEL,   hover = KEYBIND_HOVER,   client = true,  options = keylist,           default = false},
+	{ name                  = "CLIENT",    label = CLIENT_LABEL,    hover = CLIENT_HOVER,    client = true,  options = CLIENT_OPTIONS,    default = false },
+	{ name                  = "LANGUAGE",  label = LANGUAGE_LABEL,  hover = LANGUAGE_HOVER,  client = true,  options = LANGUAGE_OPTIONS,  default = false },
+	{ name                  = "CONTAINER", label = CONTAINER_LABEL, hover = CONTAINER_HOVER, client = true,  options = GENERIC_OPTIONS,   default = false },
+	{ name                  = "KEYBIND",   label = KEYBIND_LABEL,   hover = KEYBIND_HOVER,   client = true,  options = keylist,           default = false },
 }
